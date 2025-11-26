@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SAM Financial Portfolio Application
 
-## Getting Started
+## Overview
+The **SAM (Software Asset Management) Financial Portfolio** application is a modern, web-based platform designed to help organizations manage their software spend, track purchase orders (POs), and forecast financial commitments with precision. Built with **Next.js** and **Tailwind CSS**, it offers a responsive and interactive experience for Financial Analysts and Leadership.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+*   **📊 Financial Analyst Dashboard**: A comprehensive view of portfolio health with KPIs, PO lists, and actuals tracking.
+*   **📝 Single PO Management**: Detailed view of PO attributes, renewal data, and financial breakdowns.
+*   **📅 72-Month Forecast Manager**: 
+    *   Interactive grid for managing long-term forecasts.
+    *   Support for Monthly, Quarterly, and Yearly views.
+    *   Inline editing with optimistic UI updates.
+    *   Fiscal Year alignment (August start).
+*   **📈 Leaders View**: 
+    *   Executive dashboard visualizing spend by Organizational Level (L4/L5).
+    *   Funding source analysis (Central vs Functional).
+    *   Tier-based spend breakdown (Mega, Platinum, Gold, etc.).
+
+## 🛠️ Tech Stack
+
+*   **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+*   **UI Components**: [Shadcn UI](https://ui.shadcn.com/) (based on Radix UI)
+*   **Data Fetching**: [TanStack Query](https://tanstack.com/query/latest) (React Query)
+*   **Icons**: [Lucide React](https://lucide.dev/)
+
+## 📂 Project Structure
+
+```
+src/
+├── app/
+│   ├── api/                    # Mock API Route Handlers
+│   ├── home/
+│   │   ├── financialAnalystsPortfolio/
+│   │   │   ├── [poId]/         # Single PO Details & Forecast Pages
+│   │   │   ├── leaders/        # Leaders View Dashboard
+│   │   │   └── page.tsx        # Main Analyst Dashboard
+│   └── page.tsx                # Landing Page (Module Hub)
+├── components/
+│   ├── ui/                     # Reusable UI components (Buttons, Cards, Tables)
+│   └── ...
+└── lib/                        # Utilities and helpers
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏃‍♂️ Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
+*   Node.js 18+ 
+*   npm or yarn
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Installation
 
-## Learn More
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd sam_app
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4.  **Open the application**:
+    Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+## 🧪 Mock Data
+The application currently runs on **Mock APIs** defined in `src/app/api`. No external database connection is required for the initial demo. Data is generated on-the-fly or served from static mock objects to simulate a realistic environment.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎨 Design System
+The UI follows a clean, professional aesthetic suitable for enterprise financial tools:
+*   **Colors**: Slate/Gray scale for structure, with semantic colors (Blue, Green, Red, Violet) for data visualization and status.
+*   **Typography**: Inter (default Sans).
+*   **Interactivity**: Hover effects, smooth transitions, and immediate feedback on user actions.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Generated for SAM Project - November 2025*

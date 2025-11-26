@@ -10,12 +10,8 @@ export async function POST() {
         "purchaseOrderRows": [
             {
                 "Department Number": 123123,
-                "Vendor Name": [
-                    " LLC"
-                ],
-                "Vendor ID": [
-                    232323
-                ],
+                "Vendor Name": ["TECHNOLOGY LLC"],
+                "Vendor ID": [232323],
                 "PO": "TEST2",
                 "Funding Source": null,
                 "Cogs Or Opex": "OPEX",
@@ -29,12 +25,8 @@ export async function POST() {
             },
             {
                 "Department Number": 54545454,
-                "Vendor Name": [
-                    "LLC"
-                ],
-                "Vendor ID": [
-                    232323
-                ],
+                "Vendor Name": ["LLC"],
+                "Vendor ID": [232323],
                 "PO": "TEST4",
                 "Funding Source": "Part of Commit",
                 "Cogs Or Opex": "OPEX",

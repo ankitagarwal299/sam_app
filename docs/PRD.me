@@ -1,0 +1,1022 @@
+
+
+
+ROLE & GOAL
+You are an expert full‑stack engineer building a production‑ready Next.js 14 (App Router) + TypeScript web app for SAM – Inbound Purchase Orders & Financial Analyst Portfolio. Use shadcn/ui for UI components, TanStack React Table for data grids, Zod for form validation, and Tailwind CSS for styling.
+Deliver:
+
+A working app with pages, components, and mocked APIs that reflect the functional design below.
+Clean architecture, tests, and a seed dataset.
+Clear developer docs in README.md and in‑app help.
+The functional design details (entities, flows, fields, rules, and UI structure) come from the attached PRD. Follow them precisely in naming, fields, and workflows.
+
+
+HIGH‑LEVEL SCOPE (from PRD)
+Implement two capabilities:
+
+Inbound Purchase Orders (PO) Card & Queue — import PO lines, enrich, validate, approve, and ingest. Include statuses: New → Reviewed → Enriched → Submitted → Approved → Ingested (or Rejected).
+Financial Analyst Portfolio — manage owned POs, 72‑month forecast matrix, commits, actuals feed, renewal planning, KPIs, charts, and variance calculations.
+Key UI views to ship:
+
+Inbound Queue (table with status, amount, vendor, app match confidence, exceptions count).
+PO Card (tabs: Source, Enrich, Allocation, Forecast, Validation; actions: Submit → Approve → Ingest).
+Portfolio Dashboard (Header KPIs, Filters, Grids for POs/Forecast/Commits/Actuals/Renewal Planning, Charts).
+
+
+TECH BASELINE
+
+Framework: Next.js 14 (App Router) + TypeScript
+Styling: Tailwind CSS
+UI: shadcn/ui (Alert, Badge, Button, Card, Dialog, Drawer, Dropdown, Form, Input, Label, Select, Tabs, Toast, Tooltip, Table, DataTable pattern)
+Tables: TanStack React Table v8 (sorting, filtering, pagination, row selection, column visibility)
+State: React Query for server data fetching + zustand for local UI state
+Validation: Zod + react-hook-form
+Icons: Lucide
+Testing: Vitest + Testing Library + Playwright (basic e2e)
+Lint/Format: ESLint + Prettier + Type‑safe aliases (@/components, @/lib, etc.)
+
+
+FOLDER STRUCTURE
+apps/sam-portal/
+  .env.local.example
+  README.md
+  next.config.mjs
+  tailwind.config.ts
+  tsconfig.json
+  src/
+    app/
+      layout.tsx
+      page.tsx (landing)
+      inbound/
+        page.tsx (Inbound Queue)
+        [sourceLineId]/page.tsx (PO Card)
+      portfolio/
+        page.tsx (Portfolio Dashboard)
+        [poId]/forecast/page.tsx
+        [poId]/commits/page.tsx
+        [poId]/actuals/page.tsx
+        [poId]/renewal/page.tsx
+    components/
+      data-table/
+        DataTable.tsx
+        ColumnHeader.tsx
+      inbound/
+        InboundFilters.tsx
+        InboundStatusBadge.tsx
+        PoCardTabs.tsx
+        ClassificationForm.tsx
+        AllocationForm.tsx
+        ForecastGrid.tsx
+        ValidationPanel.tsx
+      portfolio/
+        KpiHeader.tsx
+        PortfolioFilters.tsx
+        ForecastMatrix.tsx
+        CommitEditor.tsx
+        ActualsGrid.tsx
+        RenewalPlanner.tsx
+        Charts/
+          BurnUpChart.tsx
+          VarianceWaterfall.tsx
+          RenewalHeatmap.tsx
+    lib/
+      api.ts (fetch wrappers)
+      zod/
+        inbound.ts
+        portfolio.ts
+      utils/
+        currency.ts
+        dates.ts
+        fx.ts
+        matching.ts
+    server/
+      api/
+        inbound/
+          route.ts (GET list)
+          [id]/classify/route.ts (POST)
+          [id]/link-prior/route.ts (POST)
+          [id]/allocate/route.ts (POST)
+          [id]/validate/route.ts (POST)
+          [id]/submit/route.ts (POST)
+          [id]/approve/route.ts (POST)
+          [id]/ingest/route.ts (POST)
+        portfolio/
+          pos/route.ts (GET by owner)
+          [poId]/forecast/route.ts (GET/PUT)
+          [poId]/commit/route.ts (POST)
+          [poId]/actuals/route.ts (GET)
+          [poId]/renewal-estimate/route.ts (POST)
+
+
+Note: Do NOT create a real database. Use mocked APIs and in-memory data for all endpoints and persistence.
+
+
+DATA MODEL (mocked)
+Represent entities in TypeScript interfaces and mock data arrays instead of DB tables:
+
+PO_SourceLine (imported PO lines with InboundStatus)
+PO (SAM purchase record; fields: classification, termMonths, entitlement dates, licenseMetric, baseAmount, owner, status)
+PO_Linkage (renewal lineage: Renewal, True-up, Co-term)
+Allocation (dept splits: percent 0–100; amount)
+ForecastBucket (monthly granularity: start/end, amount, basis Auto/Manual)
+Commit (effective start/end, amount, status Draft/Submitted/Approved/Superseded)
+Actual (GL transaction mapping with confidence and exception code)
+Invoice (invoice linkage: number, date, amount, currency)
+Mock these in memory-db.ts or directly in API route handlers.
+
+
+API ENDPOINTS (mocked server routes)
+Implement Next.js Route Handlers returning mock JSON:
+
+
+BUSINESS RULES & VALIDATIONS
+Implement as TypeScript utilities + zod schemas:
+
+Vendor existence check
+Application match with fuzzy suggestions
+GL reconciliation tolerance (±1%)
+Invoice alignment on amounts/dates
+Renewal continuity rule
+Currency normalization
+Allocation splits sum to 100%
+
+
+FORECASTING LOGIC (72‑month horizon)
+
+
+UI REQUIREMENTS
+Same as before: Inbound Queue, PO Card, Portfolio Dashboard with charts and grids.
+
+
+SAMPLE DATA
+Include Adobe PO line and forecast stub as mock JSON.
+
+1. Landing Page with Cards/components
+API : https://xyz.com/api/account/v1/accounts/accesslevels/{userid}Request Method: GETResponse :  {
+    "correlationId": "3678971d6-eee4-4b1b-beee-8c61c193931e",
+    "statusCode": 200,
+    "statusReason": "OK",
+    "success": true,
+    "status": "OK",
+    "moduleDataList": [
+        {
+            "id": “xxxxxxxxxxxxxxxxxxx",
+            "moduleName": "Bulk Upload/Download",
+            "moduleDescription": "Here you can bulk upload & download Artifacts, Datasets",
+            "moduleImagePath": "/assets/images/Bulk_upload.jpg",
+            "moduleUri": "/home/bulkupload",
+            "moduleIsDisabled": false,
+            "moduleIsHeight": true,
+            "modulePositionSequence": 2,
+            "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Bulk Upload' }",
+            "roleAccessLevels": [
+                {
+                    "roleName": "Administrator",
+                    "accessLevel": "Admin",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "id": "xxxxxxxxxxxxxxxxxxx",
+            "moduleName": "Enterprise Software Portfolio",
+            "moduleDescription": "Baseline and Forecast financial data for expected Enterprise S/W Spend & Pipeline",
+            "moduleImagePath": "/assets/images/enterpriseSoftwarePortfolio.png",
+            "moduleUri": "/home/viewasset",
+            "moduleIsDisabled": false,
+            "moduleIsHeight": true,
+            "modulePositionSequence": 1,
+            "moduleAttribute": "{ attributeGroupId: '', attributeGroupName: 'ITAM Asset table view' }",
+            "roleAccessLevels": [
+                {
+                    "roleName": "Administrator",
+                    "accessLevel": "Admin",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "id": "xxxxxxxxxxxxxxxxxxx",
+            "moduleName": "Purchase Order Processing",
+            "moduleDescription": "Available PO data to ADD, RENEW or IGNORE for Portfolio View \\n \\n",
+            "moduleImagePath": "/assets/images/poProcessing.jpg",
+            "moduleUri": "/home/snowFlakePoView",
+            "moduleIsDisabled": false,
+            "moduleIsHeight": true,
+            "modulePositionSequence": 4,
+            "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Purchase Order Processing' }",
+            "roleAccessLevels": [
+                {
+                    "roleName": "Administrator",
+                    "accessLevel": "Admin",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "id": "xxxxxxxxxxxxxxxxxxx",
+            "moduleName": "Enterprise Software Portfolio New",
+            "moduleDescription": "Baseline and Forecast financial data for expected Enterprise S/W Spend & Pipeline",
+            "moduleImagePath": "/assets/images/enterpriseSoftwarePortfolio.png",
+            "moduleUri": "/home/viewassetnew",
+            "moduleIsDisabled": false,
+            "moduleIsHeight": true,
+            "modulePositionSequence": 15,
+            "moduleAttribute": "",
+            "roleAccessLevels": [
+                {
+                    "roleName": "Administrator",
+                    "accessLevel": "Admin",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "id": "xxxxxxxxxxxxxxxxxxx",
+            "moduleName": "Financial Analysts PO Portfolio",
+            "moduleDescription": "Financial Analysts PO Portfolio",
+            "moduleImagePath": "/assets/images/financialAnalystPortfolio.jpg",
+            "moduleUri": "/home/financialAnalystsPortfolio",
+            "moduleIsDisabled": false,
+            "moduleIsHeight": false,
+            "modulePositionSequence": 14,
+            "moduleAttribute": "{ attributeGroupId: '', attributeGroupName: 'Financial Analysts PO Portfolio' }",
+            "roleAccessLevels": [
+                {
+                    "roleName": "Administrator",
+                    "accessLevel": "Admin",
+                    "priority": 3
+                }
+            ]
+        }
+    ]
+}
+
+
+2. New PO available for Portfolio View
+API:   https://xyz.com/api/datalake/v1/attributes/purchaseorders
+Request Method:   POST
+Payload: {
+    "fields": [
+        {
+            "key": "fiscal_year",
+            "value": "FY26",
+            "sourceTemplate": "itam_snowflake_purchase_order_row_item",
+            "type": "STRING"
+        }
+    ],
+    "filter": {},
+    "pageNumber": 1,
+    "itemsPerPage": 200,
+    "sort": [
+        {
+            "fieldName": "TOTAL_AMOUNT_USD",
+            "displayFieldName": "PO Amount",
+            "sortDirection": "DESCENDING"
+        }
+    ]
+}
+
+Response: {
+	"correlationId": "xxxx-xx-xxx-xxxxx-xxxxx",
+	"statusCode": 200,
+	"statusReason": "OK",
+	"success": true,
+	"status": "OK",
+	"purchaseOrderRows": [
+		[
+			{
+				"id": "58e479b1-266d-4121-9165-9d337b4ca700",
+				"createdBy": "abc",
+				"createdDate": "2023-04-11T06:14:26.405+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-06-13T06:53:24.743+00:00",
+				"key": "VENDOR_NAME",
+				"name": "Vendor Name",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": true,
+				"readOnly": true,
+				"value": "TECHNOLOGY LLC",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "58e479b1-266d-4121-9165-9d337b4ca700",
+				"createdBy": "abc",
+				"createdDate": "2023-04-11T06:19:35.270+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-05-31T06:53:29.751+00:00",
+				"key": "VENDOR_ID",
+				"name": "Vendor Id",
+				"type": "INTEGER",
+				"list": false,
+				"indexed": false,
+				"required": true,
+				"readOnly": true,
+				"value": "23",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "58e479b1-266d-4121-9165-9d337b4ca700",
+				"createdBy": "abc",
+				"createdDate": "2023-04-11T06:21:56.567+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-05-31T06:53:56.742+00:00",
+				"key": "FISCAL_YEAR",
+				"name": "Fiscal Year",
+				"type": "INTEGER",
+				"list": false,
+				"indexed": false,
+				"required": true,
+				"readOnly": false,
+				"value": "2026",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "58e479b1-266d-4121-9165-9d337b4ca700",
+				"createdBy": "abc",
+				"createdDate": "2023-04-11T06:22:50.339+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-05-31T06:54:10.633+00:00",
+				"key": "PO_NUMBER",
+				"name": "PO Number",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": "TEST1",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "0b20caf0-c9d9-477c-8374-56c2a2a08e1a",
+				"createdBy": "abc",
+				"createdDate": "2023-04-11T06:26:35.378+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-06-02T05:41:49.010+00:00",
+				"key": "TOTAL_AMOUNT_USD",
+				"name": "PO Amount",
+				"type": "CURRENCY",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": "123.123",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "fe45cb48-c1fc-424a-97d3-f4e3b86aa4ff",
+				"createdBy": "abc",
+				"createdDate": "2023-04-11T06:32:54.767+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-09-11T19:32:02.832+00:00",
+				"key": "NODE_LEVEL05_NAME",
+				"name": "Level 5 Leader",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "Robert",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "6a41312f-86b2-4a3d-9fe9-c387676b8fc8",
+				"createdBy": "abc",
+				"createdDate": "2023-04-11T06:33:45.849+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-09-11T19:31:42.819+00:00",
+				"key": "NODE_LEVEL04_NAME",
+				"name": "Level 4 Leader",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "Rodhey",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "a7f9bb05-efae-465e-9842-8ebf2e842f21",
+				"createdBy": "abc",
+				"createdDate": "2023-05-17T09:15:25.518+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-05-31T06:54:59.309+00:00",
+				"key": "SOFTWARE_PUBLISHER",
+				"name": "Software Publisher",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": true,
+				"readOnly": false,
+				"value": "TECHNOLOGY LLC",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "b4a2397a-757f-41f0-99dc-2501399be1d9",
+				"createdBy": "abc",
+				"createdDate": "2023-05-23T09:48:16.017+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-05-31T06:55:16.328+00:00",
+				"key": "SOFTWARE_TITLE",
+				"name": "Software Title",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": true,
+				"readOnly": false,
+				"value": "Management Software",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "d53440ca-6a8d-4dff-ae52-3da1bbdee790",
+				"createdBy": "abc",
+				"createdDate": "2023-06-13T07:03:01.087+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-06-13T07:03:01.087+00:00",
+				"key": "FINANCIAL_DEPARTMENT_CODE",
+				"name": "Department Number",
+				"type": "INTEGER",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "323232",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},{
+				"id": "53b73e97-3951-4f56-8828-ab94eb52149d",
+				"createdBy": "abc",
+				"createdDate": "2023-06-13T07:05:16.228+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-09-11T19:31:27.185+00:00",
+				"key": "NODE_LEVEL03_NAME",
+				"name": "Level 3 Leader",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "Stark
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "09636af9-daee-41f2-a62a-18e7ab41a09b",
+				"createdBy": "abc",
+				"createdDate": "2023-10-30T19:51:09.256+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-06-06T06:41:52.764+00:00",
+				"key": "FUNDING_SOURCE",
+				"name": "Funding Source",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"options": [
+					"TBD",
+					"Incremental - Functional Favorability Funded",
+					"Incremental - Allowed Overspend",
+					"Incremental - Risk Funded",
+					"Part of Commit",
+					"Incremental - Yet to be Approved"
+				],
+				"required": false,
+				"readOnly": false,
+				"value": "Part of Commit",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "57f8e49e-7317-4e3b-a455-bfd951e77c70",
+				"createdBy": "abc",
+				"createdDate": "2023-10-30T19:54:37.901+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-10-30T19:54:37.901+00:00",
+				"key": "KNOWN_CHANGE",
+				"name": "Known Change",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"options": [
+					"Quarterly Invoice",
+					"Invoice",
+					"No Contract Renewal",
+					"PO Only",
+					"Cross-Charge",
+					"Retiring Software Title",
+					"Contract Renewal",
+					"True-Up",
+					"New Purchase",
+					"Professional Services",
+					"Capacity Increase",
+					"Quarterly PO",
+					"Credit",
+					"Blanket PO",
+					"Swap",
+					"TBD",
+					"Existing Contract Cost Increase",
+					"One-time Invoice",
+					"New Purchase - Not Approved",
+					"upcoming renewal"
+				],
+				"required": false,
+				"readOnly": false,
+				"value": "New Purchase",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "7e22286f-f7be-4aa1-8b98-9590a3b39bd9",
+				"createdBy": "abc",
+				"createdDate": "2023-10-30T19:55:59.098+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-10-30T19:55:59.098+00:00",
+				"key": "TIER",
+				"name": "Tier",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"options": [
+					"Bronze",
+					"Silver",
+					"Gold",
+					"N/A",
+					"Platinum",
+					"Mega",
+					"Tail",
+					"Other"
+				],
+				"required": false,
+				"readOnly": false,
+				"value": "",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "bdda7391-d12b-47ce-8e3e-ec601ba6d3c7",
+				"createdBy": "abc",
+				"createdDate": "2023-10-30T19:56:40.042+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-06-06T06:37:00.795+00:00",
+				"key": "COGS_OR_OPEX",
+				"name": "COGS / OPEX",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"options": [
+					"COGS",
+					"OPEX",
+					"OTHERS"
+				],
+				"required": false,
+				"readOnly": false,
+				"value": "OPEX",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "c39f47b7-ef8a-4be3-9bb0-9d2d449a59a8",
+				"createdBy": "abc",
+				"createdDate": "2023-10-30T19:57:27.888+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-02-20T06:06:28.486+00:00",
+				"key": "RENEWAL_COMPLETE",
+				"name": "Deal Status",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"options": [
+					"Not Yet Started",
+					"In Progress",
+					"Completed",
+					"Not Renewed"
+				],
+				"required": false,
+				"readOnly": true,
+				"value": "Completed",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "61c5836a-5f75-4018-83c1-20b4dcc4ab02",
+				"createdBy": "abc",
+				"createdDate": "2023-10-30T19:58:39.823+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-02-20T06:07:05.980+00:00",
+				"key": "OPPORTUNITY_STATUS",
+				"name": "Opportunity Status",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"options": [
+					"Not Yet Started",
+					"In Progress",
+					"Decommissioned",
+					"Migrated",
+					"Consolidated",
+					"Postponed",
+					"Missed"
+				],
+				"required": false,
+				"readOnly": true,
+				"value": "Completed",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "97014895-f1f9-46b4-ae8b-6489ce6369a5",
+				"createdBy": "abc",
+				"createdDate": "2023-10-30T19:59:14.504+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2023-10-30T19:59:14.504+00:00",
+				"key": "EXPECTED_BASELINE_AMOUNT",
+				"name": "Baseline for < 300K PO's",
+				"type": "CURRENCY",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": 0.0,
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			}
+			{
+				"id": "8858e09a-970c-4ed2-bd31-148b8797aa52",
+				"createdBy": "abc",
+				"createdDate": "2024-01-25T06:15:10.148+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-01-25T06:15:10.148+00:00",
+				"key": "PO_START_DATE",
+				"name": "Start Date",
+				"type": "DATETIME",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "2025/08/01 00:00:00",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "8928dac6-9717-434c-8834-c7bcc751a181",
+				"createdBy": "abc",
+				"createdDate": "2024-01-25T06:15:38.243+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-01-25T06:15:38.243+00:00",
+				"key": "PO_END_DATE",
+				"name": "End Date",
+				"type": "DATETIME",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "2028/07/31 00:00:00",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "7d5912eb-2126-4bd2-b1fa-3320a9dcc47f",
+				"createdBy": "abc",
+				"createdDate": "2024-05-30T22:59:44.841+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-09-11T19:30:47.531+00:00",
+				"key": "NODE_LEVEL02_NAME_HIER",
+				"name": "Level 2 Leader",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "Thor",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "0eb22532-47be-44f3-8ac6-e1e56258c9f9",
+				"createdBy": "abc",
+				"createdDate": "2024-06-12T22:17:09.227+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-06-12T22:17:09.227+00:00",
+				"key": "FINANCIAL_CONTROLLER_NAME",
+				"name": "Finance Controller",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": " brucee",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "9d32a73f-e945-43ae-8c28-6e517d5ee3bc",
+				"createdBy": "abc",
+				"createdDate": "2024-06-12T22:17:43.891+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-02-11T07:32:59.498+00:00",
+				"key": "FINANCIAL_ANALYST_NAME",
+				"name": "Budget FA",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "steve",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "0d205061-a7bf-45d7-940f-388fc4864def",
+				"createdBy": "abc",
+				"createdDate": "2024-06-20T21:47:15.426+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2024-06-20T21:47:15.426+00:00",
+				"key": "NODE_LEVEL04_NAME_PL_HIER",
+				"name": "PL Level4 Name",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "G&A",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "8c492811-dcba-4c90-a047-28a01b885a83",
+				"createdBy": "abc",
+				"createdDate": "2025-02-11T07:33:46.422+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-02-11T07:33:46.422+00:00",
+				"key": "CENTRAL_NONCENTRAL_SW",
+				"name": "Central / Non-Central SW",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"options": [
+					"Central Software",
+					"Non-Central Software",
+					"^IT/OPS SW Central (Bairakdar)"
+				],
+				"required": false,
+				"readOnly": false,
+				"value": "Central Software",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "90df95e3-946d-473f-915b-ff9b5c2149c9",
+				"createdBy": "abc",
+				"createdDate": "2025-06-06T06:09:29.892+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-06-06T06:09:29.892+00:00",
+				"key": "PRODUCT_OWNER",
+				"name": "Product Owner",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "peter",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "5a1cfa41-e51e-4fa6-9c18-9c23896776fc",
+				"createdBy": "abc",
+				"createdDate": "2025-06-06T06:10:04.605+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-06-06T06:10:04.605+00:00",
+				"key": "PO_REQUESTER",
+				"name": "PO Requester",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": "Natasha",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "adbec66e-bdfe-42cd-911b-8081322d79ed",
+				"createdBy": "abc",
+				"createdDate": "2025-06-06T06:10:32.887+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-06-06T06:10:32.887+00:00",
+				"key": "REQUESTER_ID",
+				"name": "Requester Id",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "232323",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "0b5bd6e2-af9f-448e-85f1-7e8b0ed71e5d",
+				"createdBy": "abc",
+				"createdDate": "2025-06-06T06:11:01.495+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-06-06T06:11:01.495+00:00",
+				"key": "PR_NUMBER",
+				"name": "PR Number",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "PR1111222",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "fceb41a8-412a-43d2-981b-f7c674063bf9",
+				"createdBy": "abc",
+				"createdDate": "2025-07-01T05:41:12.852+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-07-01T05:41:12.852+00:00",
+				"key": "FINANCE_LEADER_L2",
+				"name": "Finance Leader L2",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": "T.Challa",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "7857f20e-f25e-483c-9f81-38ba57eb016e",
+				"createdBy": "abc",
+				"createdDate": "2025-07-01T05:41:38.439+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-07-01T05:41:38.439+00:00",
+				"key": "FINANCE_LEADER_L3",
+				"name": "Finance Leader L3",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": "Banner",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "926b8418-edcc-47b6-bff7-63ac5ba78402",
+				"createdBy": "abc",
+				"createdDate": "2025-07-01T05:42:12.568+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-07-01T05:42:12.568+00:00",
+				"key": "FINANCE_LEADER_L4",
+				"name": "Finance Leader L4",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": "stephen",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "89c50dd9-342f-4545-a585-a97eafbb2006",
+				"createdBy": "abc",
+				"createdDate": "2025-07-01T05:42:45.000+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-07-01T05:42:45.000+00:00",
+				"key": "FINANCE_LEADER_L5",
+				"name": "Finance Leader L5",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": true,
+				"value": "Robert",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "80319a8e-6cfd-4024-8df3-ce88178b62c8",
+				"createdBy": "abc",
+				"createdDate": "2025-07-12T04:59:43.653+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-07-12T04:59:43.653+00:00",
+				"key": "CONTRACT_NEGOTIATOR",
+				"name": "Contract Negotiator",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			},
+			{
+				"id": "90ddd622-ab3b-4856-a751-c03ae62ba095",
+				"createdBy": "abc",
+				"createdDate": "2025-09-24T07:50:40.986+00:00",
+				"modifiedBy": "abc",
+				"modifiedDate": "2025-09-24T07:50:40.986+00:00",
+				"key": "NODE_LEVEL06_NAME",
+				"name": "Level 6 Leader",
+				"type": "STRING",
+				"list": false,
+				"indexed": false,
+				"required": false,
+				"readOnly": false,
+				"value": "Roger",
+				"sourceTemplate": "itam_snowflake_purchase_order_row_item"
+			}
+		]
+}
+
+
+3. Add As renewal
+APIhttps://xyz.com/api/dataloader/v1/attributes/purchaseorders/aggregatePOWithoutMandatoryFY
+Request Method:   POST 
+Payload:
+{
+    "fiscalYear": "FY26",
+    "filter": {
+        "features.fields.vendor_id": "$eq:123123"
+    },
+    "groupByfields": {
+        "Department Number": "$fields.department_number",
+        "Vendor Name": "$features.fields.vendor_name",
+        "Vendor ID": "$features.fields.vendor_id",
+        "PO": "$fields.po",
+        "Funding Source": "$fields.funding_source",
+        "Cogs Or Opex": "$fields.cogs_or_opex",
+        "Known Change": "$fields.known_change",
+        "Primary Contact": "$fields.primary_contact",
+        "Product Owner": "$fields.product_owner",
+        "Business Owner": "$fields.business_owner",
+        "Finance Controller": "$fields.finance_controller",
+        "ITAM CE": "$fields.itam_ce",
+        "License Rights": "$fields.license_rights",
+        "Software Description": "$fields.software_description",
+        "Project Program": "$fields.project_program",
+        "Gps Contact": "$fields.gps_contact",
+        "Software Title": "$parentFieldsCopy.software_title",
+        "PO Start Date": "$fields.po_start_date",
+        "PO End Date": "$fields.po_end_date",
+        "PO Amount": "$fields.po_amount"
+    },
+    "pageNumber": 1,
+    "itemsPerPage": 10,
+    "sort": [
+        {
+            "fieldName": "PO",
+            "displayFieldName": "PO",
+            "sortDirection": "DESCENDING"
+        }
+    ]
+}
+Response: {
+	"correlationId": "xxxxx-xx-xx-xx-xxxxx",
+	"statusCode": 200,
+	"statusReason": "OK",
+	"success": true,
+	"status": "OK",
+	"purchaseOrderRows": [
+		{
+			"Department Number": 123123,
+			"Vendor Name": [
+				" LLC"
+			],
+			"Vendor ID": [
+				232323
+			],
+			"PO": "TEST2",
+			"Funding Source": null,
+			"Cogs Or Opex": "OPEX",
+			"Known Change": "New Purchase",
+			"Business Owner": "Robert",
+			"Finance Controller": "Rhody",
+			"Software Title": "Cloud Services",
+			"PO Start Date": 1689552000000,
+			"PO End Date": 1695772800000,
+			"PO Amount": 12.0
+		},
+		{
+			"Department Number": 54545454,
+			"Vendor Name": [
+				"LLC"
+			],
+			"Vendor ID": [
+				232323
+			],
+			"PO": "TEST4",
+			"Funding Source": "Part of Commit",
+			"Cogs Or Opex": "OPEX",
+			"Known Change": "New Purchase",
+			"Primary Contact": "Peter",
+			"Product Owner": "Natasha",
+			"Business Owner": "Bruce",
+			"Finance Controller": "Steve",
+			"Software Title": "SAP",
+			"PO Start Date": 1643241600000,
+			"PO End Date": 1758855600000,
+			"PO Amount": 123.0
+		}
+	]
+}
+
+
+
+
+
+DX & QUALITY
+Commands: pnpm dev, pnpm test, pnpm e2e, pnpm lint.
+
+
+ACCEPTANCE CRITERIA
+
+All views functional with mock data.
+API routes return realistic mock responses.
+No DB setup required.
+
+
+Also i have screesshot stored in ppt for all screens , i can attach
