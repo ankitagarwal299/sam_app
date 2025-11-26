@@ -1,5 +1,7 @@
 # SAM Financial Portfolio Application
 
+[![Deployment Status](https://img.shields.io/badge/vercel-deployed-success)](https://vercel.com)
+
 ## Overview
 The **SAM (Software Asset Management) Financial Portfolio** application is a modern, web-based platform designed to help organizations manage their software spend, track purchase orders (POs), and forecast financial commitments with precision. Built with **Next.js** and **Tailwind CSS**, it offers a responsive and interactive experience for Financial Analysts and Leadership.
 
@@ -29,19 +31,57 @@ The **SAM (Software Asset Management) Financial Portfolio** application is a mod
 ## 📂 Project Structure
 
 ```
-src/
-├── app/
-│   ├── api/                    # Mock API Route Handlers
-│   ├── home/
-│   │   ├── financialAnalystsPortfolio/
-│   │   │   ├── [poId]/         # Single PO Details & Forecast Pages
-│   │   │   ├── leaders/        # Leaders View Dashboard
-│   │   │   └── page.tsx        # Main Analyst Dashboard
-│   └── page.tsx                # Landing Page (Module Hub)
-├── components/
-│   ├── ui/                     # Reusable UI components (Buttons, Cards, Tables)
-│   └── ...
-└── lib/                        # Utilities and helpers
+sam_app/
+├── src/
+│   ├── app/
+│   │   ├── api/                                    # Mock API Route Handlers
+│   │   │   ├── account/v1/accounts/accesslevels/
+│   │   │   │   └── [userid]/route.ts              # User modules/access levels
+│   │   │   ├── datalake/v1/attributes/
+│   │   │   │   └── purchaseorders/route.ts        # PO data endpoint
+│   │   │   ├── dataloader/v1/attributes/purchaseorders/
+│   │   │   │   └── aggregatePOWithoutMandatoryFY/route.ts  # Renewal candidates
+│   │   │   └── financial-portfolio/
+│   │   │       ├── route.ts                       # Portfolio aggregated data
+│   │   │       ├── [poId]/forecast/route.ts       # 72-month forecast data
+│   │   │       └── leaders-view/route.ts          # Leadership spend data
+│   │   ├── home/
+│   │   │   ├── financialAnalystsPortfolio/
+│   │   │   │   ├── [poId]/
+│   │   │   │   │   ├── page.tsx                   # Single PO Detail View
+│   │   │   │   │   ├── forecast/page.tsx          # 72-Month Forecast Manager
+│   │   │   │   │   └── renewal/page.tsx           # Renewal Analysis
+│   │   │   │   ├── leaders/page.tsx               # Portfolio View for Leaders
+│   │   │   │   └── page.tsx                       # Financial Analyst Dashboard
+│   │   │   ├── snowFlakePoView/page.tsx           # PO Processing View
+│   │   │   ├── viewasset/page.tsx                 # Enterprise Portfolio View
+│   │   │   └── layout.tsx                         # Home layout wrapper
+│   │   ├── layout.tsx                             # Root layout with providers
+│   │   └── page.tsx                               # Landing Page (Module Hub)
+│   ├── components/
+│   │   ├── ui/                                    # Shadcn UI components
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── checkbox.tsx
+│   │   │   ├── data-table.tsx                     # Reusable data table
+│   │   │   ├── dialog.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── select.tsx
+│   │   │   ├── skeleton.tsx
+│   │   │   ├── table.tsx
+│   │   │   ├── tabs.tsx
+│   │   │   └── sonner.tsx
+│   │   ├── providers.tsx                          # React Query provider
+│   │   └── renewal-modal.tsx                      # Add as Renewal modal
+│   └── lib/
+│       └── utils.ts                               # Utility functions
+├── docs/
+│   ├── PRD.md                                     # Product Requirements Doc
+│   └── README.md                                  # Original project docs
+├── package.json
+├── tsconfig.json
+└── tailwind.config.ts
 ```
 
 ## 🏃‍♂️ Getting Started
