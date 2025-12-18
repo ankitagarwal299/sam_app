@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpRight, ArrowDownRight, DollarSign, Calendar, AlertCircle, BarChart3 } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, DollarSign, Calendar, AlertCircle, BarChart3, ArrowUpDown } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Link from 'next/link'; // Added Link import
 import { Button } from '@/components/ui/button';
@@ -45,6 +45,14 @@ interface PO {
     endDate: string;
     owner: string;
     // Add other fields as needed for display
+    vendorId: string; // Keep for reference if needed, but UI uses Description
+    poDescription: string;
+    department: string;
+    glAccount: string;
+    expenseType: string;
+    productOwner: string;
+    leader2: string;
+    leader3: string;
     raw: POField[]; // Store raw fields for details
 }
 
@@ -83,56 +91,199 @@ const fetchPOs = async (): Promise<PO[]> => {
     const json = await res.json();
 
     // Parse the Array of Arrays of Fields
-    return json.purchaseOrderRows.map((row: POField[]) => {
+    const allPos = json.purchaseOrderRows.map((row: POField[]) => {
         const getVal = (key: string) => row.find(f => f.key === key)?.value;
 
         return {
             id: String(getVal('PO_NUMBER') || getVal('VENDOR_ID') || Math.random()),
             poNumber: String(getVal('PO_NUMBER') || 'N/A'),
             vendor: String(getVal('VENDOR_NAME') || 'Unknown'),
+            vendorId: String(getVal('VENDOR_ID') || ''),
+            poDescription: String(getVal('PO_DESCRIPTION') || getVal('VENDOR_NAME') || 'Unknown'),
             amount: Number(getVal('TOTAL_AMOUNT_USD') || 0),
             fiscalYear: String(getVal('FISCAL_YEAR') || ''),
-            status: String(getVal('RENEWAL_COMPLETE') || 'Active'),
+            status: String(getVal('PO_STATUS') || 'Active'), // Default to Active/Null logic handling
             startDate: String(getVal('PO_START_DATE') || ''),
             endDate: String(getVal('PO_END_DATE') || ''),
             owner: String(getVal('FINANCIAL_ANALYST_NAME') || ''),
+            department: String(getVal('FINANCIAL_DEPARTMENT_CODE') || ''),
+            glAccount: String(getVal('GL_ACCOUNT') || ''),
+            expenseType: String(getVal('COGS_OR_OPEX') || ''),
+            productOwner: String(getVal('PRODUCT_OWNER') || ''),
+            leader2: String(getVal('NODE_LEVEL02_NAME_HIER') || ''),
+            leader3: String(getVal('NODE_LEVEL03_NAME') || ''),
             raw: row
         };
     });
+
+    // Filter UI with PO_Status : Active (or null as per requirement "Active or PO_Status : null")
+    // Requirement says: "Add PO_Status : Active or PO_Status : null - UI will be filtered with PO_Status : Active"
+    // This implies we show only Active ones? Or if null is allowed?
+    // "UI will be filtered with PO_Status : Active" -> I will interpret this as showing only 'Active'.
+    // If requirement means "Active or null are valid, but filter for Active", then I filter for 'Active'.
+    return allPos.filter((po: any) => po.status === 'Active');
 };
 
 // --- Column Definitions ---
 const poColumns: ColumnDef<PO>[] = [
     {
         accessorKey: 'poNumber',
-        header: 'PO Number',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    PO Number
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
         cell: ({ row }) => (
             <Link href={`/home/financialAnalystsPortfolio/${row.original.poNumber}`} className="text-blue-600 hover:underline">
                 {row.getValue('poNumber')}
             </Link>
         )
     },
-    { accessorKey: 'vendor', header: 'Vendor' },
-    { accessorKey: 'fiscalYear', header: 'FY' },
-    { accessorKey: 'startDate', header: 'Start Date' },
-    { accessorKey: 'endDate', header: 'End Date' },
+    {
+        accessorKey: 'poDescription', // Replaces Vendor ID
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    PO Description
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    // Fiscal Year removed as per requirement
+    {
+        accessorKey: 'startDate',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Start Date
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'endDate',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    End Date
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'leader2',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Leader 2
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'leader3',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Leader 3
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'department',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Dept Number
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'glAccount',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    GL Account
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'expenseType',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Expense Type
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'productOwner',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Product Owner
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
     {
         accessorKey: 'amount',
-        header: 'Amount',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Amount
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue('amount'));
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
         }
     },
-    { accessorKey: 'owner', header: 'Owner' },
+    {
+        accessorKey: 'owner',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Financial Analyst
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
     {
         accessorKey: 'status',
-        header: 'Status',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Status
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
             let colorClass = 'text-gray-600 bg-gray-100';
             if (status === 'Completed') colorClass = 'text-green-600 bg-green-100';
             if (status === 'In Progress') colorClass = 'text-blue-600 bg-blue-100';
+            if (status === 'Active') colorClass = 'text-blue-600 bg-blue-50 border-blue-200';
             return <span className={`px-2 py-1 rounded-full text-xs font-medium ${colorClass}`}>{status}</span>;
         }
     },

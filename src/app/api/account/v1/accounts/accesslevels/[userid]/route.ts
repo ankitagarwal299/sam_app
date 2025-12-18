@@ -29,7 +29,7 @@ export async function GET() {
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
                 "moduleName": "Enterprise Software Portfolio",
-                "moduleDescription": "Baseline and Forecast financial data for expected Enterprise S/W Spend & Pipeline",
+                "moduleDescription": "Available PO data to be ADDed, RENEWed, IGNORed",
                 "moduleImagePath": "/assets/images/enterpriseSoftwarePortfolio.png",
                 "moduleUri": "/home/viewasset",
                 "moduleIsDisabled": false,
