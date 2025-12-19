@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowUpDown, RotateCcw } from 'lucide-react';
+import { ArrowUpDown, RotateCcw, Calendar } from 'lucide-react';
 import { useState } from 'react';
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
@@ -411,25 +411,48 @@ export default function ViewAssetPage() {
     }
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Purchase Order Inbox</h1>
-                    <p className="text-gray-500">Review and process incoming purchase orders to align them with your portfolio.</p>
+        <div className="space-y-6">
+            <div className="flex flex-col space-y-4">
+                {/* Context / Top Filter Area - Segmented Control */}
+                <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2 text-blue-600">
+                        <Calendar className="h-4 w-4 animate-pulse" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Select Portfolio Year</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        <Select value={selectedFiscalYear} onValueChange={setSelectedFiscalYear}>
+                            <SelectTrigger className="w-[180px] rounded-full bg-white border-blue-200 text-blue-600 font-bold focus:ring-blue-100">
+                                <SelectValue placeholder="Select Year" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="All">All Fiscal Years</SelectItem>
+                                {uniqueFiscalYears.map(fy => (
+                                    <SelectItem key={fy} value={String(fy)}>FY {fy}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
-                <div className="flex gap-2 items-center">
-                    {activeTab === "pending" ? (
-                        <>
-                            <Button onClick={handleAddAsNew} className="bg-green-600 hover:bg-green-700">Add as New</Button>
-                            <Button onClick={handleAddAsRenewal} className="bg-blue-600 hover:bg-blue-700">Add as Renewal</Button>
-                            <Button onClick={handleIgnore} variant="destructive">Ignore PO</Button>
-                        </>
-                    ) : (
-                        <Button onClick={handleRevert} className="bg-orange-600 hover:bg-orange-700">
-                            <RotateCcw className="mr-2 h-4 w-4" />
-                            Revert to Pending Inbox
-                        </Button>
-                    )}
+
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Purchase Order Inbox</h1>
+                        <p className="text-gray-500 text-sm">Review and process incoming purchase orders for {selectedFiscalYear === 'All' ? 'all years' : `FY ${selectedFiscalYear}`}.</p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                        {activeTab === "pending" ? (
+                            <>
+                                <Button onClick={handleAddAsNew} className="bg-green-600 hover:bg-green-700">Add as New</Button>
+                                <Button onClick={handleAddAsRenewal} className="bg-blue-600 hover:bg-blue-700">Add as Renewal</Button>
+                                <Button onClick={handleIgnore} variant="destructive">Ignore PO</Button>
+                            </>
+                        ) : (
+                            <Button onClick={handleRevert} className="bg-orange-600 hover:bg-orange-700">
+                                <RotateCcw className="mr-2 h-4 w-4" />
+                                Revert to Pending Inbox
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -443,21 +466,6 @@ export default function ViewAssetPage() {
                             Ignored ({data?.filter(po => po.PO_STATUS === 'Ignored').length || 0})
                         </TabsTrigger>
                     </TabsList>
-
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-500">Fiscal Year:</span>
-                        <Select value={selectedFiscalYear} onValueChange={setSelectedFiscalYear}>
-                            <SelectTrigger className="w-[180px] bg-white">
-                                <SelectValue placeholder="All Years" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="All">All Fiscal Years</SelectItem>
-                                {uniqueFiscalYears.map(fy => (
-                                    <SelectItem key={fy} value={String(fy)}>{fy}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
                 </div>
 
                 <TabsContent value="pending" className="border-none p-0 outline-none">

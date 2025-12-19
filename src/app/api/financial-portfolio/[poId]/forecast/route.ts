@@ -26,7 +26,7 @@ export async function GET(request: Request, context: { params: Promise<{ poId: s
             const quarter = Math.floor(fiscalMonthIndex / 3) + 1;
 
             data.push({
-                id: `${poId}-${year}-${month.toString().padStart(2, '0')}`,
+                id: `${poId}-${i.toString().padStart(3, '0')}`,
                 poId,
                 year,
                 month,
@@ -39,7 +39,7 @@ export async function GET(request: Request, context: { params: Promise<{ poId: s
                 commitAmount: monthlyAmount,
                 variance: i < 6 ? Math.random() * 10 - 5 : 0, // ±5%
                 status: i < 6 ? 'locked' : 'draft',
-                basis: i < 36 ? 'committed' : 'auto',
+                basis: i < 36 ? 'approved' : 'auto',
                 lastModified: new Date().toISOString(),
                 modifiedBy: 'steve'
             });

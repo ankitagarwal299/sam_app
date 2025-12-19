@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 
 // In-memory mock data to handle updates during the session
-let purchaseOrderRows: any[][] = [
+const purchaseOrderRows: any[][] = [
     [
         { "key": "VENDOR_NAME", "value": "TECHNOLOGY LLC", "name": "Vendor Name", "type": "STRING", "readOnly": true },
         { "key": "PO_DESCRIPTION", "value": "Tech Refresh 2025", "name": "PO Description", "type": "STRING", "readOnly": false },
-        { "key": "FISCAL_YEAR", "value": "2026", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
+        { "key": "FISCAL_YEAR", "value": "2024", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
         { "key": "PO_NUMBER", "value": "PO-001", "name": "PO Number", "type": "STRING", "readOnly": true },
         { "key": "TOTAL_AMOUNT_USD", "value": "123.123", "name": "PO Amount", "type": "CURRENCY", "readOnly": true },
         { "key": "SOFTWARE_PUBLISHER", "value": "TECHNOLOGY LLC", "name": "Software Publisher", "type": "STRING", "readOnly": false },
@@ -31,12 +31,23 @@ let purchaseOrderRows: any[][] = [
         { "key": "PR_NUMBER", "value": "PR1111222", "name": "PR Number", "type": "STRING", "readOnly": false },
         { "key": "CONTRACT_NEGOTIATOR", "value": "Tony", "name": "Contract Negotiator", "type": "STRING", "readOnly": false },
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
-        { "key": "GL_ACCOUNT", "value": "GL-123456", "name": "GL Account", "type": "STRING", "readOnly": false }
+        { "key": "GL_ACCOUNT", "value": "GL-123456", "name": "GL Account", "type": "STRING", "readOnly": false },
+        { "key": "EXPENSE_CATEGORY", "value": "Software", "name": "Expense Category", "type": "STRING", "readOnly": false },
+        { "key": "COST_POOL", "value": "IT Ops", "name": "Cost Pool", "type": "STRING", "readOnly": false },
+        { "key": "SW_USAGE_CATEGORY", "value": "Internal", "name": "SW Usage Category", "type": "STRING", "readOnly": false },
+        { "key": "SW_CATEGORY", "value": "SaaS", "name": "SW Category", "type": "STRING", "readOnly": false },
+        { "key": "NODE_LEVEL04_NAME", "value": "Banner", "name": "Level 4 Leader", "type": "STRING", "readOnly": false },
+        { "key": "NODE_LEVEL05_NAME", "value": "Romanoff", "name": "Level 5 Leader", "type": "STRING", "readOnly": false },
+        { "key": "BUSINESS_OWNER", "value": "Clint", "name": "Business Owner", "type": "STRING", "readOnly": false },
+        { "key": "BIZ_OPS_OWNER", "value": "Coulson", "name": "Biz Ops Owner", "type": "STRING", "readOnly": false },
+        { "key": "OPPORTUNITY_CONTACT", "value": "Hill", "name": "Opportunity Contact", "type": "STRING", "readOnly": false },
+        { "key": "COMPETITIVE_SOFTWARE", "value": "None", "name": "Competitive Software", "type": "STRING", "readOnly": false },
+        { "key": "REDUNDANT_SOFTWARE", "value": "No", "name": "Redundant Software", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "MICROSOFT", "name": "Vendor Name", "type": "STRING", "readOnly": true },
         { "key": "PO_DESCRIPTION", "value": "Azure Enterprise Agreement", "name": "PO Description", "type": "STRING", "readOnly": false },
-        { "key": "FISCAL_YEAR", "value": "2026", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
+        { "key": "FISCAL_YEAR", "value": "2023", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
         { "key": "PO_NUMBER", "value": "PO-002", "name": "PO Number", "type": "STRING", "readOnly": true },
         { "key": "TOTAL_AMOUNT_USD", "value": "500000.00", "name": "PO Amount", "type": "CURRENCY", "readOnly": true },
         { "key": "SOFTWARE_TITLE", "value": "Azure Enterprise", "name": "Software Title", "type": "STRING", "readOnly": false },
@@ -55,7 +66,7 @@ let purchaseOrderRows: any[][] = [
     [
         { "key": "VENDOR_NAME", "value": "AMAZON WEB SERVICES", "name": "Vendor Name", "type": "STRING", "readOnly": true },
         { "key": "PO_DESCRIPTION", "value": "AWS Cloud Hosting", "name": "PO Description", "type": "STRING", "readOnly": false },
-        { "key": "FISCAL_YEAR", "value": "2026", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
+        { "key": "FISCAL_YEAR", "value": "2022", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
         { "key": "PO_NUMBER", "value": "PO-003", "name": "PO Number", "type": "STRING", "readOnly": true },
         { "key": "TOTAL_AMOUNT_USD", "value": "750000.00", "name": "PO Amount", "type": "CURRENCY", "readOnly": true },
         { "key": "PO_START_DATE", "value": "2025/06/01 00:00:00", "name": "Start Date", "type": "DATETIME", "readOnly": false },
@@ -72,7 +83,7 @@ let purchaseOrderRows: any[][] = [
     [
         { "key": "VENDOR_NAME", "value": "SALESFORCE", "name": "Vendor Name", "type": "STRING", "readOnly": true },
         { "key": "PO_DESCRIPTION", "value": "CRM Licenses", "name": "PO Description", "type": "STRING", "readOnly": false },
-        { "key": "FISCAL_YEAR", "value": "2026", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
+        { "key": "FISCAL_YEAR", "value": "2025", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
         { "key": "PO_NUMBER", "value": "PO-004", "name": "PO Number", "type": "STRING", "readOnly": true },
         { "key": "TOTAL_AMOUNT_USD", "value": "300000.00", "name": "PO Amount", "type": "CURRENCY", "readOnly": true },
         { "key": "PO_START_DATE", "value": "2025/02/01 00:00:00", "name": "Start Date", "type": "DATETIME", "readOnly": false },
@@ -89,7 +100,7 @@ let purchaseOrderRows: any[][] = [
     [
         { "key": "VENDOR_NAME", "value": "ORACLE", "name": "Vendor Name", "type": "STRING", "readOnly": true },
         { "key": "PO_DESCRIPTION", "value": "Database Support", "name": "PO Description", "type": "STRING", "readOnly": false },
-        { "key": "FISCAL_YEAR", "value": "2026", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
+        { "key": "FISCAL_YEAR", "value": "2021", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
         { "key": "PO_NUMBER", "value": "PO-005", "name": "PO Number", "type": "STRING", "readOnly": true },
         { "key": "TOTAL_AMOUNT_USD", "value": "150000.00", "name": "PO Amount", "type": "CURRENCY", "readOnly": true },
         { "key": "PO_START_DATE", "value": "2025/03/15 00:00:00", "name": "Start Date", "type": "DATETIME", "readOnly": false },
@@ -106,7 +117,7 @@ let purchaseOrderRows: any[][] = [
     [
         { "key": "VENDOR_NAME", "value": "ADOBE", "name": "Vendor Name", "type": "STRING", "readOnly": true },
         { "key": "PO_DESCRIPTION", "value": "Creative Cloud", "name": "PO Description", "type": "STRING", "readOnly": false },
-        { "key": "FISCAL_YEAR", "value": "2026", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
+        { "key": "FISCAL_YEAR", "value": "2020", "name": "Fiscal Year", "type": "INTEGER", "readOnly": false },
         { "key": "PO_NUMBER", "value": "PO-006", "name": "PO Number", "type": "STRING", "readOnly": true },
         { "key": "TOTAL_AMOUNT_USD", "value": "50000.00", "name": "PO Amount", "type": "CURRENCY", "readOnly": true },
         { "key": "PO_START_DATE", "value": "2025/01/01 00:00:00", "name": "Start Date", "type": "DATETIME", "readOnly": false },
@@ -361,7 +372,7 @@ export async function POST() {
 }
 
 export async function PATCH(request: Request) {
-    const { poNumber, status } = await request.json();
+    const { poNumber, updates, status } = await request.json();
 
     const rowIndex = purchaseOrderRows.findIndex(row =>
         row.find(field => field.key === 'PO_NUMBER' && field.value === poNumber)
@@ -371,11 +382,29 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ success: false, message: 'PO not found' }, { status: 404 });
     }
 
-    const statusField = purchaseOrderRows[rowIndex].find(field => field.key === 'PO_STATUS');
-    if (statusField) {
-        statusField.value = status;
-    } else {
-        purchaseOrderRows[rowIndex].push({ "key": "PO_STATUS", "value": status, "name": "PO Status", "type": "STRING", "readOnly": true });
+    // Handle generic updates if provided
+    if (updates && typeof updates === 'object') {
+        Object.keys(updates).forEach(key => {
+            const field = purchaseOrderRows[rowIndex].find(f => f.key === key);
+            if (field) {
+                // Determine if we need to parse the value (e.g. for numbers)
+                // For simplicity in this mock, we'll trust the input or cast slightly
+                field.value = updates[key];
+            } else {
+                // Optionally create the field if it doesn't exist (mock data flexibility)
+                // For now, we only update existing fields to avoid polluting schema
+            }
+        });
+    }
+
+    // Handle specific status update (backward compatibility or specific logic)
+    if (status) {
+        const statusField = purchaseOrderRows[rowIndex].find(field => field.key === 'PO_STATUS');
+        if (statusField) {
+            statusField.value = status;
+        } else {
+            purchaseOrderRows[rowIndex].push({ "key": "PO_STATUS", "value": status, "name": "PO Status", "type": "STRING", "readOnly": true });
+        }
     }
 
     return NextResponse.json({ success: true });

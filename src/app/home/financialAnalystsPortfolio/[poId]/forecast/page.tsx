@@ -20,7 +20,23 @@ import {
     XCircle,
     Info
 } from 'lucide-react';
+import { toast } from 'sonner';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import React from 'react';
+
+const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLLabelElement>>(({ className, ...props }, ref) => (
+    <label ref={ref} className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${className}`} {...props} />
+));
+Label.displayName = "Label";
 
 // --- Types ---
 type GranularityType = 'monthly' | 'quarterly' | 'yearly';
@@ -39,7 +55,7 @@ interface MonthlyForecast {
     commitAmount: number;
     variance: number;
     status: 'draft' | 'locked' | 'submitted';
-    basis: 'auto' | 'manual' | 'committed';
+    basis: 'auto' | 'manual' | 'approved';
     lastModified: string;
     modifiedBy: string;
 }
@@ -70,6 +86,12 @@ const getVarianceColor = (variance: number) => {
     if (Math.abs(variance) < 2) return 'text-green-600 bg-green-50';
     if (Math.abs(variance) < 5) return 'text-yellow-600 bg-yellow-50';
     return 'text-red-600 bg-red-50';
+};
+
+const calculateVariance = (forecast: number, actual: number | null) => {
+    if (!forecast || forecast === 0) return 0;
+    const actualVal = actual || 0;
+    return ((forecast - actualVal) / forecast) * 100;
 };
 
 const getVarianceIcon = (variance: number) => {
@@ -118,8 +140,25 @@ export default function ForecastManagementPage() {
 
     const [granularity, setGranularity] = useState<GranularityType>('quarterly');
     const [expandedQuarters, setExpandedQuarters] = useState<Set<string>>(new Set());
+    // --- State for editing ---
+    // storing cell ID as "ID:FIELD" to distinguish between forecast and commit
     const [editingCell, setEditingCell] = useState<string | null>(null);
     const [editValue, setEditValue] = useState<string>('');
+
+    // --- State for Uplift ---
+    const [upliftOpen, setUpliftOpen] = useState(false);
+    // State for temporary form values
+    const [upliftFactors, setUpliftFactors] = useState({
+        price: { pct: 0, reason: '' },
+        volume: { pct: 0, reason: '' },
+        expansion: { pct: 0, reason: '' },
+    });
+    // State for applied values (used in forecast calculation)
+    const [appliedUpliftFactors, setAppliedUpliftFactors] = useState({
+        price: { pct: 0, reason: '' },
+        volume: { pct: 0, reason: '' },
+        expansion: { pct: 0, reason: '' },
+    });
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['forecast', poId],
@@ -160,10 +199,12 @@ export default function ForecastManagementPage() {
             quartersMap[key].actual += m.actualAmount || 0;
             quartersMap[key].commit += m.commitAmount;
             quartersMap[key].months.push(m);
-            quartersMap[key].variance += m.variance;
         });
 
-        return Object.values(quartersMap).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+        return Object.values(quartersMap).map(q => ({
+            ...q,
+            variance: calculateVariance(q.amount, q.actual)
+        })).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
     };
 
     const sortedQuarters = getSortedQuarters();
@@ -180,10 +221,12 @@ export default function ForecastManagementPage() {
             years[key].amount += m.forecastAmount;
             years[key].actual += m.actualAmount || 0;
             years[key].commit += m.commitAmount;
-            years[key].variance += m.variance;
         });
 
-        return Object.values(years).sort((a, b) => a.label.localeCompare(b.label));
+        return Object.values(years).map(y => ({
+            ...y,
+            variance: calculateVariance(y.amount, y.actual)
+        })).sort((a, b) => a.label.localeCompare(b.label));
     };
 
     const sortedYears = aggregateYearly();
@@ -198,15 +241,17 @@ export default function ForecastManagementPage() {
         setExpandedQuarters(newExpanded);
     };
 
-    const handleCellEdit = (cellId: string, currentValue: number) => {
-        setEditingCell(cellId);
+    const handleCellEdit = (id: string, field: 'forecast' | 'commit', currentValue: number) => {
+        setEditingCell(`${id}:${field}`);
         setEditValue(currentValue.toString());
     };
 
     const saveEdit = () => {
         if (!editingCell) return;
 
+        const [id, field] = editingCell.split(':');
         const newValue = parseFloat(editValue);
+
         if (isNaN(newValue)) {
             setEditingCell(null);
             return;
@@ -216,68 +261,18 @@ export default function ForecastManagementPage() {
         queryClient.setQueryData(['forecast', poId], (oldData: ForecastData | undefined) => {
             if (!oldData) return oldData;
 
-            const newForecasts = oldData.monthlyForecasts.map(m => {
-                // Check if we are editing a quarter aggregation or a specific month
-                // For simplicity in this mock, if we edit a quarter, we distribute to months?
-                // Or if we edit a month, we update just that month.
-                // The current UI ID structure for quarter rows is just the quarter key (e.g. FY26-Q1)
-                // But the monthly rows have specific IDs.
-
-                // Case 1: Editing a specific month (Monthly view or expanded quarter)
-                // The ID passed for monthly view is m.id (e.g. PO-2025-08)
-                // The ID passed for quarterly view is the quarter key (e.g. FY26-Q1)
-
-                // If editing a quarter, we need to distribute the change.
-                // For now, let's support monthly editing primarily.
-                // If the user edits a quarter cell, we'll just update the first month of that quarter
-                // or split it evenly? Let's assume we split evenly for now if it matches a quarter key.
-
-                // Actually, let's look at how the grid calls handleCellEdit.
-                // For Quarter row: handleCellEdit(key, quarter.amount) -> key is "FY26-Q1"
-                // For Month row: handleCellEdit does not seem to be called in the expanded view?
-                // Wait, looking at the code:
-                // Expanded Monthly Detail: <DataCell editable={m.status !== 'locked'}> ... </DataCell>
-                // It doesn't have an onClick handler! That's why monthly editing inside expanded view wasn't working.
-
-                // Let's fix the onClick in the JSX first.
-                // This block is now mostly handled by the logic below.
+            const updatedForecasts = oldData.monthlyForecasts.map(m => {
+                if (m.id === id || m.period === id) {
+                    return {
+                        ...m,
+                        [field === 'commit' ? 'commitAmount' : 'forecastAmount']: newValue,
+                        modifiedBy: 'User',
+                        // Reset variance if forecast changes? Or recalc? keeping simple for now
+                        variance: field === 'forecast' ? 0 : m.variance
+                    };
+                }
                 return m;
             });
-
-            // If we edited a quarter, we need a second pass or a different logic.
-            // For this fix, let's enable Monthly editing in the expanded view and Monthly view.
-            // And for the Quarterly view, if they edit the total, we'll distribute it evenly across the months in that quarter.
-
-            let updatedForecasts = [...oldData.monthlyForecasts];
-
-            // Check if it's a quarter key
-            const isQuarterKey = editingCell && editingCell.includes('-Q');
-            if (isQuarterKey && editingCell) {
-                const [fy, q] = editingCell.split('-Q');
-                const quarterNum = parseInt(q);
-
-                // Find months in this quarter
-                const monthsInQuarter = updatedForecasts.filter(m => m.fiscalYear === fy && m.quarter === quarterNum);
-                if (monthsInQuarter.length > 0) {
-                    const diff = newValue - monthsInQuarter.reduce((sum, m) => sum + m.forecastAmount, 0);
-                    const splitDiff = diff / monthsInQuarter.length;
-
-                    updatedForecasts = updatedForecasts.map(m => {
-                        if (m.fiscalYear === fy && m.quarter === quarterNum) {
-                            return { ...m, forecastAmount: m.forecastAmount + splitDiff, variance: 0, modifiedBy: 'User' };
-                        }
-                        return m;
-                    });
-                }
-            } else {
-                // Assume it's a month ID
-                updatedForecasts = updatedForecasts.map(m => {
-                    if (m.id === editingCell || m.period === editingCell) { // Check both ID formats just in case
-                        return { ...m, forecastAmount: newValue, variance: 0, modifiedBy: 'User' };
-                    }
-                    return m;
-                });
-            }
 
             return {
                 ...oldData,
@@ -286,6 +281,24 @@ export default function ForecastManagementPage() {
         });
 
         setEditingCell(null);
+    };
+
+    const handleSaveUplift = () => {
+        // Commit the form values to the applied state
+        setAppliedUpliftFactors(upliftFactors);
+        setUpliftOpen(false);
+        toast.success("Forecast uplift applied successfully.");
+    };
+
+    const handleOpenUplift = () => {
+        // Reset form values to match currently applied values
+        setUpliftFactors(appliedUpliftFactors);
+        setUpliftOpen(true);
+    };
+
+    const getUpliftedAmount = (amount: number) => {
+        const totalPct = (appliedUpliftFactors.price.pct || 0) + (appliedUpliftFactors.volume.pct || 0) + (appliedUpliftFactors.expansion.pct || 0);
+        return amount * (1 + totalPct / 100);
     };
 
     return (
@@ -303,6 +316,46 @@ export default function ForecastManagementPage() {
                             Term: {new Date(data.startDate).toLocaleDateString()} - {new Date(data.endDate).toLocaleDateString()}
                         </p>
                     </div>
+                </div>
+
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-gray-500">Total Forecast</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{formatCurrency(data.monthlyForecasts.reduce((sum, m) => sum + m.forecastAmount, 0))}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-gray-500">Actuals to Date</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{formatCurrency(data.monthlyForecasts.reduce((sum, m) => sum + (m.actualAmount || 0), 0))}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-gray-500">Remaining Forecast</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">
+                                {formatCurrency(data.monthlyForecasts
+                                    .filter(m => !m.actualAmount)
+                                    .reduce((sum, m) => sum + m.forecastAmount, 0))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-gray-500">Saving %</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-green-600">±2.3%</div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 {/* Action Bar */}
@@ -331,23 +384,22 @@ export default function ForecastManagementPage() {
                         </Button>
                     </div>
 
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                            <Copy className="w-4 h-4 mr-1" /> Copy Prior Period
-                        </Button>
-                        <Button variant="outline" size="sm">
-                            <TrendingUp className="w-4 h-4 mr-1" /> Apply Uplift %
-                        </Button>
-                        <Button variant="outline" size="sm">
-                            <Download className="w-4 h-4 mr-1" /> Export
-                        </Button>
-                        <Button variant="outline" size="sm">
-                            <Upload className="w-4 h-4 mr-1" /> Import
-                        </Button>
-                        <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                            Save Changes
-                        </Button>
-                    </div>
+                    {granularity === 'monthly' && (
+                        <div className="flex gap-2">
+                            <Button variant="outline" size="sm" onClick={handleOpenUplift}>
+                                <TrendingUp className="w-4 h-4 mr-1" /> Apply Uplift %
+                            </Button>
+                            <Button variant="outline" size="sm">
+                                <Download className="w-4 h-4 mr-1" /> Export
+                            </Button>
+                            <Button variant="outline" size="sm">
+                                <Upload className="w-4 h-4 mr-1" /> Import
+                            </Button>
+                            <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                                Save Changes
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -362,9 +414,10 @@ export default function ForecastManagementPage() {
                                     <thead>
                                         <tr>
                                             <HeaderCell className="w-24">Period</HeaderCell>
-                                            <HeaderCell>Forecast</HeaderCell>
-                                            <HeaderCell>Actual</HeaderCell>
                                             <HeaderCell>Commit</HeaderCell>
+                                            <HeaderCell>Actual</HeaderCell>
+                                            <HeaderCell>Forecast</HeaderCell>
+                                            <HeaderCell>Forecast with uplift</HeaderCell>
                                             <HeaderCell>Variance %</HeaderCell>
                                             <HeaderCell>Status</HeaderCell>
                                             <HeaderCell className="w-16">Actions</HeaderCell>
@@ -375,26 +428,10 @@ export default function ForecastManagementPage() {
                                             <React.Fragment key={quarter.label}>
                                                 <tr className="bg-white hover:bg-gray-50">
                                                     <DataCell className="font-semibold bg-blue-50">{quarter.label}</DataCell>
-                                                    <DataCell
-                                                        editable={quarter.status !== 'locked'}
-                                                        onClick={() => quarter.status !== 'locked' && handleCellEdit(quarter.label, quarter.amount)}
-                                                    >
-                                                        {editingCell === quarter.label ? (
-                                                            <input
-                                                                type="number"
-                                                                value={editValue}
-                                                                onChange={(e) => setEditValue(e.target.value)}
-                                                                onBlur={saveEdit}
-                                                                onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
-                                                                className="w-full px-2 py-1 border rounded"
-                                                                autoFocus
-                                                            />
-                                                        ) : (
-                                                            formatCurrency(quarter.amount)
-                                                        )}
-                                                    </DataCell>
-                                                    <DataCell>{quarter.actual > 0 ? formatCurrency(quarter.actual) : '-'}</DataCell>
                                                     <DataCell>{formatCurrency(quarter.commit)}</DataCell>
+                                                    <DataCell>{quarter.actual > 0 ? formatCurrency(quarter.actual) : '-'}</DataCell>
+                                                    <DataCell>{formatCurrency(quarter.amount)}</DataCell>
+                                                    <DataCell>{formatCurrency(getUpliftedAmount(quarter.amount))}</DataCell>
                                                     <DataCell variance={quarter.variance}>
                                                         <div className="flex items-center justify-center gap-1">
                                                             {getVarianceIcon(quarter.variance)}
@@ -426,27 +463,11 @@ export default function ForecastManagementPage() {
                                                 {expandedQuarters.has(quarter.label) && quarter.months.sort((a, b) => a.period.localeCompare(b.period)).map(m => (
                                                     <tr key={m.id} className="bg-gray-50 text-xs">
                                                         <DataCell className="pl-8 text-left bg-blue-50/50">{m.periodLabel}</DataCell>
-                                                        <DataCell
-                                                            editable={m.status !== 'locked'}
-                                                            onClick={() => m.status !== 'locked' && handleCellEdit(m.id, m.forecastAmount)}
-                                                        >
-                                                            {editingCell === m.id ? (
-                                                                <input
-                                                                    type="number"
-                                                                    value={editValue}
-                                                                    onChange={(e) => setEditValue(e.target.value)}
-                                                                    onBlur={saveEdit}
-                                                                    onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
-                                                                    className="w-full px-2 py-1 border rounded"
-                                                                    autoFocus
-                                                                />
-                                                            ) : (
-                                                                formatCurrency(m.forecastAmount)
-                                                            )}
-                                                        </DataCell>
-                                                        <DataCell>{m.actualAmount ? formatCurrency(m.actualAmount) : '-'}</DataCell>
                                                         <DataCell>{formatCurrency(m.commitAmount)}</DataCell>
-                                                        <DataCell variance={m.variance}>{m.variance.toFixed(1)}%</DataCell>
+                                                        <DataCell>{m.actualAmount ? formatCurrency(m.actualAmount) : '-'}</DataCell>
+                                                        <DataCell>{formatCurrency(m.forecastAmount)}</DataCell>
+                                                        <DataCell>{formatCurrency(getUpliftedAmount(m.forecastAmount))}</DataCell>
+                                                        <DataCell variance={calculateVariance(m.forecastAmount, m.actualAmount)}>{calculateVariance(m.forecastAmount, m.actualAmount).toFixed(1)}%</DataCell>
                                                         <DataCell>
                                                             <span className={`px-2 py-0.5 rounded text-[10px] ${m.status === 'locked' ? 'bg-gray-200' : 'bg-green-100'
                                                                 }`}>
@@ -468,9 +489,10 @@ export default function ForecastManagementPage() {
                                     <thead>
                                         <tr>
                                             <HeaderCell>Year</HeaderCell>
-                                            <HeaderCell>Forecast</HeaderCell>
-                                            <HeaderCell>Actual</HeaderCell>
                                             <HeaderCell>Commit</HeaderCell>
+                                            <HeaderCell>Actual</HeaderCell>
+                                            <HeaderCell>Forecast</HeaderCell>
+                                            <HeaderCell>Forecast with uplift</HeaderCell>
                                             <HeaderCell>Variance %</HeaderCell>
                                         </tr>
                                     </thead>
@@ -478,9 +500,10 @@ export default function ForecastManagementPage() {
                                         {sortedYears.map((year) => (
                                             <tr key={year.label} className="bg-white hover:bg-gray-50">
                                                 <DataCell className="font-semibold bg-blue-50">{year.label}</DataCell>
-                                                <DataCell>{formatCurrency(year.amount)}</DataCell>
-                                                <DataCell>{year.actual > 0 ? formatCurrency(year.actual) : '-'}</DataCell>
                                                 <DataCell>{formatCurrency(year.commit)}</DataCell>
+                                                <DataCell>{year.actual > 0 ? formatCurrency(year.actual) : '-'}</DataCell>
+                                                <DataCell>{formatCurrency(year.amount)}</DataCell>
+                                                <DataCell>{formatCurrency(getUpliftedAmount(year.amount))}</DataCell>
                                                 <DataCell variance={year.variance}>{year.variance.toFixed(1)}%</DataCell>
                                             </tr>
                                         ))}
@@ -494,9 +517,10 @@ export default function ForecastManagementPage() {
                                     <thead>
                                         <tr>
                                             <HeaderCell>Month</HeaderCell>
-                                            <HeaderCell>Forecast</HeaderCell>
-                                            <HeaderCell>Actual</HeaderCell>
                                             <HeaderCell>Commit</HeaderCell>
+                                            <HeaderCell>Actual</HeaderCell>
+                                            <HeaderCell>Forecast</HeaderCell>
+                                            <HeaderCell>Forecast with uplift</HeaderCell>
                                             <HeaderCell>Variance %</HeaderCell>
                                             <HeaderCell>Status</HeaderCell>
                                             <HeaderCell>Basis</HeaderCell>
@@ -506,11 +530,34 @@ export default function ForecastManagementPage() {
                                         {data.monthlyForecasts.map(m => (
                                             <tr key={m.id} className="bg-white hover:bg-gray-50">
                                                 <DataCell className="font-medium bg-blue-50">{m.periodLabel}</DataCell>
+                                                {/* COMMIT - Editable */}
                                                 <DataCell
                                                     editable={m.status !== 'locked'}
-                                                    onClick={() => m.status !== 'locked' && handleCellEdit(m.id, m.forecastAmount)}
+                                                    onClick={() => m.status !== 'locked' && handleCellEdit(m.id, 'commit', m.commitAmount)}
                                                 >
-                                                    {editingCell === m.id ? (
+                                                    {editingCell === `${m.id}:commit` ? (
+                                                        <input
+                                                            type="number"
+                                                            value={editValue}
+                                                            onChange={(e) => setEditValue(e.target.value)}
+                                                            onBlur={saveEdit}
+                                                            onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
+                                                            className="w-full px-2 py-1 border rounded"
+                                                            autoFocus
+                                                        />
+                                                    ) : (
+                                                        formatCurrency(m.commitAmount)
+                                                    )}
+                                                </DataCell>
+
+                                                <DataCell>{m.actualAmount ? formatCurrency(m.actualAmount) : '-'}</DataCell>
+
+                                                {/* FORECAST - Editable */}
+                                                <DataCell
+                                                    editable={m.status !== 'locked'}
+                                                    onClick={() => m.status !== 'locked' && handleCellEdit(m.id, 'forecast', m.forecastAmount)}
+                                                >
+                                                    {editingCell === `${m.id}:forecast` ? (
                                                         <input
                                                             type="number"
                                                             value={editValue}
@@ -524,9 +571,8 @@ export default function ForecastManagementPage() {
                                                         formatCurrency(m.forecastAmount)
                                                     )}
                                                 </DataCell>
-                                                <DataCell>{m.actualAmount ? formatCurrency(m.actualAmount) : '-'}</DataCell>
-                                                <DataCell>{formatCurrency(m.commitAmount)}</DataCell>
-                                                <DataCell variance={m.variance}>{m.variance.toFixed(1)}%</DataCell>
+                                                <DataCell>{formatCurrency(getUpliftedAmount(m.forecastAmount))}</DataCell>
+                                                <DataCell variance={calculateVariance(m.forecastAmount, m.actualAmount)}>{calculateVariance(m.forecastAmount, m.actualAmount).toFixed(1)}%</DataCell>
                                                 <DataCell>
                                                     <span className={`px-2 py-1 rounded text-xs ${m.status === 'locked' ? 'bg-gray-200' : 'bg-green-100'
                                                         }`}>
@@ -534,7 +580,7 @@ export default function ForecastManagementPage() {
                                                     </span>
                                                 </DataCell>
                                                 <DataCell>
-                                                    <span className={`text-xs ${m.basis === 'committed' ? 'text-blue-600' :
+                                                    <span className={`text-xs ${m.basis === 'approved' ? 'text-blue-600' :
                                                         m.basis === 'manual' ? 'text-purple-600' : 'text-gray-600'
                                                         }`}>
                                                         {m.basis}
@@ -550,45 +596,98 @@ export default function ForecastManagementPage() {
                 </CardContent>
             </Card>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Total Forecast</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{formatCurrency(data.monthlyForecasts.reduce((sum, m) => sum + m.forecastAmount, 0))}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Actuals to Date</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{formatCurrency(data.monthlyForecasts.reduce((sum, m) => sum + (m.actualAmount || 0), 0))}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Remaining Forecast</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {formatCurrency(data.monthlyForecasts
-                                .filter(m => !m.actualAmount)
-                                .reduce((sum, m) => sum + m.forecastAmount, 0))}
+
+            <Dialog open={upliftOpen} onOpenChange={setUpliftOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Apply Forecast Uplift</DialogTitle>
+                        <DialogDescription>
+                            Enter percentage uplifts and reasons. These will be applied to the current forecast.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        {/* Price Uplift */}
+                        <div className="grid gap-2">
+                            <Label htmlFor="price-pct" className="font-semibold">Price Uplift</Label>
+                            <div className="grid grid-cols-3 gap-2">
+                                <div className="col-span-1">
+                                    <Label htmlFor="price-pct" className="text-xs text-gray-500">Percentage (%)</Label>
+                                    <Input
+                                        id="price-pct"
+                                        type="number"
+                                        value={upliftFactors.price.pct}
+                                        onChange={(e) => setUpliftFactors({ ...upliftFactors, price: { ...upliftFactors.price, pct: parseFloat(e.target.value) || 0 } })}
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <Label htmlFor="price-reason" className="text-xs text-gray-500">Reason</Label>
+                                    <Input
+                                        id="price-reason"
+                                        value={upliftFactors.price.reason}
+                                        onChange={(e) => setUpliftFactors({ ...upliftFactors, price: { ...upliftFactors.price, reason: e.target.value } })}
+                                        placeholder="e.g. Inflation"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Avg Variance</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-green-600">±2.3%</div>
-                    </CardContent>
-                </Card>
-            </div>
+
+                        {/* Volume Uplift */}
+                        <div className="grid gap-2">
+                            <Label htmlFor="volume-pct" className="font-semibold">Volume Uplift</Label>
+                            <div className="grid grid-cols-3 gap-2">
+                                <div className="col-span-1">
+                                    <Label htmlFor="volume-pct" className="text-xs text-gray-500">Percentage (%)</Label>
+                                    <Input
+                                        id="volume-pct"
+                                        type="number"
+                                        value={upliftFactors.volume.pct}
+                                        onChange={(e) => setUpliftFactors({ ...upliftFactors, volume: { ...upliftFactors.volume, pct: parseFloat(e.target.value) || 0 } })}
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <Label htmlFor="volume-reason" className="text-xs text-gray-500">Reason</Label>
+                                    <Input
+                                        id="volume-reason"
+                                        value={upliftFactors.volume.reason}
+                                        onChange={(e) => setUpliftFactors({ ...upliftFactors, volume: { ...upliftFactors.volume, reason: e.target.value } })}
+                                        placeholder="e.g. Business Growth"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Expansion Uplift */}
+                        <div className="grid gap-2">
+                            <Label htmlFor="expansion-pct" className="font-semibold">Expansion Uplift</Label>
+                            <div className="grid grid-cols-3 gap-2">
+                                <div className="col-span-1">
+                                    <Label htmlFor="expansion-pct" className="text-xs text-gray-500">Percentage (%)</Label>
+                                    <Input
+                                        id="expansion-pct"
+                                        type="number"
+                                        value={upliftFactors.expansion.pct}
+                                        onChange={(e) => setUpliftFactors({ ...upliftFactors, expansion: { ...upliftFactors.expansion, pct: parseFloat(e.target.value) || 0 } })}
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <Label htmlFor="expansion-reason" className="text-xs text-gray-500">Reason</Label>
+                                    <Input
+                                        id="expansion-reason"
+                                        value={upliftFactors.expansion.reason}
+                                        onChange={(e) => setUpliftFactors({ ...upliftFactors, expansion: { ...upliftFactors.expansion, reason: e.target.value } })}
+                                        placeholder="e.g. New Markets"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setUpliftOpen(false)}>Cancel</Button>
+                        <Button onClick={handleSaveUplift}>Save Uplift</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }

@@ -8,27 +8,27 @@ export async function GET() {
         "success": true,
         "status": "OK",
         "moduleDataList": [
+            // {
+            //     "id": "xxxxxxxxxxxxxxxxxxx",
+            //     "moduleName": "Bulk Upload/Download",
+            //     "moduleDescription": "Here you can bulk upload & download Artifacts, Datasets",
+            //     "moduleImagePath": "/assets/images/Bulk_upload.jpg",
+            //     "moduleUri": "/home/bulkupload",
+            //     "moduleIsDisabled": false,
+            //     "moduleIsHeight": true,
+            //     "modulePositionSequence": 2,
+            //     "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Bulk Upload' }",
+            //     "roleAccessLevels": [
+            //         {
+            //             "roleName": "Administrator",
+            //             "accessLevel": "Admin",
+            //             "priority": 3
+            //         }
+            //     ]
+            // },
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
-                "moduleName": "Bulk Upload/Download",
-                "moduleDescription": "Here you can bulk upload & download Artifacts, Datasets",
-                "moduleImagePath": "/assets/images/Bulk_upload.jpg",
-                "moduleUri": "/home/bulkupload",
-                "moduleIsDisabled": false,
-                "moduleIsHeight": true,
-                "modulePositionSequence": 2,
-                "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Bulk Upload' }",
-                "roleAccessLevels": [
-                    {
-                        "roleName": "Administrator",
-                        "accessLevel": "Admin",
-                        "priority": 3
-                    }
-                ]
-            },
-            {
-                "id": "xxxxxxxxxxxxxxxxxxx",
-                "moduleName": "Enterprise Software Portfolio",
+                "moduleName": "Inbound Purchase Order",
                 "moduleDescription": "Available PO data to be ADDed, RENEWed, IGNORed",
                 "moduleImagePath": "/assets/images/enterpriseSoftwarePortfolio.png",
                 "moduleUri": "/home/viewasset",
@@ -44,24 +44,24 @@ export async function GET() {
                     }
                 ]
             },
-            {
-                "id": "xxxxxxxxxxxxxxxxxxx",
-                "moduleName": "Purchase Order Processing",
-                "moduleDescription": "Available PO data to ADD, RENEW or IGNORE for Portfolio View \n \n",
-                "moduleImagePath": "/assets/images/poProcessing.jpg",
-                "moduleUri": "/home/snowFlakePoView",
-                "moduleIsDisabled": false,
-                "moduleIsHeight": true,
-                "modulePositionSequence": 4,
-                "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Purchase Order Processing' }",
-                "roleAccessLevels": [
-                    {
-                        "roleName": "Administrator",
-                        "accessLevel": "Admin",
-                        "priority": 3
-                    }
-                ]
-            },
+            // {
+            //     "id": "xxxxxxxxxxxxxxxxxxx",
+            //     "moduleName": "Purchase Order Processing",
+            //     "moduleDescription": "Available PO data to ADD, RENEW or IGNORE for Portfolio View \n \n",
+            //     "moduleImagePath": "/assets/images/poProcessing.jpg",
+            //     "moduleUri": "/home/snowFlakePoView",
+            //     "moduleIsDisabled": false,
+            //     "moduleIsHeight": true,
+            //     "modulePositionSequence": 4,
+            //     "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Purchase Order Processing' }",
+            //     "roleAccessLevels": [
+            //         {
+            //             "roleName": "Administrator",
+            //             "accessLevel": "Admin",
+            //             "priority": 3
+            //         }
+            //     ]
+            // },
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
                 "moduleName": "Enterprise Software Portfolio New",
