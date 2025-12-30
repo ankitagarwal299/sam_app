@@ -44,34 +44,16 @@ export async function GET() {
                     }
                 ]
             },
-            // {
-            //     "id": "xxxxxxxxxxxxxxxxxxx",
-            //     "moduleName": "Purchase Order Processing",
-            //     "moduleDescription": "Available PO data to ADD, RENEW or IGNORE for Portfolio View \n \n",
-            //     "moduleImagePath": "/assets/images/poProcessing.jpg",
-            //     "moduleUri": "/home/snowFlakePoView",
-            //     "moduleIsDisabled": false,
-            //     "moduleIsHeight": true,
-            //     "modulePositionSequence": 4,
-            //     "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Purchase Order Processing' }",
-            //     "roleAccessLevels": [
-            //         {
-            //             "roleName": "Administrator",
-            //             "accessLevel": "Admin",
-            //             "priority": 3
-            //         }
-            //     ]
-            // },
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
                 "moduleName": "Enterprise Software Portfolio New",
                 "moduleDescription": "Baseline and Forecast financial data for expected Enterprise S/W Spend & Pipeline",
-                "moduleImagePath": "/assets/images/enterpriseSoftwarePortfolio.png",
-                "moduleUri": "/home/viewassetnew",
+                "moduleImagePath": "/assets/images/poProcessing.jpg",
+                "moduleUri": "/home/snowFlakePoView",
                 "moduleIsDisabled": false,
                 "moduleIsHeight": true,
-                "modulePositionSequence": 15,
-                "moduleAttribute": "",
+                "modulePositionSequence": 4,
+                "moduleAttribute": "{ 'attributeGroupId': '', 'attributeGroupName': 'Purchase Order Processing' }",
                 "roleAccessLevels": [
                     {
                         "roleName": "Administrator",
@@ -80,6 +62,24 @@ export async function GET() {
                     }
                 ]
             },
+            // {
+            //     "id": "xxxxxxxxxxxxxxxxxxx",
+            //     "moduleName": "Enterprise Software Portfolio New",
+            //     "moduleDescription": "Baseline and Forecast financial data for expected Enterprise S/W Spend & Pipeline",
+            //     "moduleImagePath": "/assets/images/enterpriseSoftwarePortfolio.png",
+            //     "moduleUri": "/home/viewassetnew",
+            //     "moduleIsDisabled": false,
+            //     "moduleIsHeight": true,
+            //     "modulePositionSequence": 15,
+            //     "moduleAttribute": "",
+            //     "roleAccessLevels": [
+            //         {
+            //             "roleName": "Administrator",
+            //             "accessLevel": "Admin",
+            //             "priority": 3
+            //         }
+            //     ]
+            // },
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
                 "moduleName": "Financial Analysts PO Portfolio",
@@ -103,7 +103,7 @@ export async function GET() {
                 "moduleName": "Portfolio View for Leaders",
                 "moduleDescription": "Executive summary of in-year spend across organization levels and funding sources.",
                 "moduleImagePath": "/assets/images/leadersView.jpg",
-                "moduleUri": "/home/financialAnalystsPortfolio/leaders",
+                "moduleUri": "/home/portfolioViewleaders",
                 "moduleIsDisabled": false,
                 "moduleIsHeight": false,
                 "modulePositionSequence": 16,

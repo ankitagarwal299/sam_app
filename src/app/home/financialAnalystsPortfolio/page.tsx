@@ -20,8 +20,9 @@ interface FinancialPortfolioData {
         actuals: { mtd: number; qtd: number; ytd: number };
         variance: number;
     };
-    // pos: PO[]; // Removed, fetched separately
     forecastMatrix: ForecastRow[];
+    commitMatrix: ForecastRow[];
+    actualsMatrix: ForecastRow[];
     actuals: ActualRow[];
     renewals: RenewalRow[];
 }
@@ -390,15 +391,15 @@ export default function FinancialAnalystPortfolio() {
                 <KpiCard title="Variance" value={portfolioData.kpis.variance} icon={<AlertCircle className="h-4 w-4 text-red-500" />} trend={portfolioData.kpis.variance > 0 ? 'negative' : 'positive'} />
             </div>
 
+
             {/* Main Content Tabs */}
             <Tabs defaultValue="pos" className="w-full">
-                <TabsList className="grid w-full grid-cols-6 lg:w-[600px]">
+                <TabsList className="grid w-full grid-cols-5 lg:w-[500px]">
                     <TabsTrigger value="pos">POs</TabsTrigger>
                     <TabsTrigger value="forecast">Forecast</TabsTrigger>
                     <TabsTrigger value="commit">Commit</TabsTrigger>
                     <TabsTrigger value="actuals">Actuals</TabsTrigger>
                     <TabsTrigger value="renewals">Renewals</TabsTrigger>
-                    <TabsTrigger value="charts">Charts</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="pos" className="mt-6">
@@ -414,46 +415,27 @@ export default function FinancialAnalystPortfolio() {
 
                 <TabsContent value="forecast" className="mt-6">
                     <Card className="border-none shadow-sm">
-                        <CardHeader><CardTitle>Forecast Matrix (72 Months)</CardTitle></CardHeader>
+                        <CardHeader><CardTitle>Forecast Matrix (2025-2026)</CardTitle></CardHeader>
                         <CardContent>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm text-left">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th className="px-6 py-3">PO Number</th>
-                                            {/* Simplified headers for demo */}
-                                            <th className="px-6 py-3">2024-Q1</th>
-                                            <th className="px-6 py-3">2024-Q2</th>
-                                            <th className="px-6 py-3">2024-Q3</th>
-                                            <th className="px-6 py-3">2024-Q4</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {portfolioData.forecastMatrix.map((row) => (
-                                            <tr key={row.poNumber} className="bg-white border-b hover:bg-gray-50">
-                                                <td className="px-6 py-4 font-medium text-gray-900">{row.poNumber}</td>
-                                                <td className="px-6 py-4">{formatCurrency(row.buckets['2024-Q1'] || 0)}</td>
-                                                <td className="px-6 py-4">{formatCurrency(row.buckets['2024-Q2'] || 0)}</td>
-                                                <td className="px-6 py-4">{formatCurrency(row.buckets['2024-Q3'] || 0)}</td>
-                                                <td className="px-6 py-4">{formatCurrency(row.buckets['2024-Q4'] || 0)}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                            <FinancialMatrixTable data={portfolioData.forecastMatrix} />
                         </CardContent>
                     </Card>
                 </TabsContent>
 
                 <TabsContent value="commit" className="mt-6">
-                    <div className="p-4 text-center text-gray-500">Commit functionality coming soon.</div>
+                    <Card className="border-none shadow-sm">
+                        <CardHeader><CardTitle>Commit Matrix (2025-2026)</CardTitle></CardHeader>
+                        <CardContent>
+                            <FinancialMatrixTable data={portfolioData.commitMatrix} />
+                        </CardContent>
+                    </Card>
                 </TabsContent>
 
                 <TabsContent value="actuals" className="mt-6">
                     <Card className="border-none shadow-sm">
-                        <CardHeader><CardTitle>Actuals Feed</CardTitle></CardHeader>
+                        <CardHeader><CardTitle>Actuals Matrix (2025-2026)</CardTitle></CardHeader>
                         <CardContent>
-                            <DataTable columns={actualColumns} data={portfolioData.actuals} />
+                            <FinancialMatrixTable data={portfolioData.actualsMatrix} />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -466,52 +448,42 @@ export default function FinancialAnalystPortfolio() {
                         </CardContent>
                     </Card>
                 </TabsContent>
-
-                <TabsContent value="charts" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Card className="border-none shadow-sm">
-                            <CardHeader><CardTitle>Forecast vs Actuals (Burn-up)</CardTitle></CardHeader>
-                            <CardContent>
-                                <div className="h-64 flex items-end justify-between gap-2 px-4 border-b border-l border-gray-200 relative">
-                                    {/* Simple CSS Bar Chart */}
-                                    {[40, 55, 65, 80, 95, 100].map((h, i) => (
-                                        <div key={i} className="w-full bg-blue-100 rounded-t-sm relative group">
-                                            <div className="absolute bottom-0 w-full bg-blue-500 rounded-t-sm transition-all duration-500" style={{ height: `${h}%` }}></div>
-                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                                {h}%
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex justify-between mt-2 text-xs text-gray-500 px-4">
-                                    <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="border-none shadow-sm">
-                            <CardHeader><CardTitle>Variance Waterfall</CardTitle></CardHeader>
-                            <CardContent>
-                                <div className="h-64 flex items-center justify-center text-gray-400">
-                                    <div className="text-center">
-                                        <div className="flex items-end gap-4 h-40">
-                                            <div className="w-16 bg-green-500 h-32 rounded-t"></div>
-                                            <div className="w-16 bg-red-400 h-12 rounded-t mb-20"></div>
-                                            <div className="w-16 bg-blue-500 h-24 rounded-t"></div>
-                                        </div>
-                                        <p className="mt-4">Budget vs Spend vs Forecast</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </TabsContent>
             </Tabs>
         </div>
     );
 }
 
 // --- Helper Components & Functions ---
+
+function FinancialMatrixTable({ data }: { data: ForecastRow[] }) {
+    const quarters = ['2025-Q1', '2025-Q2', '2025-Q3', '2025-Q4', '2026-Q1', '2026-Q2', '2026-Q3', '2026-Q4'];
+    return (
+        <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+                    <tr>
+                        <th className="px-6 py-4 min-w-[150px] font-bold">PO Number</th>
+                        {quarters.map(q => (
+                            <th key={q} className="px-6 py-4 font-bold">{q}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((row) => (
+                        <tr key={row.poNumber} className="bg-white border-b hover:bg-gray-50 transition-colors">
+                            <td className="px-6 py-4 font-semibold text-blue-600">
+                                <Link href={`/home/financialAnalystsPortfolio/${row.poNumber}`}>{row.poNumber}</Link>
+                            </td>
+                            {quarters.map(q => (
+                                <td key={q} className="px-6 py-4 text-gray-600">{formatCurrency(row.buckets[q] || 0)}</td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+}
 
 function KpiCard({ title, value, subValue, icon, trend }: { title: string, value: number, subValue?: string, icon: React.ReactNode, trend?: 'positive' | 'negative' }) {
     return (

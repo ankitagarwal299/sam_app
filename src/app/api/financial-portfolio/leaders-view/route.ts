@@ -58,10 +58,27 @@ export async function GET() {
         acv: 365000000
     };
 
+    // Bubble Chart Data: Months on X-axis, PO Amount on Y-axis, TCV as bubble size
+    const bubbleChartData = [
+        { month: 'Jan', poAmount: 45000000, tcv: 85000000, tier: 'mega', label: 'Cloud Migration Phase 1' },
+        { month: 'Feb', poAmount: 28000000, tcv: 42000000, tier: 'platinum', label: 'Security Infrastructure' },
+        { month: 'Mar', poAmount: 62000000, tcv: 120000000, tier: 'mega', label: 'Enterprise Platform Upgrade' },
+        { month: 'Apr', poAmount: 18000000, tcv: 28000000, tier: 'gold', label: 'Data Center Optimization' },
+        { month: 'May', poAmount: 35000000, tcv: 55000000, tier: 'platinum', label: 'Network Modernization' },
+        { month: 'Jun', poAmount: 52000000, tcv: 95000000, tier: 'mega', label: 'AI/ML Infrastructure' },
+        { month: 'Jul', poAmount: 22000000, tcv: 32000000, tier: 'gold', label: 'DevOps Tooling' },
+        { month: 'Aug', poAmount: 15000000, tcv: 22000000, tier: 'silver', label: 'Collaboration Suite' },
+        { month: 'Sep', poAmount: 48000000, tcv: 78000000, tier: 'platinum', label: 'Customer Analytics Platform' },
+        { month: 'Oct', poAmount: 8000000, tcv: 12000000, tier: 'bronze', label: 'Monitoring Tools' },
+        { month: 'Nov', poAmount: 38000000, tcv: 65000000, tier: 'platinum', label: 'Identity Management' },
+        { month: 'Dec', poAmount: 72000000, tcv: 150000000, tier: 'mega', label: 'Multi-Cloud Strategy Q4' },
+    ];
+
     return NextResponse.json({
         level4Spend,
         level5Spend,
         fundingSource,
-        metrics
+        metrics,
+        bubbleChartData
     });
 }

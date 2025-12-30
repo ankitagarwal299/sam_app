@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
+import { generatePOFinancials } from '@/lib/mock-financial-data';
 
 export async function GET() {
+    // In a real app, we'd fetch these from a database
+    const poIds = ["PO-001", "PO-002", "PO-003", "PO-004", "PO-005", "PO-2024-001", "PO-2024-002"];
+
+    const financialData = poIds.map(id => generatePOFinancials(id));
+
     const data = {
         kpis: {
             totalAnnualizedSpend: 12500000,
@@ -9,73 +15,52 @@ export async function GET() {
             actuals: { mtd: 1000000, qtd: 3000000, ytd: 9000000 },
             variance: 500000,
         },
-        pos: [
-            {
-                poNumber: "PO-2024-001",
-                vendor: "Microsoft",
-                application: "Azure",
-                term: "36 Months",
-                startDate: "2024-01-01",
-                endDate: "2026-12-31",
-                amount: 3600000,
-                ownership: "John Doe",
-                status: "Active",
-            },
-            {
-                poNumber: "PO-2024-002",
-                vendor: "Salesforce",
-                application: "Sales Cloud",
-                term: "12 Months",
-                startDate: "2024-04-01",
-                endDate: "2025-03-31",
-                amount: 1200000,
-                ownership: "Jane Smith",
-                status: "Active",
-            },
-            {
-                poNumber: "PO-2024-003",
-                vendor: "Adobe",
-                application: "Creative Cloud",
-                term: "24 Months",
-                startDate: "2023-06-01",
-                endDate: "2025-05-31",
-                amount: 500000,
-                ownership: "John Doe",
-                status: "Review",
-            },
-            {
-                poNumber: "PO-2024-004",
-                vendor: "Slack",
-                application: "Enterprise Grid",
-                term: "12 Months",
-                startDate: "2024-01-01",
-                endDate: "2024-12-31",
-                amount: 800000,
-                ownership: "Mike Johnson",
-                status: "Active",
-            },
-            {
-                poNumber: "PO-2024-005",
-                vendor: "Zoom",
-                application: "Zoom Meetings",
-                term: "12 Months",
-                startDate: "2024-02-01",
-                endDate: "2025-01-31",
-                amount: 200000,
-                ownership: "Jane Smith",
-                status: "Pending Renewal",
+        forecastMatrix: financialData.map(f => ({
+            poNumber: f.poNumber,
+            buckets: {
+                "2025-Q1": f.forecast['FY26'].q1,
+                "2025-Q2": f.forecast['FY26'].q2,
+                "2025-Q3": f.forecast['FY26'].q3,
+                "2025-Q4": f.forecast['FY26'].q4,
+                "2026-Q1": f.forecast['FY27'].q1,
+                "2026-Q2": f.forecast['FY27'].q2,
+                "2026-Q3": f.forecast['FY27'].q3,
+                "2026-Q4": f.forecast['FY27'].q4,
             }
-        ],
-        forecastMatrix: [
-            { poNumber: "PO-2024-001", buckets: { "2024-Q1": 300000, "2024-Q2": 300000, "2024-Q3": 300000, "2024-Q4": 300000 } },
-            { poNumber: "PO-2024-002", buckets: { "2024-Q1": 0, "2024-Q2": 300000, "2024-Q3": 300000, "2024-Q4": 300000 } }
-        ],
+        })),
+        commitMatrix: financialData.map(f => ({
+            poNumber: f.poNumber,
+            buckets: {
+                "2025-Q1": f.commit['FY26'].q1,
+                "2025-Q2": f.commit['FY26'].q2,
+                "2025-Q3": f.commit['FY26'].q3,
+                "2025-Q4": f.commit['FY26'].q4,
+                "2026-Q1": f.commit['FY27'].q1,
+                "2026-Q2": f.commit['FY27'].q2,
+                "2026-Q3": f.commit['FY27'].q3,
+                "2026-Q4": f.commit['FY27'].q4,
+            }
+        })),
+        actualsMatrix: financialData.map(f => ({
+            poNumber: f.poNumber,
+            buckets: {
+                "2025-Q1": f.actuals['FY26'].q1,
+                "2025-Q2": f.actuals['FY26'].q2,
+                "2025-Q3": f.actuals['FY26'].q3,
+                "2025-Q4": f.actuals['FY26'].q4,
+                "2026-Q1": f.actuals['FY27'].q1,
+                "2026-Q2": f.actuals['FY27'].q2,
+                "2026-Q3": f.actuals['FY27'].q3,
+                "2026-Q4": f.actuals['FY27'].q4,
+            }
+        })),
+        // Keep these for the data tables that expect a flat list
         actuals: [
             { date: "2024-01-15", poNumber: "PO-2024-001", amount: 100000, account: "Software-Licensing" },
             { date: "2024-02-15", poNumber: "PO-2024-001", amount: 100000, account: "Software-Licensing" }
         ],
         renewals: [
-            { poNumber: "PO-2024-005", nextRenewalDate: "2025-01-31", expectedQuantity: 500, unitPrice: 400, term: "12 Months", risk: "Low", notes: "Standard renewal" }
+            { poNumber: "PO-005", nextRenewalDate: "2025-01-31", expectedQuantity: 500, unitPrice: 400, term: "12 Months", risk: "Low", notes: "Standard renewal" }
         ]
     };
 

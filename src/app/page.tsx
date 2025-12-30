@@ -55,12 +55,29 @@ export default function LandingPage() {
   // Sort by sequence
   const modules = data?.moduleDataList.sort((a, b) => a.modulePositionSequence - b.modulePositionSequence);
 
+  // Manual injection of GL Reconciliation Module
+  const glModule: ModuleData = {
+    id: 'gl-rec-module-001',
+    moduleName: 'GL Reconciliation',
+    moduleDescription: 'Reconcile General Ledger Actuals with Purchase Order Forecasts per Fiscal Period.',
+    moduleImagePath: '',
+    moduleUri: '/home/gl-reconciliation',
+    moduleIsDisabled: false,
+    moduleIsHeight: false,
+    modulePositionSequence: 99,
+  };
+
+  if (modules && !modules.find(m => m.moduleName === 'GL Reconciliation')) {
+    modules.push(glModule);
+  }
+
   // Helper to get icon based on name (since we don't have real images)
   const getIcon = (name: string) => {
     if (name.includes('Bulk')) return <Upload className="h-8 w-8 text-blue-500" />;
     if (name.includes('Enterprise')) return <BarChart3 className="h-8 w-8 text-purple-500" />;
     if (name.includes('Purchase')) return <FileText className="h-8 w-8 text-green-500" />;
     if (name.includes('Financial')) return <PieChart className="h-8 w-8 text-orange-500" />;
+    if (name.includes('GL Reconciliation')) return <FileText className="h-8 w-8 text-teal-500" />;
     return <BarChart3 className="h-8 w-8 text-gray-500" />;
   };
 

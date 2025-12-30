@@ -417,7 +417,7 @@ export default function ViewAssetPage() {
                 <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-2 text-blue-600">
                         <Calendar className="h-4 w-4 animate-pulse" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Select Portfolio Year</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Select Fiscal Year</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         <Select value={selectedFiscalYear} onValueChange={setSelectedFiscalYear}>
