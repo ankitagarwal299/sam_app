@@ -46,10 +46,10 @@ export async function GET() {
             },
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
-                "moduleName": "Enterprise Software Portfolio New",
-                "moduleDescription": "Baseline and Forecast financial data for expected Enterprise S/W Spend & Pipeline",
+                "moduleName": "GPS Portfolio",
+                "moduleDescription": "GPS Portfolio : SW Purchase and Renewal Forecasts View for Global Purchase Services",
                 "moduleImagePath": "/assets/images/poProcessing.jpg",
-                "moduleUri": "/home/snowFlakePoView",
+                "moduleUri": "/home/gpsPortfolio",
                 "moduleIsDisabled": false,
                 "moduleIsHeight": true,
                 "modulePositionSequence": 4,
@@ -62,24 +62,6 @@ export async function GET() {
                     }
                 ]
             },
-            // {
-            //     "id": "xxxxxxxxxxxxxxxxxxx",
-            //     "moduleName": "Enterprise Software Portfolio New",
-            //     "moduleDescription": "Baseline and Forecast financial data for expected Enterprise S/W Spend & Pipeline",
-            //     "moduleImagePath": "/assets/images/enterpriseSoftwarePortfolio.png",
-            //     "moduleUri": "/home/viewassetnew",
-            //     "moduleIsDisabled": false,
-            //     "moduleIsHeight": true,
-            //     "modulePositionSequence": 15,
-            //     "moduleAttribute": "",
-            //     "roleAccessLevels": [
-            //         {
-            //             "roleName": "Administrator",
-            //             "accessLevel": "Admin",
-            //             "priority": 3
-            //         }
-            //     ]
-            // },
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
                 "moduleName": "Financial Analysts PO Portfolio",
