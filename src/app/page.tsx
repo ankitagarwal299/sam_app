@@ -71,6 +71,22 @@ export default function LandingPage() {
     modules.push(glModule);
   }
 
+  // Manual injection of Publisher 360 Module
+  const publisher360Module: ModuleData = {
+    id: 'publisher-360-module-001',
+    moduleName: 'Publisher 360° View',
+    moduleDescription: 'Comprehensive view of purchases, renewals, financials, and relationships for software publishers.',
+    moduleImagePath: '',
+    moduleUri: '/home/publisher-360',
+    moduleIsDisabled: false,
+    moduleIsHeight: false,
+    modulePositionSequence: 100,
+  };
+
+  if (modules && !modules.find(m => m.moduleName === 'Publisher 360° View')) {
+    modules.push(publisher360Module);
+  }
+
   // Helper to get icon based on name (since we don't have real images)
   const getIcon = (name: string) => {
     if (name.includes('Bulk')) return <Upload className="h-8 w-8 text-blue-500" />;
@@ -78,6 +94,7 @@ export default function LandingPage() {
     if (name.includes('Purchase')) return <FileText className="h-8 w-8 text-green-500" />;
     if (name.includes('Financial')) return <PieChart className="h-8 w-8 text-orange-500" />;
     if (name.includes('GL Reconciliation')) return <FileText className="h-8 w-8 text-teal-500" />;
+    if (name.includes('Publisher 360')) return <PieChart className="h-8 w-8 text-indigo-500" />;
     return <BarChart3 className="h-8 w-8 text-gray-500" />;
   };
 
