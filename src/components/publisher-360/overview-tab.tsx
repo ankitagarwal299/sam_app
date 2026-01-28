@@ -3,19 +3,26 @@
 import { DollarSign, Calendar, Clock, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KpiCard } from './kpi-card';
-import { Publisher360Data, formatCurrency, formatDate } from '@/lib/publisher-360-data';
+import { DonutChartKPI } from './donut-chart-kpi';
+import { Publisher360Data, formatCurrency, formatDate, getYearlyTotal, getYearlyInvoices } from '@/lib/publisher-360-data';
 
 interface OverviewTabProps {
     data: Publisher360Data;
+    selectedYear?: number;
+    onNavigateToInvoices?: () => void;
 }
 
-export function OverviewTab({ data }: OverviewTabProps) {
-    const { kpis, keyDates, licensesByBU, entitlements } = data;
+export function OverviewTab({ data, selectedYear = 2024, onNavigateToInvoices }: OverviewTabProps) {
+    const { kpis, keyDates, licensesByBU, entitlements, publisher } = data;
+
+    // Calculate yearly totals for donut chart
+    const yearlyTotal = getYearlyTotal(publisher.id, selectedYear);
+    const yearlyInvoices = getYearlyInvoices(publisher.id, selectedYear);
 
     return (
         <div className="space-y-6">
             {/* KPI Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <KpiCard
                     title="Total Contract Value"
                     value={kpis.tcv}
@@ -23,22 +30,53 @@ export function OverviewTab({ data }: OverviewTabProps) {
                     icon={<DollarSign className="h-4 w-4" />}
                 />
                 <KpiCard
-                    title="Annual Contract Value"
+                    title="Total liabilities"
                     value={kpis.acv}
                     trend={kpis.acvTrend}
                     icon={<TrendingUp className="h-4 w-4" />}
                 />
+
+                {/* SAVINGS Card */}
+                <Card className="border-none shadow-sm hover:shadow-md transition-all duration-200 bg-white">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4 px-4">
+                        <CardTitle className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                            SAVINGS
+                        </CardTitle>
+                        <div className="text-gray-400">
+                            <DollarSign className="h-4 w-4" />
+                        </div>
+                    </CardHeader>
+                    <CardContent className="px-4 pb-4">
+                        <div className="space-y-1">
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-600">Budget Savings:</span>
+                                <span className="font-bold text-green-700">$500,000</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-600">Unutilized License:</span>
+                                <span className="font-bold text-gray-900">
+                                    {entitlements.reduce((acc, curr) => acc + (curr.quantity - curr.consumed), 0)}
+                                </span>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Donut Chart KPI */}
+                <DonutChartKPI
+                    total={yearlyTotal}
+                    invoicesAmount={yearlyInvoices}
+                    vendor={publisher.name}
+                    year={selectedYear}
+                    onInvoicesClick={onNavigateToInvoices}
+                />
+
                 <KpiCard
                     title="Next Renewal"
                     value={formatDate(keyDates.nextRenewalDate)}
                     subtitle={`${keyDates.daysUntilRenewal} days`}
                     format="text"
                     icon={<Calendar className="h-4 w-4" />}
-                />
-                <KpiCard
-                    title="Renewal PO Amount"
-                    value={keyDates.renewalPOAmount}
-                    icon={<DollarSign className="h-4 w-4" />}
                 />
                 <KpiCard
                     title="Vendor FY End"
@@ -122,19 +160,19 @@ export function OverviewTab({ data }: OverviewTabProps) {
                                             <span className="text-xs text-gray-500">
                                                 {ent.consumed}/{ent.quantity}
                                             </span>
+                                            <span className="text-xs font-medium text-gray-600">
+                                                {ent.consumedPercent}%
+                                            </span>
                                             <StatusBadge status={ent.status} />
                                         </div>
                                     </div>
-                                    <div className="relative">
+                                    <div>
                                         <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                                             <div
                                                 className={`h-full rounded-full transition-all ${getProgressBarColor(ent.consumedPercent, ent.status)}`}
                                                 style={{ width: `${Math.min(ent.consumedPercent, 100)}%` }}
                                             />
                                         </div>
-                                        <span className="absolute right-0 -top-5 text-xs font-medium text-gray-600">
-                                            {ent.consumedPercent}%
-                                        </span>
                                     </div>
                                 </div>
                             ))}

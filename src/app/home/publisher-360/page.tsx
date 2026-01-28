@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Toaster } from '@/components/ui/sonner';
-import { LayoutDashboard, FileText, Package, Users, UserCheck } from 'lucide-react';
+import { LayoutDashboard, FileText, Package, Users, UserCheck, PiggyBank, Receipt } from 'lucide-react';
 
 import { PublisherSelector } from '@/components/publisher-360/publisher-selector';
 import { OverviewTab } from '@/components/publisher-360/overview-tab';
@@ -13,6 +13,8 @@ import { ContractsTab } from '@/components/publisher-360/contracts-tab';
 import { ProductsTab } from '@/components/publisher-360/products-tab';
 import { PeopleTab } from '@/components/publisher-360/people-tab';
 import { StakeholdersTab } from '@/components/publisher-360/stakeholders-tab';
+import { SavingsTab } from '@/components/publisher-360/savings-tab';
+import { InvoicesTab } from '@/components/publisher-360/invoices-tab';
 
 import { Publisher, Publisher360Data, Contract, Product, PublisherContact, InternalContact, Stakeholder } from '@/lib/publisher-360-data';
 
@@ -33,6 +35,8 @@ const fetchPublisherData = async (publisherId: string): Promise<Publisher360Data
 export default function Publisher360Page() {
     const [selectedPublisher, setSelectedPublisher] = useState<Publisher | null>(null);
     const [localData, setLocalData] = useState<Publisher360Data | null>(null);
+    const [selectedYear, setSelectedYear] = useState<number>(2024);
+    const [activeTab, setActiveTab] = useState<string>('overview');
 
     // Fetch publishers list
     const { data: publishersData, isLoading: isLoadingPublishers } = useQuery({
@@ -112,6 +116,11 @@ export default function Publisher360Page() {
         });
     }, []);
 
+    // Handler to navigate to invoices tab from donut chart
+    const handleNavigateToInvoices = useCallback(() => {
+        setActiveTab('invoices');
+    }, []);
+
     // Loading state for publishers
     if (isLoadingPublishers) {
         return (
@@ -144,11 +153,26 @@ export default function Publisher360Page() {
                                 Comprehensive view of purchases, renewals, financials, and relationships
                             </p>
                         </div>
-                        <PublisherSelector
-                            publishers={publishersData?.publishers || []}
-                            selectedPublisher={selectedPublisher}
-                            onSelect={setSelectedPublisher}
-                        />
+                        <div className="flex items-center gap-3">
+                            {/* Year Selector */}
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm text-gray-600">Year:</span>
+                                <select
+                                    value={selectedYear}
+                                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                                    className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value={2024}>2024</option>
+                                    <option value={2025}>2025</option>
+                                    <option value={2026}>2026</option>
+                                </select>
+                            </div>
+                            <PublisherSelector
+                                publishers={publishersData?.publishers || []}
+                                selectedPublisher={selectedPublisher}
+                                onSelect={setSelectedPublisher}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,7 +184,7 @@ export default function Publisher360Page() {
                 ) : isLoadingData || !localData ? (
                     <LoadingSkeleton />
                 ) : (
-                    <Tabs defaultValue="overview" className="w-full">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                         <TabsList className="bg-white border border-gray-200 p-1 rounded-lg shadow-sm mb-6">
                             <TabsTrigger value="overview" className="gap-2 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
                                 <LayoutDashboard className="h-4 w-4" />
@@ -182,10 +206,22 @@ export default function Publisher360Page() {
                                 <UserCheck className="h-4 w-4" />
                                 Stakeholders
                             </TabsTrigger>
+                            <TabsTrigger value="savings" className="gap-2 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                                <PiggyBank className="h-4 w-4" />
+                                Savings
+                            </TabsTrigger>
+                            <TabsTrigger value="invoices" className="gap-2 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                                <Receipt className="h-4 w-4" />
+                                Invoices
+                            </TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="overview" className="mt-0">
-                            <OverviewTab data={localData} />
+                            <OverviewTab
+                                data={localData}
+                                selectedYear={selectedYear}
+                                onNavigateToInvoices={handleNavigateToInvoices}
+                            />
                         </TabsContent>
 
                         <TabsContent value="contracts" className="mt-0">
@@ -216,6 +252,14 @@ export default function Publisher360Page() {
                                 stakeholders={localData.stakeholders}
                                 onStakeholderUpdate={handleStakeholderUpdate}
                             />
+                        </TabsContent>
+
+                        <TabsContent value="savings" className="mt-0">
+                            <SavingsTab savings={localData.savings} />
+                        </TabsContent>
+
+                        <TabsContent value="invoices" className="mt-0">
+                            <InvoicesTab invoices={localData.invoices} />
                         </TabsContent>
                     </Tabs>
                 )}

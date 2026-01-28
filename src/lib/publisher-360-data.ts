@@ -93,6 +93,21 @@ export interface Stakeholder {
     email?: string;
 }
 
+export interface Saving {
+    poNumber: string;
+    savingType: 'decomission' | 'renewal savings' | 'discounts' | 'royalties' | 'risk mitigation' | 'license reuse';
+    savingAmount: number; // negative values only
+    savingPeriod: string; // default = Q1FY26
+}
+
+export interface Invoice {
+    poNumber: string;
+    invoiceDate: string;
+    invoiceAmount: number;
+    invoicePeriod: string; // format: Mx-QyFYn (e.g., M1-Q1FY26)
+    bu: string;
+}
+
 export interface Publisher360Data {
     publisher: Publisher;
     kpis: ContractKPIs;
@@ -104,6 +119,8 @@ export interface Publisher360Data {
     publisherContacts: PublisherContact[];
     internalContacts: InternalContact[];
     stakeholders: Stakeholder[];
+    savings: Saving[];
+    invoices: Invoice[];
 }
 
 // ==================== Mock Data ====================
@@ -269,6 +286,16 @@ const oracleData: Publisher360Data = {
         { id: 's3', name: 'Thomas Anderson', orgBU: 'Legal / Compliance', role: 'General Counsel', influence: 'High', notes: 'Reviewing contract terms, addressing data privacy concerns...', email: 'thomas.anderson@enterprise.com' },
         { id: 's4', name: 'Sophie Laurent', orgBU: 'Marketing / Brand', role: 'CMO', influence: 'Low', notes: 'Focused on brand alignment and upcoming marketing campaigns...', email: 'sophie.laurent@enterprise.com' },
     ],
+    savings: [
+        { poNumber: 'PO-98765', savingType: 'renewal savings', savingAmount: -50000, savingPeriod: 'Q1FY26' },
+        { poNumber: 'PO-87654', savingType: 'decomission', savingAmount: -12000, savingPeriod: 'Q1FY26' },
+        { poNumber: 'PO-76543', savingType: 'discounts', savingAmount: -5000, savingPeriod: 'Q2FY26' },
+    ],
+    invoices: [
+        { poNumber: 'PO-98765', invoiceDate: '2024-01-15', invoiceAmount: 15000, invoicePeriod: 'M1-Q1FY26', bu: 'IT Services' },
+        { poNumber: 'PO-98765', invoiceDate: '2024-02-15', invoiceAmount: 15000, invoicePeriod: 'M2-Q1FY26', bu: 'IT Services' },
+        { poNumber: 'PO-87654', invoiceDate: '2024-03-01', invoiceAmount: 8500, invoicePeriod: 'M3-Q1FY26', bu: 'Engineering' },
+    ],
 };
 
 const microsoftData: Publisher360Data = {
@@ -339,6 +366,12 @@ const microsoftData: Publisher360Data = {
     stakeholders: [
         { id: 'ms1', name: 'Alex Turner', orgBU: 'IT / Infrastructure', role: 'CIO', influence: 'High', notes: 'Executive sponsor for cloud transformation' },
     ],
+    savings: [
+        { poNumber: 'PO-MS-12345', savingType: 'risk mitigation', savingAmount: -150000, savingPeriod: 'Q1FY26' },
+    ],
+    invoices: [
+        { poNumber: 'PO-MS-12345', invoiceDate: '2024-07-01', invoiceAmount: 120000, invoicePeriod: 'M1-Q1FY26', bu: 'Enterprise IT' },
+    ],
 };
 
 // Map of all publisher data
@@ -368,4 +401,27 @@ export function formatDate(dateString: string): string {
         month: 'short',
         day: 'numeric',
     });
+}
+
+// Helper to get yearly total forecast/liabilities for a publisher
+export function getYearlyTotal(publisherId: string, year: number): number {
+    const data = publisherDataMap[publisherId];
+    if (!data) return 0;
+
+    // For now, return the ACV as the yearly total
+    // In a real app, this would query actual yearly forecast data
+    return data.kpis.acv;
+}
+
+// Helper to get yearly invoices sum for a publisher
+export function getYearlyInvoices(publisherId: string, year: number): number {
+    const data = publisherDataMap[publisherId];
+    if (!data || !data.invoices) return 0;
+
+    return data.invoices
+        .filter(invoice => {
+            const invoiceYear = new Date(invoice.invoiceDate).getFullYear();
+            return invoiceYear === year;
+        })
+        .reduce((sum, invoice) => sum + invoice.invoiceAmount, 0);
 }
