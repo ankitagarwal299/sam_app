@@ -10,7 +10,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "TOTAL_AMOUNT_USD", "value": "123.123", "name": "PO Amount", "type": "CURRENCY", "readOnly": true },
         { "key": "SOFTWARE_PUBLISHER", "value": "TECHNOLOGY LLC", "name": "Software Publisher", "type": "STRING", "readOnly": false },
         { "key": "SOFTWARE_TITLE", "value": "Management Software", "name": "Software Title", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "323232", "name": "Department Number", "type": "INTEGER", "readOnly": false },
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1001", "name": "Department Number", "type": "STRING", "readOnly": false },
         { "key": "NODE_LEVEL03_NAME", "value": "Stark", "name": "Level 3 Leader", "type": "STRING", "readOnly": false },
         { "key": "FUNDING_SOURCE", "value": "Part of Commit", "name": "Funding Source", "type": "STRING", "readOnly": false },
         { "key": "KNOWN_CHANGE", "value": "New Purchase", "name": "Known Change", "type": "STRING", "readOnly": false },
@@ -61,7 +61,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "COGS_OR_OPEX", "value": "COGS", "name": "Expense Type", "type": "STRING", "readOnly": false },
         { "key": "PRODUCT_OWNER", "value": "satya", "name": "Product Owner", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-999000", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "998877", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1002", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "AMAZON WEB SERVICES", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -78,7 +78,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Natasha Romanoff", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-AWS-01", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1001", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1003", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "SALESFORCE", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -95,7 +95,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Bruce Banner", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-SF-02", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "2002", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1004", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "ORACLE", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -112,7 +112,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Wanda Maximoff", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-ORA-03", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "3003", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1005", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "ADOBE", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -129,7 +129,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Vision", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-ADB-04", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "4004", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1006", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "ZOOM", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -145,7 +145,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Clint Barton", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-ZOOM-05", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "5005", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1007", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "SLACK", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -161,7 +161,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Sam Wilson", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-SLACK-06", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "6006", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1008", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "GITHUB", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -178,7 +178,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Bucky Barnes", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-GIT-07", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "7007", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1009", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "ATLASSIAN", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -195,7 +195,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Scott Lang", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-ATLAS-08", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "8008", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1010", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "DATADOG", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -211,7 +211,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Hope van Dyne", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-DDOG-09", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "9009", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1011", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "SPLUNK", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -227,7 +227,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "T'Challa", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-SPL-10", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1010", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1012", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "SNOWFLAKE", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -244,7 +244,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Stephen Strange", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-SNOW-11", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1111", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1013", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "MIGNOW", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -260,7 +260,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Peter Parker", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-FIG-12", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1212", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1014", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "NOTION", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -276,7 +276,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": null, "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Carol Danvers", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-NOT-13", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1313", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1015", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "LINEAR", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -292,7 +292,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": "Ignored", "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Arthur Curry", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-LIN-14", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1414", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1016", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "VERCEL", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -308,7 +308,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": "Ignored", "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Diana Prince", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-VER-15", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1515", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1017", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "SENTRY", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -324,7 +324,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": "Active", "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Barry Allen", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-SEN-16", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1616", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1018", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "AUTH0", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -340,7 +340,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": "Active", "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Victor Stone", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-AUTH-17", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1717", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1019", "name": "Department Number", "type": "STRING", "readOnly": false }
     ],
     [
         { "key": "VENDOR_NAME", "value": "TWILIO", "name": "Vendor Name", "type": "STRING", "readOnly": true },
@@ -356,7 +356,7 @@ const purchaseOrderRows: any[][] = [
         { "key": "PO_STATUS", "value": "Active", "name": "PO Status", "type": "STRING", "readOnly": true },
         { "key": "FINANCIAL_ANALYST_NAME", "value": "Hal Jordan", "name": "Financial Analyst", "type": "STRING", "readOnly": false },
         { "key": "GL_ACCOUNT", "value": "GL-TWIL-18", "name": "GL Account", "type": "STRING", "readOnly": false },
-        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "1818", "name": "Department Number", "type": "INTEGER", "readOnly": false }
+        { "key": "FINANCIAL_DEPARTMENT_CODE", "value": "D-1020", "name": "Department Number", "type": "STRING", "readOnly": false }
     ]
 ];
 

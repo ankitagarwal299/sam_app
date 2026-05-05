@@ -7,10 +7,12 @@ import { ArrowLeft, Info, ChevronDown, ChevronUp, Filter, MoreHorizontal } from 
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { SnapshotManager } from './snapshot-manager';
 
 // --- Types ---
-interface Tiers {
+export interface Tiers {
     mega: number;
     platinum: number;
     gold: number;
@@ -19,24 +21,24 @@ interface Tiers {
     tail: number;
 }
 
-interface Level4Item {
+export interface Level4Item {
     name: string;
     total: number;
     tiers: Tiers;
 }
 
-interface Level5Item {
+export interface Level5Item {
     name: string;
     amount: number;
 }
 
-interface FundingData {
+export interface FundingData {
     total: number;
     count: number;
     tiers: Tiers;
 }
 
-interface BubbleDataPoint {
+export interface BubbleDataPoint {
     month: string;
     poAmount: number;
     tcv: number;
@@ -44,7 +46,7 @@ interface BubbleDataPoint {
     label: string;
 }
 
-interface LeadersViewData {
+export interface LeadersViewData {
     level4Spend: Level4Item[];
     level5Spend: Level5Item[];
     fundingSource: {
@@ -90,8 +92,8 @@ const LEGEND = [
 
 // --- Components ---
 
-const FilterSelect = ({ placeholder }: { placeholder: string }) => (
-    <Select>
+const FilterSelect = ({ placeholder, onValueChange }: { placeholder: string; onValueChange?: (value: string) => void }) => (
+    <Select onValueChange={onValueChange}>
         <SelectTrigger className="w-[140px] h-8 text-xs bg-white border-gray-200">
             <SelectValue placeholder={placeholder} />
         </SelectTrigger>
@@ -100,6 +102,77 @@ const FilterSelect = ({ placeholder }: { placeholder: string }) => (
         </SelectContent>
     </Select>
 );
+
+const DEPARTMENTS = ['Finance', 'IT', 'HR', 'Marketing', 'Operations', 'Legal', 'Sales', 'Engineering'];
+
+const DepartmentMultiSelect = ({ selected, onChange }: { selected: string[]; onChange: (departments: string[]) => void }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (ref.current && !ref.current.contains(e.target as Node)) {
+                setIsOpen(false);
+            }
+        }
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isOpen]);
+
+    const toggleDept = (dept: string) => {
+        onChange(
+            selected.includes(dept)
+                ? selected.filter(d => d !== dept)
+                : [...selected, dept]
+        );
+    };
+
+    const label = selected.length === 0
+        ? 'Department'
+        : selected.length <= 2
+            ? selected.join(', ')
+            : `${selected.length} selected`;
+
+    return (
+        <div className="relative" ref={ref}>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center justify-between w-[160px] h-8 text-xs bg-white border border-gray-200 rounded-md px-3 hover:bg-gray-50 transition-colors"
+            >
+                <span className={selected.length === 0 ? 'text-muted-foreground' : 'text-gray-900 font-medium'}>{label}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && (
+                <div className="absolute top-full left-0 mt-1 w-[200px] bg-white rounded-lg shadow-lg border z-50">
+                    <div className="p-2 border-b">
+                        <button
+                            className="text-[10px] text-blue-600 hover:underline"
+                            onClick={() => onChange([])}
+                        >
+                            Clear all
+                        </button>
+                    </div>
+                    <div className="max-h-48 overflow-y-auto p-1">
+                        {DEPARTMENTS.map(dept => (
+                            <label
+                                key={dept}
+                                className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer"
+                            >
+                                <Checkbox
+                                    checked={selected.includes(dept)}
+                                    onCheckedChange={() => toggleDept(dept)}
+                                />
+                                <span className="text-xs text-gray-700">{dept}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
 
 const StackedBar = ({ tiers, total, max }: { tiers: Tiers, total: number, max: number }) => {
     const getWidth = (val: number) => `${(val / max) * 100}%`;
@@ -282,6 +355,17 @@ export default function LeadersViewPage() {
     const [isFundingExpanded, setIsFundingExpanded] = useState(true);
     const [isSpendExpanded, setIsSpendExpanded] = useState(true);
     const [isRenewalExpanded, setIsRenewalExpanded] = useState(true);
+    const [filters, setFilters] = useState<Record<string, string>>({});
+    const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+
+    const updateFilter = (key: string, value: string) => {
+        setFilters(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleDepartmentChange = (departments: string[]) => {
+        setSelectedDepartments(departments);
+        setFilters(prev => ({ ...prev, Department: departments.length > 0 ? departments.join(', ') : '' }));
+    };
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['leadersView'],
@@ -308,6 +392,7 @@ export default function LeadersViewPage() {
                     <Info className="w-4 h-4 text-gray-400" />
                 </div>
                 <div className="flex gap-2">
+                    <SnapshotManager data={data} filters={filters} />
                     <Button variant="outline" size="icon" className="h-8 w-8"><Filter className="w-4 h-4" /></Button>
                     <Button variant="outline" size="icon" className="h-8 w-8"><MoreHorizontal className="w-4 h-4" /></Button>
                 </div>
@@ -315,13 +400,13 @@ export default function LeadersViewPage() {
 
             {/* Filters */}
             <div className="bg-white p-3 rounded-lg shadow-sm border mb-4 flex flex-wrap gap-3 items-center">
-                <FilterSelect placeholder="SLT Leader" />
-                <FilterSelect placeholder="Dept Level 4" />
-                <FilterSelect placeholder="Dept Level 5" />
-                <FilterSelect placeholder="Funding Source" />
-                <FilterSelect placeholder="COGS Or OPEX" />
-                <FilterSelect placeholder="Tier" />
-                <FilterSelect placeholder="Quarters" />
+                <FilterSelect placeholder="SLT Leader" onValueChange={(v) => updateFilter('SLT Leader', v)} />
+                <FilterSelect placeholder="Dept Level 4" onValueChange={(v) => updateFilter('Dept Level 4', v)} />
+                <FilterSelect placeholder="Dept Level 5" onValueChange={(v) => updateFilter('Dept Level 5', v)} />
+                <FilterSelect placeholder="Funding Source" onValueChange={(v) => updateFilter('Funding Source', v)} />
+                <FilterSelect placeholder="COGS Or OPEX" onValueChange={(v) => updateFilter('COGS Or OPEX', v)} />
+                <DepartmentMultiSelect selected={selectedDepartments} onChange={handleDepartmentChange} />
+                <FilterSelect placeholder="Quarters" onValueChange={(v) => updateFilter('Quarters', v)} />
             </div>
 
             {/* Top Section: Spend by Level 4 & 5 */}

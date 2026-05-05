@@ -9,7 +9,7 @@ export async function POST() {
         "status": "OK",
         "purchaseOrderRows": [
             {
-                "Department Number": 123123,
+                "Department Number": "D-1001",
                 "Vendor Name": ["TECHNOLOGY LLC"],
                 "Vendor ID": [232323],
                 "PO": "TEST2",
@@ -24,7 +24,7 @@ export async function POST() {
                 "PO Amount": 12.0
             },
             {
-                "Department Number": 54545454,
+                "Department Number": "D-1002",
                 "Vendor Name": ["LLC"],
                 "Vendor ID": [232323],
                 "PO": "TEST4",
