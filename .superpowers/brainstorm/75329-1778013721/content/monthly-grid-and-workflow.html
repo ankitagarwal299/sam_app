@@ -1,0 +1,280 @@
+<h2>Monthly Planning Grid + Workflow Status Bar</h2>
+<p class="subtitle">The editable grid where forecasts are built, plus the lifecycle status visualization</p>
+
+<!-- Workflow Status Bar -->
+<div class="mockup" style="margin-bottom: 24px;">
+  <div class="mockup-header">Workflow Status Bar — Always visible at top of forecast</div>
+  <div class="mockup-body" style="padding: 20px;">
+    <!-- Version info row -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 11px;">
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span style="font-weight: 600;">ForecastSet:</span> <span style="background: #f1f5f9; padding: 3px 10px; border-radius: 4px;">FS-2025-CC4201</span>
+        <span style="font-weight: 600;">Version:</span> <span style="background: #f1f5f9; padding: 3px 10px; border-radius: 4px;">v3 (Draft)</span>
+        <span style="font-weight: 600;">Created from:</span> <span style="color: #3b82f6; text-decoration: underline; cursor: pointer;">v2 (Approved)</span>
+      </div>
+      <div style="font-size: 10px; color: #64748b;">Last saved: 2 min ago by J. Smith</div>
+    </div>
+    <!-- Status pipeline -->
+    <div style="display: flex; align-items: center; gap: 0; margin-bottom: 16px;">
+      <!-- Draft -->
+      <div style="flex: 1; text-align: center;">
+        <div style="background: #dcfce7; border: 2px solid #16a34a; border-radius: 8px; padding: 10px 8px; position: relative;">
+          <div style="font-size: 10px; font-weight: 700; color: #166534;">✓ Draft</div>
+          <div style="font-size: 9px; color: #166534; margin-top: 2px;">Created May 1</div>
+        </div>
+      </div>
+      <div style="width: 30px; height: 2px; background: #16a34a;"></div>
+      <!-- Submitted -->
+      <div style="flex: 1; text-align: center;">
+        <div style="background: #dbeafe; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px 8px; box-shadow: 0 0 0 3px rgba(59,130,246,0.15);">
+          <div style="font-size: 10px; font-weight: 700; color: #1e40af;">● Submitted</div>
+          <div style="font-size: 9px; color: #1e40af; margin-top: 2px;">You are here</div>
+        </div>
+      </div>
+      <div style="width: 30px; height: 2px; background: #e2e8f0;"></div>
+      <!-- Ready for Approval -->
+      <div style="flex: 1; text-align: center;">
+        <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+          <div style="font-size: 10px; font-weight: 600; color: #64748b;">Ready for Approval</div>
+          <div style="font-size: 9px; color: #94a3b8; margin-top: 2px;">Needs dual confirm</div>
+        </div>
+      </div>
+      <div style="width: 30px; height: 2px; background: #e2e8f0;"></div>
+      <!-- Locked -->
+      <div style="flex: 1; text-align: center;">
+        <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+          <div style="font-size: 10px; font-weight: 600; color: #64748b;">🔒 Locked</div>
+          <div style="font-size: 9px; color: #94a3b8; margin-top: 2px;">Routes to approvers</div>
+        </div>
+      </div>
+      <div style="width: 30px; height: 2px; background: #e2e8f0;"></div>
+      <!-- Approved -->
+      <div style="flex: 1; text-align: center;">
+        <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+          <div style="font-size: 10px; font-weight: 600; color: #64748b;">✓ Approved</div>
+          <div style="font-size: 9px; color: #94a3b8; margin-top: 2px;">Immutable</div>
+        </div>
+      </div>
+    </div>
+    <!-- Action context -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #eff6ff; border-radius: 8px; padding: 10px 16px;">
+      <div style="font-size: 10px; color: #1e40af;">
+        <strong>Next step:</strong> Finance confirms readiness → moves to "Ready for Approval"
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="mock-button" style="font-size: 10px; padding: 5px 10px; background: white; border: 1px solid #e2e8f0;">Recall to Draft</button>
+        <button class="mock-button" style="font-size: 10px; padding: 5px 10px; background: white; border: 1px solid #e2e8f0;">Compare with v2</button>
+      </div>
+    </div>
+    <!-- Rejected state example -->
+    <div style="margin-top: 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 16px; display: flex; align-items: center; gap: 10px;">
+      <span style="font-size: 14px;">↩️</span>
+      <div style="font-size: 10px; color: #991b1b;">
+        <strong>If Rejected:</strong> Returns to Budget Owner queue with reason. "Request Info" doesn't change status — just adds a comment thread.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly Planning Grid -->
+<div class="mockup">
+  <div class="mockup-header">Monthly Planning Grid — Budget Owner (People → Monthly Grid sub-view)</div>
+  <div class="mockup-body" style="padding: 16px; font-size: 10px; overflow-x: auto;">
+    <!-- Controls row -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <select style="font-size: 10px; padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 4px; background: white;">
+          <option>FY26 (Aug 2025 – Jul 2026)</option>
+          <option>FY27 (Aug 2026 – Jul 2027)</option>
+        </select>
+        <div style="display: flex; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden;">
+          <button style="font-size: 9px; padding: 4px 10px; background: #3b82f6; color: white; border: none;">Monthly</button>
+          <button style="font-size: 9px; padding: 4px 10px; background: white; border: none; border-left: 1px solid #e2e8f0;">Quarterly</button>
+          <button style="font-size: 9px; padding: 4px 10px; background: white; border: none; border-left: 1px solid #e2e8f0;">Yearly</button>
+        </div>
+        <select style="font-size: 10px; padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 4px; background: white;">
+          <option>All Labor Types</option>
+          <option>Non-Incremental Only</option>
+          <option>Incremental Only</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 6px;">
+        <button class="mock-button" style="font-size: 9px; padding: 4px 8px;">↓ Export</button>
+        <button class="mock-button" style="font-size: 9px; padding: 4px 8px;">↑ Import</button>
+      </div>
+    </div>
+
+    <!-- The Grid -->
+    <div style="overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+      <table style="width: 100%; font-size: 9px; border-collapse: collapse; min-width: 900px;">
+        <thead>
+          <tr style="background: #f8fafc;">
+            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0; position: sticky; left: 0; background: #f8fafc; min-width: 120px;">Resource / Role</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 50px;">Type</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 40px;">Alloc%</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; background: #eff6ff; min-width: 55px;">Aug</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; background: #eff6ff; min-width: 55px;">Sep</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; background: #eff6ff; min-width: 55px;">Oct</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Nov</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Dec</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Jan</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Feb</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Mar</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Apr</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">May</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Jun</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; min-width: 55px;">Jul</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; font-weight: 700; min-width: 65px;">FY Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Non-Incremental Section -->
+          <tr style="background: #f0fdf4;">
+            <td colspan="16" style="padding: 6px 8px; font-weight: 700; font-size: 10px; color: #166534; border-bottom: 1px solid #e2e8f0;">▾ Non-Incremental Labor (Allocation-based)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 6px 8px; position: sticky; left: 0; background: white; font-weight: 500;">J. Smith (Sr. Eng)</td>
+            <td style="padding: 6px; text-align: center;"><span style="background: #eff6ff; padding: 1px 4px; border-radius: 3px;">FTE</span></td>
+            <td style="padding: 6px; text-align: center;"><input style="width: 36px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="100%"></td>
+            <td style="padding: 4px; text-align: center; background: #f8fafc;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center; background: #f8fafc;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center; background: #f8fafc;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 4px; text-align: center;"><input style="width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 3px; padding: 2px; font-size: 9px;" value="$32K"></td>
+            <td style="padding: 6px; text-align: center; font-weight: 700;">$384K</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9; background: #fffbeb;">
+            <td style="padding: 6px 8px; position: sticky; left: 0; background: #fffbeb; font-weight: 500;">M. Chen (Architect)</td>
+            <td style="padding: 6px; text-align: center;"><span style="background: #eff6ff; padding: 1px 4px; border-radius: 3px;">FTE</span></td>
+            <td style="padding: 6px; text-align: center;"><input style="width: 36px; text-align: center; border: 2px solid #dc2626; border-radius: 3px; padding: 2px; font-size: 9px; background: #fef2f2;" value="115%"></td>
+            <td colspan="12" style="padding: 6px; text-align: center; color: #dc2626; font-weight: 600; font-size: 10px;">⚠️ BLOCKING: Allocation exceeds 100% — must resolve before submission</td>
+            <td style="padding: 6px; text-align: center; font-weight: 700; color: #dc2626;">—</td>
+          </tr>
+          <!-- Incremental Section -->
+          <tr style="background: #eff6ff;">
+            <td colspan="16" style="padding: 6px 8px; font-weight: 700; font-size: 10px; color: #1e40af; border-bottom: 1px solid #e2e8f0;">▾ Incremental Labor (Headcount-based)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 6px 8px; position: sticky; left: 0; background: white; font-weight: 500;">Data Analyst ×3 (India)</td>
+            <td style="padding: 6px; text-align: center;"><span style="background: #fef3c7; padding: 1px 4px; border-radius: 3px;">Contr</span></td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8;">—</td>
+            <td style="padding: 4px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 4px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 4px; text-align: center; background: #f0fdf4; font-size: 9px; font-weight: 500;">$23K</td>
+            <td style="padding: 6px; text-align: center; font-weight: 700;">$207K</td>
+          </tr>
+          <!-- Totals -->
+          <tr style="background: #f1f5f9; font-weight: 700;">
+            <td style="padding: 8px; position: sticky; left: 0; background: #f1f5f9;" colspan="3">TOTAL LABOR</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 6px; text-align: center;">$55K</td>
+            <td style="padding: 8px; text-align: center; font-size: 11px;">$591K</td>
+          </tr>
+          <!-- Actuals comparison row -->
+          <tr style="background: #faf5ff;">
+            <td style="padding: 6px 8px; position: sticky; left: 0; background: #faf5ff; font-style: italic; color: #7c3aed;" colspan="3">Actuals (Workday)</td>
+            <td style="padding: 6px; text-align: center; color: #7c3aed; font-size: 9px;">$53K</td>
+            <td style="padding: 6px; text-align: center; color: #7c3aed; font-size: 9px;">$54K</td>
+            <td style="padding: 6px; text-align: center; color: #7c3aed; font-size: 9px;">$52K</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #7c3aed; font-weight: 700;">$159K</td>
+          </tr>
+          <tr style="background: #fef2f2;">
+            <td style="padding: 6px 8px; position: sticky; left: 0; background: #fef2f2; font-style: italic; color: #dc2626;" colspan="3">Variance (Forecast − Actuals)</td>
+            <td style="padding: 6px; text-align: center; color: #dc2626; font-size: 9px;">+$2K</td>
+            <td style="padding: 6px; text-align: center; color: #dc2626; font-size: 9px;">+$1K</td>
+            <td style="padding: 6px; text-align: center; color: #dc2626; font-size: 9px;">+$3K</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #94a3b8; font-size: 9px;">—</td>
+            <td style="padding: 6px; text-align: center; color: #dc2626; font-weight: 700;">+$6K</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Grid legend -->
+    <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 9px; color: #64748b; flex-wrap: wrap;">
+      <span>🟢 <strong>Green cells</strong> = Costs auto-calculated from rate × headcount</span>
+      <span>⬜ <strong>White inputs</strong> = Editable (Budget Owner in Draft only)</span>
+      <span>🟡 <strong>Yellow row</strong> = Blocking validation error</span>
+      <span>🟣 <strong>Purple row</strong> = Actuals from Workday (read-only)</span>
+      <span>🔴 <strong>Red row</strong> = Variance highlight</span>
+    </div>
+
+    <!-- Editability rules -->
+    <div style="margin-top: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px;">
+      <div style="font-weight: 600; font-size: 11px; margin-bottom: 6px;">Editability Rules by Status:</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px;">
+        <div><span style="background: #dcfce7; padding: 2px 6px; border-radius: 3px;">Draft</span> — Budget Owner can edit all forecast cells</div>
+        <div><span style="background: #dbeafe; padding: 2px 6px; border-radius: 3px;">Submitted</span> — Read-only for all; Finance reviews</div>
+        <div><span style="background: #f3e8ff; padding: 2px 6px; border-radius: 3px;">Locked</span> — Read-only; in approval chain</div>
+        <div><span style="background: #dcfce7; padding: 2px 6px; border-radius: 3px; font-weight: bold;">Approved</span> — Immutable. Must create new version to change.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top: 24px;">How does this look?</h3>
+<div class="options">
+  <div class="option" data-choice="looks-good" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>This captures what I need</h3>
+      <p>Grid structure, workflow bar, validation, and editability rules are clear. Let's move on.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="more-detail" onclick="toggleSelect(this)">
+    <div class="letter">+</div>
+    <div class="content">
+      <h3>Show me more detail</h3>
+      <p>I want to see the Software/Operating tabs, or the add-expense flow, or something else specific.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="changes" onclick="toggleSelect(this)">
+    <div class="letter">✏️</div>
+    <div class="content">
+      <h3>I have changes/feedback</h3>
+      <p>Something doesn't match what I'm envisioning — let me tell you what to adjust.</p>
+    </div>
+  </div>
+</div>

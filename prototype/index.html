@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Tech Forecast & AFE Platform — Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-sans bg-gray-50 text-gray-900 antialiased">
+
+  <!-- App Shell -->
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-56 bg-slate-900 text-slate-200 flex flex-col flex-shrink-0 overflow-y-auto">
+      <!-- Logo -->
+      <div class="px-4 py-4 border-b border-slate-700 flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">G</div>
+        <div>
+          <div class="font-bold text-sm text-white">Global Tech</div>
+          <div class="text-[10px] text-slate-400">Forecast & AFE Platform</div>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <nav class="flex-1 py-3 text-sm">
+        <!-- Overview -->
+        <div class="px-4 py-2 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Overview</div>
+        <a href="#" data-page="dashboard" class="nav-link active flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>📊</span> Dashboard
+        </a>
+
+        <!-- Forecast Planning -->
+        <div class="px-4 py-2 mt-3 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Forecast Planning</div>
+        <a href="#" data-page="people" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>👥</span> People
+        </a>
+        <a href="#" data-page="software" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>💻</span> Software
+        </a>
+        <a href="#" data-page="operating" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>⚙️</span> Operating
+        </a>
+        <a href="#" data-page="capital" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>🏗️</span> Capital
+        </a>
+        <a href="#" data-page="audit" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>📋</span> Audit Trail
+        </a>
+
+        <!-- AFE -->
+        <div class="px-4 py-2 mt-3 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">AFE Governance</div>
+        <a href="#" data-page="afe" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>📝</span> My AFEs
+        </a>
+        <a href="#" data-page="memos" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>📄</span> Executive Memos
+        </a>
+
+        <!-- Collaboration -->
+        <div class="px-4 py-2 mt-3 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Collaboration</div>
+        <a href="#" data-page="cross-cost" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>🔗</span> Cross-Cost Center
+          <span class="ml-auto bg-amber-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">3</span>
+        </a>
+        <a href="#" data-page="resource-requests" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>📨</span> Resource Requests
+        </a>
+
+        <!-- Workflow -->
+        <div class="px-4 py-2 mt-3 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Workflow</div>
+        <a href="#" data-page="approvals" class="nav-link flex items-center gap-2 px-4 py-2 mx-2 rounded-md">
+          <span>✅</span> Approvals
+          <span class="ml-auto bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">5</span>
+        </a>
+      </nav>
+
+      <!-- User -->
+      <div class="border-t border-slate-700 px-4 py-3">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 bg-slate-600 rounded-full flex items-center justify-center text-[10px] font-medium">JS</div>
+          <div>
+            <div class="text-xs font-medium text-white">John Smith</div>
+            <div class="text-[10px] text-slate-400" id="user-role-label">Budget Owner · CC-4201</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Bar -->
+      <header class="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+        <div class="text-xs text-gray-500" id="breadcrumb">Dashboard / <span class="text-gray-900 font-medium">Overview</span></div>
+        <!-- Role Toggle -->
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] text-gray-500 font-medium">View as:</span>
+          <button id="role-budget-owner" class="role-btn active text-[10px] px-2.5 py-1 rounded-md font-medium">Budget Owner</button>
+          <button id="role-finance" class="role-btn text-[10px] px-2.5 py-1 rounded-md font-medium">Finance</button>
+          <button id="role-approver" class="role-btn text-[10px] px-2.5 py-1 rounded-md font-medium">Approver</button>
+        </div>
+      </header>
+
+      <!-- Page Content (scrollable) -->
+      <div class="flex-1 overflow-y-auto p-6" id="page-content">
+        <!-- Pages injected here by JS -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div id="modal-overlay" class="fixed inset-0 bg-black/40 z-50 hidden flex items-center justify-center p-4">
+    <div id="modal-content" class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <!-- Modal content injected by JS -->
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

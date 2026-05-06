@@ -1,0 +1,115 @@
+<h2>Forecast Dashboard — Tab & Section Structure</h2>
+<p class="subtitle">The shared foundation: same tabs, different capabilities per role. Which tab layout feels right?</p>
+
+<div class="options">
+  <div class="option" data-choice="top-tabs" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Top Horizontal Tabs</h3>
+      <p>Tabs across the top (like your current app). Simple, familiar. Works well with 5-6 tabs.</p>
+      <div class="mockup" style="margin-top: 12px;">
+        <div class="mockup-body" style="padding: 12px; font-size: 11px;">
+          <div style="display: flex; gap: 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 12px;">
+            <div style="padding: 8px 16px; border-bottom: 2px solid #3b82f6; margin-bottom: -2px; font-weight: bold; color: #3b82f6;">People</div>
+            <div style="padding: 8px 16px; color: #64748b;">Software</div>
+            <div style="padding: 8px 16px; color: #64748b;">Operating</div>
+            <div style="padding: 8px 16px; color: #64748b;">Capital</div>
+            <div style="padding: 8px 16px; color: #64748b;">Audit</div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <div style="flex: 1; background: #f8fafc; border-radius: 6px; padding: 12px;">
+              <div style="font-size: 10px; color: #64748b; margin-bottom: 4px;">KPI Cards + Filters here</div>
+              <div style="height: 30px; background: #e2e8f0; border-radius: 4px;"></div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; background: #f8fafc; border-radius: 6px; padding: 12px;">
+            <div style="font-size: 10px; color: #64748b;">Data grid / monthly planning table below</div>
+            <div style="height: 60px; background: #e2e8f0; border-radius: 4px; margin-top: 6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="sidebar-tabs" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Left Sidebar Navigation</h3>
+      <p>Vertical nav on left. Gives more horizontal space for the monthly grid (important for 12+ columns of financial data).</p>
+      <div class="mockup" style="margin-top: 12px;">
+        <div class="mockup-body" style="padding: 12px; font-size: 11px;">
+          <div style="display: flex; gap: 0;">
+            <div style="width: 140px; border-right: 1px solid #e2e8f0; padding-right: 10px;">
+              <div style="padding: 8px 10px; background: #eff6ff; border-radius: 6px; font-weight: bold; color: #3b82f6; margin-bottom: 4px;">👥 People</div>
+              <div style="padding: 8px 10px; color: #64748b; margin-bottom: 2px;">💻 Software</div>
+              <div style="padding: 8px 10px; color: #64748b; margin-bottom: 2px;">⚙️ Operating</div>
+              <div style="padding: 8px 10px; color: #64748b; margin-bottom: 2px;">🏗️ Capital</div>
+              <div style="padding: 8px 10px; color: #64748b;">📋 Audit</div>
+            </div>
+            <div style="flex: 1; padding-left: 12px;">
+              <div style="background: #f8fafc; border-radius: 6px; padding: 10px; margin-bottom: 8px;">
+                <div style="font-size: 10px; color: #64748b;">KPI + Filters</div>
+                <div style="height: 24px; background: #e2e8f0; border-radius: 4px; margin-top: 4px;"></div>
+              </div>
+              <div style="background: #f8fafc; border-radius: 6px; padding: 10px;">
+                <div style="font-size: 10px; color: #64748b;">Full-width data grid</div>
+                <div style="height: 60px; background: #e2e8f0; border-radius: 4px; margin-top: 4px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="hybrid" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Hybrid — Top Tabs + Sub-navigation</h3>
+      <p>Top tabs for expense categories, with a secondary row for sub-views within each tab (e.g., People → "Hiring Requests" | "Approved Team" | "Monthly Grid").</p>
+      <div class="mockup" style="margin-top: 12px;">
+        <div class="mockup-body" style="padding: 12px; font-size: 11px;">
+          <div style="display: flex; gap: 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 0;">
+            <div style="padding: 8px 16px; border-bottom: 2px solid #3b82f6; margin-bottom: -2px; font-weight: bold; color: #3b82f6;">People</div>
+            <div style="padding: 8px 16px; color: #64748b;">Software</div>
+            <div style="padding: 8px 16px; color: #64748b;">Operating</div>
+            <div style="padding: 8px 16px; color: #64748b;">Capital</div>
+            <div style="padding: 8px 16px; color: #64748b;">Audit</div>
+          </div>
+          <div style="display: flex; gap: 12px; background: #f8fafc; padding: 8px 16px; border-bottom: 1px solid #e2e8f0;">
+            <div style="padding: 4px 10px; background: white; border-radius: 4px; font-weight: 500; font-size: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Hiring Requests</div>
+            <div style="padding: 4px 10px; font-size: 10px; color: #64748b;">Approved Team</div>
+            <div style="padding: 4px 10px; font-size: 10px; color: #64748b;">Monthly Grid</div>
+          </div>
+          <div style="padding: 12px;">
+            <div style="background: #f8fafc; border-radius: 6px; padding: 10px; margin-bottom: 8px;">
+              <div style="font-size: 10px; color: #64748b;">Content area for selected sub-view</div>
+              <div style="height: 70px; background: #e2e8f0; border-radius: 4px; margin-top: 4px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pros-cons" style="margin-top: 20px;">
+  <div class="pros">
+    <h4>Why this matters</h4>
+    <ul>
+      <li>The PRD's "People" tab has 3 distinct views (Hiring Requests, Approved Team, Monthly Grid)</li>
+      <li>The monthly planning grid needs 12+ columns of financial data</li>
+      <li>Finance sees more metadata columns than Budget Owner</li>
+      <li>Both roles need the same tabs, but different sub-views within them</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <h4>Recommendation</h4>
+    <ul>
+      <li><strong>Option C (Hybrid)</strong> handles the PRD's complexity best</li>
+      <li>Top tabs keep expense categories visible at all times</li>
+      <li>Sub-nav handles the multiple views within each category</li>
+      <li>Role determines which sub-views and actions appear</li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,305 @@
+<h2>Full Application Navigation — Information Architecture</h2>
+<p class="subtitle">How all modules connect. Role determines which sections are visible and what actions are available.</p>
+
+<!-- Role selector -->
+<div style="display: flex; gap: 8px; margin-bottom: 20px; align-items: center;">
+  <span style="font-size: 11px; font-weight: 600;">Viewing as:</span>
+  <span style="background: #3b82f6; color: white; padding: 4px 12px; border-radius: 6px; font-size: 10px; font-weight: 600;">Budget Owner</span>
+  <span style="background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 6px; font-size: 10px;">Finance Operator</span>
+  <span style="background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 6px; font-size: 10px;">Approver (VP/CIO)</span>
+</div>
+
+<!-- Full app layout mockup -->
+<div class="mockup">
+  <div class="mockup-header">Application Shell — Sidebar + Main Content</div>
+  <div class="mockup-body" style="padding: 0; display: flex; min-height: 520px; font-size: 10px;">
+
+    <!-- Global Sidebar -->
+    <div style="width: 220px; background: #1e293b; color: #e2e8f0; padding: 16px 0; flex-shrink: 0;">
+      <!-- Logo -->
+      <div style="padding: 0 16px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #334155;">
+        <div style="width: 28px; height: 28px; background: #3b82f6; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">G</div>
+        <div>
+          <div style="font-weight: 700; font-size: 12px;">Global Tech</div>
+          <div style="font-size: 8px; color: #94a3b8;">Forecast & AFE Platform</div>
+        </div>
+      </div>
+
+      <!-- Nav sections -->
+      <div style="padding: 12px 0;">
+        <!-- Dashboard -->
+        <div style="padding: 8px 16px; font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 600; letter-spacing: 0.5px;">Overview</div>
+        <div style="padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: #334155; border-left: 3px solid #3b82f6; margin: 2px 0;">
+          <span>📊</span> <span style="font-weight: 600;">Dashboard</span>
+        </div>
+
+        <!-- Forecast Planning -->
+        <div style="padding: 12px 16px 8px; font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 600; letter-spacing: 0.5px;">Forecast Planning</div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>👥</span> <span>People</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>💻</span> <span>Software</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>⚙️</span> <span>Operating</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>🏗️</span> <span>Capital</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>📋</span> <span>Audit Trail</span>
+        </div>
+
+        <!-- AFE -->
+        <div style="padding: 12px 16px 8px; font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 600; letter-spacing: 0.5px;">AFE Governance</div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>📝</span> <span>My AFEs</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>🤖</span> <span>AI Writing Assist</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>📄</span> <span>Executive Memos</span>
+        </div>
+
+        <!-- Cross-Cost Center -->
+        <div style="padding: 12px 16px 8px; font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 600; letter-spacing: 0.5px;">Collaboration</div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>🔗</span> <span>Cross-Cost Center</span>
+          <span style="margin-left: auto; background: #f59e0b; color: white; padding: 1px 6px; border-radius: 8px; font-size: 8px;">3</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>📨</span> <span>Resource Requests</span>
+          <span style="margin-left: auto; background: #3b82f6; color: white; padding: 1px 6px; border-radius: 8px; font-size: 8px;">1</span>
+        </div>
+
+        <!-- Approvals -->
+        <div style="padding: 12px 16px 8px; font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 600; letter-spacing: 0.5px;">Workflow</div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>✅</span> <span>Approvals Queue</span>
+          <span style="margin-left: auto; background: #dc2626; color: white; padding: 1px 6px; border-radius: 8px; font-size: 8px;">5</span>
+        </div>
+        <div style="padding: 7px 16px; display: flex; align-items: center; gap: 8px; margin: 1px 0; cursor: pointer;">
+          <span>📊</span> <span>Version Compare</span>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div style="position: absolute; bottom: 0; width: 220px; border-top: 1px solid #334155; padding: 12px 16px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 24px; background: #475569; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px;">JS</div>
+          <div>
+            <div style="font-size: 9px; font-weight: 500;">John Smith</div>
+            <div style="font-size: 8px; color: #94a3b8;">Budget Owner · CC-4201</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div style="flex: 1; background: #f8fafc; padding: 20px;">
+      <!-- Breadcrumb -->
+      <div style="font-size: 9px; color: #64748b; margin-bottom: 12px;">
+        Dashboard / <span style="color: #111; font-weight: 500;">Overview</span>
+      </div>
+
+      <!-- Dashboard content -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div>
+          <div style="font-size: 16px; font-weight: 700;">Good morning, John</div>
+          <div style="font-size: 10px; color: #64748b;">FY26 · Cost Center CC-4201 (Cloud Engineering)</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <select style="font-size: 10px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; background: white;">
+            <option>FY26</option>
+            <option>FY27</option>
+          </select>
+          <button class="mock-button" style="font-size: 10px; padding: 5px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px;">+ New Forecast Version</button>
+        </div>
+      </div>
+
+      <!-- KPI summary cards -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 9px; color: #64748b;">Total Forecast</div>
+          <div style="font-size: 16px; font-weight: bold; margin-top: 2px;">$4.82M</div>
+          <div style="font-size: 9px; color: #16a34a; margin-top: 2px;">↑ 3% vs prior</div>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 9px; color: #64748b;">Actuals YTD</div>
+          <div style="font-size: 16px; font-weight: bold; margin-top: 2px;">$1.21M</div>
+          <div style="font-size: 9px; color: #64748b; margin-top: 2px;">3 months in</div>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 9px; color: #64748b;">Pending Approvals</div>
+          <div style="font-size: 16px; font-weight: bold; margin-top: 2px; color: #f59e0b;">5</div>
+          <div style="font-size: 9px; color: #f59e0b; margin-top: 2px;">2 urgent</div>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 9px; color: #64748b;">Active AFEs</div>
+          <div style="font-size: 16px; font-weight: bold; margin-top: 2px;">3</div>
+          <div style="font-size: 9px; color: #3b82f6; margin-top: 2px;">1 in review</div>
+        </div>
+      </div>
+
+      <!-- Quick actions + recent activity -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+          <div style="font-size: 11px; font-weight: 600; margin-bottom: 10px;">Quick Actions</div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px; background: #f8fafc; border-radius: 6px; cursor: pointer;">
+              <span style="background: #dbeafe; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px;">📝</span>
+              <div><div style="font-size: 10px; font-weight: 500;">Submit Forecast v3 for Review</div><div style="font-size: 8px; color: #64748b;">2 blocking issues remain</div></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px; background: #f8fafc; border-radius: 6px; cursor: pointer;">
+              <span style="background: #dcfce7; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px;">👤</span>
+              <div><div style="font-size: 10px; font-weight: 500;">New Hiring Request</div><div style="font-size: 8px; color: #64748b;">Add incremental headcount</div></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px; background: #f8fafc; border-radius: 6px; cursor: pointer;">
+              <span style="background: #fef3c7; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px;">📄</span>
+              <div><div style="font-size: 10px; font-weight: 500;">Create New AFE</div><div style="font-size: 8px; color: #64748b;">Capital authorization request</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+          <div style="font-size: 11px; font-weight: 600; margin-bottom: 10px;">Recent Activity</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 8px; font-size: 9px; align-items: flex-start;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; margin-top: 4px; flex-shrink: 0;"></div>
+              <div><strong>Finance</strong> requested info on DevOps rate override<br><span style="color: #94a3b8;">2 hours ago</span></div>
+            </div>
+            <div style="display: flex; gap: 8px; font-size: 9px; align-items: flex-start;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #16a34a; margin-top: 4px; flex-shrink: 0;"></div>
+              <div><strong>CloudOps</strong> submitted cross-cost estimate for PRJ-0042<br><span style="color: #94a3b8;">Yesterday</span></div>
+            </div>
+            <div style="display: flex; gap: 8px; font-size: 9px; align-items: flex-start;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; margin-top: 4px; flex-shrink: 0;"></div>
+              <div><strong>AFE-2025-003</strong> approved by VP Finance<br><span style="color: #94a3b8;">2 days ago</span></div>
+            </div>
+            <div style="display: flex; gap: 8px; font-size: 9px; align-items: flex-start;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #dc2626; margin-top: 4px; flex-shrink: 0;"></div>
+              <div><strong>Workday actuals</strong> ingested — $2.3K variance detected<br><span style="color: #94a3b8;">3 days ago</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Role visibility matrix -->
+<div style="margin-top: 24px;">
+  <h3>Navigation Visibility by Role</h3>
+  <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 10px; font-size: 10px;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background: #f8fafc;">
+          <th style="padding: 8px 12px; text-align: left; border-bottom: 1px solid #e2e8f0;">Section</th>
+          <th style="padding: 8px 12px; text-align: center; border-bottom: 1px solid #e2e8f0;">Budget Owner</th>
+          <th style="padding: 8px 12px; text-align: center; border-bottom: 1px solid #e2e8f0;">Finance Operator</th>
+          <th style="padding: 8px 12px; text-align: center; border-bottom: 1px solid #e2e8f0;">Approver (VP/CIO)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">Dashboard</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Own CC</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ All CCs</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Summary</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">Forecast Planning (People/SW/Op/Cap)</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Edit in Draft</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Review + SOW Match</td>
+          <td style="padding: 6px 12px; text-align: center;">👁️ Read-only</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">Audit Trail</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Own versions</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ All versions</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ All versions</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">My AFEs</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Create/Submit</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Review/Challenge</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Approve/Reject</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">AI Writing Assist</td>
+          <td style="padding: 6px 12px; text-align: center;">✅</td>
+          <td style="padding: 6px 12px; text-align: center;">✅</td>
+          <td style="padding: 6px 12px; text-align: center;">❌</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">Executive Memos</td>
+          <td style="padding: 6px 12px; text-align: center;">👁️ Own</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ All</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ All</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">Cross-Cost Center</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Send requests</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ View all deps</td>
+          <td style="padding: 6px 12px; text-align: center;">👁️ Status only</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 6px 12px; font-weight: 500;">Resource Requests</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Create</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Approve</td>
+          <td style="padding: 6px 12px; text-align: center;">❌</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 12px; font-weight: 500;">Approvals Queue</td>
+          <td style="padding: 6px 12px; text-align: center;">👁️ Track own</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Confirm readiness</td>
+          <td style="padding: 6px 12px; text-align: center;">✅ Approve/Reject</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Route map -->
+<div style="margin-top: 24px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+  <h3 style="margin-bottom: 10px;">Proposed Route Structure (Next.js App Router)</h3>
+  <pre style="font-size: 9px; line-height: 1.6; color: #334155; margin: 0; font-family: monospace;">
+/                              → Landing / Module selector (if multi-app)
+/dashboard                     → Role-aware overview (KPIs, quick actions, activity)
+/forecast                      → Forecast planning shell
+  /forecast/people             → People tab (sub-views: hiring, team, grid)
+  /forecast/software           → Software expenses
+  /forecast/operating          → Operating expenses
+  /forecast/capital            → Capital expenses + SOW matching (Finance)
+  /forecast/audit              → Version history & change log
+/afe                           → AFE list
+  /afe/new                     → Create new AFE
+  /afe/[afeId]                 → AFE detail + narrative + memo
+  /afe/[afeId]/memo            → Executive memo (PDF view)
+/cross-cost-center             → Dependency tracker + request queue
+  /cross-cost-center/[reqId]   → Estimate entry screen
+/resource-requests             → Resource request list + create
+/approvals                     → Approval queue (grouped by type)
+/approvals/[versionId]         → Review specific forecast version
+/compare/[v1]/[v2]            → Version comparison view
+  </pre>
+</div>
+
+<h3 style="margin-top: 24px;">Ready to proceed?</h3>
+<div class="options">
+  <div class="option" data-choice="write-spec" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>I've seen enough — write the design spec</h3>
+      <p>Consolidate everything into a formal design document, then create the implementation plan</p>
+    </div>
+  </div>
+  <div class="option" data-choice="more-exploration" onclick="toggleSelect(this)">
+    <div class="letter">🔍</div>
+    <div class="content">
+      <h3>I want to explore more areas first</h3>
+      <p>Tell me which screens or flows you'd like to see visualized</p>
+    </div>
+  </div>
+</div>

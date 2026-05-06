@@ -1,0 +1,235 @@
+<h2>People Tab — Detailed Layout</h2>
+<p class="subtitle">The People tab has the most complexity. Here's how the sub-views break down per role.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Budget Owner — People Tab → Hiring Requests</div>
+  <div class="mockup-body" style="padding: 16px; font-size: 11px;">
+    <!-- Top tabs -->
+    <div style="display: flex; gap: 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 0;">
+      <div style="padding: 8px 16px; border-bottom: 2px solid #3b82f6; margin-bottom: -2px; font-weight: bold; color: #3b82f6;">People</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Software</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Operating</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Capital</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Audit</div>
+    </div>
+    <!-- Sub-nav -->
+    <div style="display: flex; gap: 8px; background: #f8fafc; padding: 8px 16px; border-bottom: 1px solid #e2e8f0; align-items: center;">
+      <div style="padding: 5px 12px; background: white; border-radius: 6px; font-weight: 600; font-size: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); color: #1e40af;">Hiring Requests</div>
+      <div style="padding: 5px 12px; font-size: 10px; color: #64748b; cursor: pointer;">Approved Team</div>
+      <div style="padding: 5px 12px; font-size: 10px; color: #64748b; cursor: pointer;">Monthly Grid</div>
+      <div style="margin-left: auto; display: flex; gap: 6px;">
+        <span style="background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 500;">Draft v3</span>
+        <span style="background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 500;">2 Blocking Issues</span>
+      </div>
+    </div>
+    <!-- KPI Row -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; padding: 16px;">
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Total Headcount</div>
+        <div style="font-size: 18px; font-weight: bold; margin-top: 4px;">24</div>
+        <div style="font-size: 9px; color: #16a34a;">+3 pending approval</div>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Monthly Labor Cost</div>
+        <div style="font-size: 18px; font-weight: bold; margin-top: 4px;">$482K</div>
+        <div style="font-size: 9px; color: #dc2626;">+$64K vs budget</div>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Incremental Requests</div>
+        <div style="font-size: 18px; font-weight: bold; margin-top: 4px;">5</div>
+        <div style="font-size: 9px; color: #f59e0b;">2 awaiting review</div>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Avg Allocation</div>
+        <div style="font-size: 18px; font-weight: bold; margin-top: 4px;">87%</div>
+        <div style="font-size: 9px; color: #64748b;">Non-incremental</div>
+      </div>
+    </div>
+    <!-- Table -->
+    <div style="padding: 0 16px 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input class="mock-input" placeholder="Search roles..." style="font-size: 10px; padding: 5px 10px; width: 160px;">
+          <select style="font-size: 10px; padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 4px; background: white;">
+            <option>All Statuses</option>
+          </select>
+          <select style="font-size: 10px; padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 4px; background: white;">
+            <option>FTE & Contractor</option>
+          </select>
+        </div>
+        <button class="mock-button" style="font-size: 10px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px;">+ New Hiring Request</button>
+      </div>
+      <table style="width: 100%; font-size: 10px; border-collapse: collapse; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <thead>
+          <tr style="background: #f8fafc;">
+            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0;">Role</th>
+            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0;">Type</th>
+            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0;">Country</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0;">HC</th>
+            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0;">Rate</th>
+            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0;">Start Date</th>
+            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0;">Funding</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0;">Status</th>
+            <th style="padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px; font-weight: 500;">Sr. Cloud Engineer</td>
+            <td style="padding: 8px;"><span style="background: #eff6ff; color: #1e40af; padding: 2px 6px; border-radius: 3px; font-size: 9px;">FTE</span></td>
+            <td style="padding: 8px;">US</td>
+            <td style="padding: 8px; text-align: center;">2</td>
+            <td style="padding: 8px;">$185/hr</td>
+            <td style="padding: 8px;">2025-09-01</td>
+            <td style="padding: 8px;"><span style="font-size: 9px;">CapEx</span></td>
+            <td style="padding: 8px; text-align: center;"><span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 10px; font-size: 9px;">Approved</span></td>
+            <td style="padding: 8px; text-align: center; color: #64748b;">⋯</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px; font-weight: 500;">Data Analyst</td>
+            <td style="padding: 8px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 3px; font-size: 9px;">Contractor</span></td>
+            <td style="padding: 8px;">India</td>
+            <td style="padding: 8px; text-align: center;">3</td>
+            <td style="padding: 8px;">$45/hr</td>
+            <td style="padding: 8px;">2025-10-15</td>
+            <td style="padding: 8px;"><span style="font-size: 9px;">OpEx</span></td>
+            <td style="padding: 8px; text-align: center;"><span style="background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 10px; font-size: 9px;">Draft</span></td>
+            <td style="padding: 8px; text-align: center; color: #3b82f6;">✏️</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9; background: #fffbeb;">
+            <td style="padding: 8px; font-weight: 500;">Security Architect</td>
+            <td style="padding: 8px;"><span style="background: #eff6ff; color: #1e40af; padding: 2px 6px; border-radius: 3px; font-size: 9px;">FTE</span></td>
+            <td style="padding: 8px;">US</td>
+            <td style="padding: 8px; text-align: center;">1</td>
+            <td style="padding: 8px;">$210/hr</td>
+            <td style="padding: 8px;">2025-08-01</td>
+            <td style="padding: 8px;"><span style="font-size: 9px;">CapEx</span></td>
+            <td style="padding: 8px; text-align: center;"><span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 10px; font-size: 9px;">⚠️ Missing Project</span></td>
+            <td style="padding: 8px; text-align: center; color: #3b82f6;">✏️</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; font-weight: 500;">DevOps Engineer</td>
+            <td style="padding: 8px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 3px; font-size: 9px;">Contractor</span></td>
+            <td style="padding: 8px;">UK</td>
+            <td style="padding: 8px; text-align: center;">1</td>
+            <td style="padding: 8px; color: #dc2626; font-weight: bold;">$160/hr*</td>
+            <td style="padding: 8px;">2025-11-01</td>
+            <td style="padding: 8px;"><span style="font-size: 9px;">OpEx</span></td>
+            <td style="padding: 8px; text-align: center;"><span style="background: #f3e8ff; color: #6b21a8; padding: 2px 8px; border-radius: 10px; font-size: 9px;">Submitted</span></td>
+            <td style="padding: 8px; text-align: center; color: #64748b;">👁️</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 8px; font-size: 9px; color: #94a3b8;">* Manual rate override (default: $95/hr, Vendor: Accenture). Visible to Finance.</div>
+    </div>
+    <!-- Bottom actions -->
+    <div style="padding: 0 16px 16px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="font-size: 10px; color: #64748b;">Showing 4 of 12 requests · <a style="color: #3b82f6; text-decoration: underline;">View all</a></div>
+      <div style="display: flex; gap: 8px;">
+        <button class="mock-button" style="font-size: 10px; padding: 6px 12px;">Save Draft</button>
+        <button class="mock-button" style="font-size: 10px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px;">Submit for Review →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-top: 20px;">
+  <div class="mockup-header">Finance Operator — People Tab → Same View (Review Mode)</div>
+  <div class="mockup-body" style="padding: 16px; font-size: 11px;">
+    <!-- Differences highlighted -->
+    <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 14px;">🔍</span>
+      <div>
+        <div style="font-weight: 600; font-size: 11px;">Finance View Differences:</div>
+        <div style="font-size: 10px; color: #78350f;">Sees ALL cost centers (not just own) · Extra columns: Cost Center, Project ID, Override Flag · Cannot edit — can Approve, Reject, Request Info · Rate override audit trail visible</div>
+      </div>
+    </div>
+    <!-- Extra columns preview -->
+    <table style="width: 100%; font-size: 9px; border-collapse: collapse; border: 1px solid #e2e8f0;">
+      <thead>
+        <tr style="background: #f8fafc;">
+          <th style="padding: 6px; text-align: left; border-bottom: 1px solid #e2e8f0; color: #dc2626;">Cost Ctr ⬇</th>
+          <th style="padding: 6px; text-align: left; border-bottom: 1px solid #e2e8f0; color: #dc2626;">Project ID ⬇</th>
+          <th style="padding: 6px; text-align: left; border-bottom: 1px solid #e2e8f0;">Role</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Type</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Country</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">HC</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Rate</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0; color: #dc2626;">Override? ⬇</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Jan</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Feb</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Mar</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Status</th>
+          <th style="padding: 6px; border-bottom: 1px solid #e2e8f0;">Decision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 5px; font-weight: 500;">CC-4201</td>
+          <td style="padding: 5px;">PRJ-0042</td>
+          <td style="padding: 5px;">Sr. Cloud Eng</td>
+          <td style="padding: 5px;">FTE</td>
+          <td style="padding: 5px;">US</td>
+          <td style="padding: 5px; text-align: center;">2</td>
+          <td style="padding: 5px;">$185</td>
+          <td style="padding: 5px; text-align: center;">—</td>
+          <td style="padding: 5px;">$64K</td>
+          <td style="padding: 5px;">$64K</td>
+          <td style="padding: 5px;">$64K</td>
+          <td style="padding: 5px;"><span style="background: #f3e8ff; padding: 1px 5px; border-radius: 3px; font-size: 8px;">Submitted</span></td>
+          <td style="padding: 5px;"><span style="color: #16a34a; cursor: pointer;">✓</span> <span style="color: #dc2626; cursor: pointer;">✗</span> <span style="color: #3b82f6; cursor: pointer;">?</span></td>
+        </tr>
+        <tr style="background: #fff7ed;">
+          <td style="padding: 5px; font-weight: 500;">CC-4305</td>
+          <td style="padding: 5px; color: #dc2626; font-weight: bold;">⚠️ Missing</td>
+          <td style="padding: 5px;">DevOps Eng</td>
+          <td style="padding: 5px;">Contr</td>
+          <td style="padding: 5px;">UK</td>
+          <td style="padding: 5px; text-align: center;">1</td>
+          <td style="padding: 5px; color: #dc2626; font-weight: bold;">$160*</td>
+          <td style="padding: 5px; text-align: center;">⚠️</td>
+          <td style="padding: 5px;">$28K</td>
+          <td style="padding: 5px;">$28K</td>
+          <td style="padding: 5px;">$28K</td>
+          <td style="padding: 5px;"><span style="background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: 8px;">Flagged</span></td>
+          <td style="padding: 5px;"><span style="color: #16a34a; cursor: pointer;">✓</span> <span style="color: #dc2626; cursor: pointer;">✗</span> <span style="color: #3b82f6; cursor: pointer;">?</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top: 6px; font-size: 9px; color: #64748b;">Red columns (⬇) = Finance-only columns not shown to Budget Owner. Decision: ✓ Approve · ✗ Reject · ? Request Info</div>
+  </div>
+</div>
+
+<h3 style="margin-top: 24px;">Does this People tab structure make sense?</h3>
+<p class="subtitle">Key decisions to confirm:</p>
+
+<div class="options" data-multiselect>
+  <div class="option" data-choice="structure-good" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Overall structure looks good</h3>
+      <p>Tabs + sub-nav + role-based column visibility is the right approach</p>
+    </div>
+  </div>
+  <div class="option" data-choice="more-monthly" onclick="toggleSelect(this)">
+    <div class="letter">📊</div>
+    <div class="content">
+      <h3>Show me the Monthly Grid sub-view next</h3>
+      <p>The editable monthly planning grid where allocation % and rates drive costs</p>
+    </div>
+  </div>
+  <div class="option" data-choice="more-software" onclick="toggleSelect(this)">
+    <div class="letter">💻</div>
+    <div class="content">
+      <h3>Show me the Software/Operating tabs next</h3>
+      <p>How expense entry and metadata differs from People</p>
+    </div>
+  </div>
+  <div class="option" data-choice="workflow" onclick="toggleSelect(this)">
+    <div class="letter">🔄</div>
+    <div class="content">
+      <h3>Show me the status/workflow bar</h3>
+      <p>How Draft → Submitted → Ready for Approval → Locked → Approved is visualized</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,370 @@
+<h2>Software & Operating Expense Tabs</h2>
+<p class="subtitle">These tabs share a similar structure — metadata + monthly grid. The PRD notes they have "a similar metadata set" with filterable navigation between them.</p>
+
+<!-- Software Tab -->
+<div class="mockup" style="margin-bottom: 24px;">
+  <div class="mockup-header">Budget Owner — Software Expenses Tab</div>
+  <div class="mockup-body" style="padding: 16px; font-size: 10px;">
+    <!-- Top tabs -->
+    <div style="display: flex; gap: 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 0;">
+      <div style="padding: 8px 16px; color: #94a3b8;">People</div>
+      <div style="padding: 8px 16px; border-bottom: 2px solid #3b82f6; margin-bottom: -2px; font-weight: bold; color: #3b82f6;">Software</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Operating</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Capital</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Audit</div>
+    </div>
+    <!-- Sub-nav -->
+    <div style="display: flex; gap: 8px; background: #f8fafc; padding: 8px 16px; border-bottom: 1px solid #e2e8f0; align-items: center;">
+      <div style="padding: 5px 12px; background: white; border-radius: 6px; font-weight: 600; font-size: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); color: #1e40af;">All Software</div>
+      <div style="padding: 5px 12px; font-size: 10px; color: #64748b; cursor: pointer;">By Vendor</div>
+      <div style="padding: 5px 12px; font-size: 10px; color: #64748b; cursor: pointer;">Monthly Grid</div>
+      <div style="margin-left: auto;">
+        <span style="background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 500;">12 items · $1.4M annual</span>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; padding: 14px 16px;">
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase;">Total Software</div>
+        <div style="font-size: 16px; font-weight: bold; margin-top: 3px;">$1.42M</div>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase;">Renewals Due</div>
+        <div style="font-size: 16px; font-weight: bold; margin-top: 3px; color: #f59e0b;">3</div>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase;">CapEx Portion</div>
+        <div style="font-size: 16px; font-weight: bold; margin-top: 3px;">$380K</div>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+        <div style="font-size: 9px; color: #64748b; text-transform: uppercase;">OpEx Portion</div>
+        <div style="font-size: 16px; font-weight: bold; margin-top: 3px;">$1.04M</div>
+      </div>
+    </div>
+
+    <!-- Software table with metadata -->
+    <div style="padding: 0 16px 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div style="display: flex; gap: 8px;">
+          <input class="mock-input" placeholder="Search software..." style="font-size: 10px; padding: 5px 10px; width: 160px;">
+          <select style="font-size: 10px; padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 4px; background: white;">
+            <option>All Funding Types</option>
+          </select>
+        </div>
+        <button class="mock-button" style="font-size: 10px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px;">+ Add Software Expense</button>
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <table style="width: 100%; font-size: 9px; border-collapse: collapse;">
+          <thead>
+            <tr style="background: #f8fafc;">
+              <th style="padding: 7px; text-align: left; border-bottom: 1px solid #e2e8f0;">Software / License</th>
+              <th style="padding: 7px; text-align: left; border-bottom: 1px solid #e2e8f0;">Vendor</th>
+              <th style="padding: 7px; text-align: left; border-bottom: 1px solid #e2e8f0;">Project ID</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Type</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Funding</th>
+              <th style="padding: 7px; text-align: right; border-bottom: 1px solid #e2e8f0;">Annual Cost</th>
+              <th style="padding: 7px; text-align: right; border-bottom: 1px solid #e2e8f0;">Monthly</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Renewal</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Status</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 7px; font-weight: 500;">Snowflake Enterprise</td>
+              <td style="padding: 7px;">Snowflake Inc</td>
+              <td style="padding: 7px;"><code style="background: #f1f5f9; padding: 1px 4px; border-radius: 3px;">PRJ-0042</code></td>
+              <td style="padding: 7px; text-align: center;"><span style="background: #eff6ff; padding: 1px 5px; border-radius: 3px;">SaaS</span></td>
+              <td style="padding: 7px; text-align: center;">OpEx</td>
+              <td style="padding: 7px; text-align: right; font-weight: 600;">$420,000</td>
+              <td style="padding: 7px; text-align: right;">$35,000</td>
+              <td style="padding: 7px; text-align: center;">Mar 2026</td>
+              <td style="padding: 7px; text-align: center;"><span style="background: #dcfce7; padding: 1px 6px; border-radius: 10px;">Active</span></td>
+              <td style="padding: 7px; text-align: center;">✏️ ⋯</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 7px; font-weight: 500;">Dynatrace Full-Stack</td>
+              <td style="padding: 7px;">Dynatrace LLC</td>
+              <td style="padding: 7px;"><code style="background: #f1f5f9; padding: 1px 4px; border-radius: 3px;">PRJ-0018</code></td>
+              <td style="padding: 7px; text-align: center;"><span style="background: #fef3c7; padding: 1px 5px; border-radius: 3px;">License</span></td>
+              <td style="padding: 7px; text-align: center;">CapEx</td>
+              <td style="padding: 7px; text-align: right; font-weight: 600;">$280,000</td>
+              <td style="padding: 7px; text-align: right;">$23,333</td>
+              <td style="padding: 7px; text-align: center; color: #f59e0b; font-weight: 600;">⚠️ Oct 2025</td>
+              <td style="padding: 7px; text-align: center;"><span style="background: #fef3c7; padding: 1px 6px; border-radius: 10px;">Renewal Due</span></td>
+              <td style="padding: 7px; text-align: center;">✏️ ⋯</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 7px; font-weight: 500;">GitHub Enterprise</td>
+              <td style="padding: 7px;">Microsoft</td>
+              <td style="padding: 7px;"><code style="background: #f1f5f9; padding: 1px 4px; border-radius: 3px;">PRJ-0042</code></td>
+              <td style="padding: 7px; text-align: center;"><span style="background: #eff6ff; padding: 1px 5px; border-radius: 3px;">SaaS</span></td>
+              <td style="padding: 7px; text-align: center;">OpEx</td>
+              <td style="padding: 7px; text-align: right; font-weight: 600;">$156,000</td>
+              <td style="padding: 7px; text-align: right;">$13,000</td>
+              <td style="padding: 7px; text-align: center;">Jul 2026</td>
+              <td style="padding: 7px; text-align: center;"><span style="background: #dcfce7; padding: 1px 6px; border-radius: 10px;">Active</span></td>
+              <td style="padding: 7px; text-align: center;">✏️ ⋯</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Operating Tab -->
+<div class="mockup" style="margin-bottom: 24px;">
+  <div class="mockup-header">Budget Owner — Operating Expenses Tab</div>
+  <div class="mockup-body" style="padding: 16px; font-size: 10px;">
+    <!-- Top tabs -->
+    <div style="display: flex; gap: 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 0;">
+      <div style="padding: 8px 16px; color: #94a3b8;">People</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Software</div>
+      <div style="padding: 8px 16px; border-bottom: 2px solid #3b82f6; margin-bottom: -2px; font-weight: bold; color: #3b82f6;">Operating</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Capital</div>
+      <div style="padding: 8px 16px; color: #94a3b8;">Audit</div>
+    </div>
+    <!-- Sub-nav -->
+    <div style="display: flex; gap: 8px; background: #f8fafc; padding: 8px 16px; border-bottom: 1px solid #e2e8f0; align-items: center;">
+      <div style="padding: 5px 12px; background: white; border-radius: 6px; font-weight: 600; font-size: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); color: #1e40af;">All Expenses</div>
+      <div style="padding: 5px 12px; font-size: 10px; color: #64748b; cursor: pointer;">By Category</div>
+      <div style="padding: 5px 12px; font-size: 10px; color: #64748b; cursor: pointer;">Monthly Grid</div>
+      <div style="margin-left: auto;">
+        <span style="background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 500;">8 items · $620K annual</span>
+      </div>
+    </div>
+
+    <!-- Operating expenses table -->
+    <div style="padding: 14px 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div style="display: flex; gap: 8px;">
+          <input class="mock-input" placeholder="Search expenses..." style="font-size: 10px; padding: 5px 10px; width: 160px;">
+          <select style="font-size: 10px; padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 4px; background: white;">
+            <option>All Categories</option>
+            <option>Travel</option>
+            <option>Training</option>
+            <option>Facilities</option>
+            <option>Professional Services</option>
+          </select>
+        </div>
+        <button class="mock-button" style="font-size: 10px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px;">+ Add Operating Expense</button>
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <table style="width: 100%; font-size: 9px; border-collapse: collapse;">
+          <thead>
+            <tr style="background: #f8fafc;">
+              <th style="padding: 7px; text-align: left; border-bottom: 1px solid #e2e8f0;">Expense Description</th>
+              <th style="padding: 7px; text-align: left; border-bottom: 1px solid #e2e8f0;">Category</th>
+              <th style="padding: 7px; text-align: left; border-bottom: 1px solid #e2e8f0;">Project ID</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Recurring?</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Funding</th>
+              <th style="padding: 7px; text-align: right; border-bottom: 1px solid #e2e8f0;">Annual Cost</th>
+              <th style="padding: 7px; text-align: right; border-bottom: 1px solid #e2e8f0;">Monthly</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Start</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">End</th>
+              <th style="padding: 7px; text-align: center; border-bottom: 1px solid #e2e8f0;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 7px; font-weight: 500;">AWS Cloud Hosting</td>
+              <td style="padding: 7px;"><span style="background: #e0f2fe; padding: 1px 5px; border-radius: 3px;">Infrastructure</span></td>
+              <td style="padding: 7px;"><code style="background: #f1f5f9; padding: 1px 4px; border-radius: 3px;">PRJ-0042</code></td>
+              <td style="padding: 7px; text-align: center;">✓ Monthly</td>
+              <td style="padding: 7px; text-align: center;">OpEx</td>
+              <td style="padding: 7px; text-align: right; font-weight: 600;">$240,000</td>
+              <td style="padding: 7px; text-align: right;">$20,000</td>
+              <td style="padding: 7px; text-align: center;">Aug 2025</td>
+              <td style="padding: 7px; text-align: center;">Ongoing</td>
+              <td style="padding: 7px; text-align: center;">✏️ ⋯</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 7px; font-weight: 500;">Team Offsite Q1</td>
+              <td style="padding: 7px;"><span style="background: #fce7f3; padding: 1px 5px; border-radius: 3px;">Travel</span></td>
+              <td style="padding: 7px;"><code style="background: #f1f5f9; padding: 1px 4px; border-radius: 3px;">PRJ-0042</code></td>
+              <td style="padding: 7px; text-align: center;">One-time</td>
+              <td style="padding: 7px; text-align: center;">OpEx</td>
+              <td style="padding: 7px; text-align: right; font-weight: 600;">$45,000</td>
+              <td style="padding: 7px; text-align: right;">—</td>
+              <td style="padding: 7px; text-align: center;">Nov 2025</td>
+              <td style="padding: 7px; text-align: center;">Nov 2025</td>
+              <td style="padding: 7px; text-align: center;">✏️ ⋯</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 7px; font-weight: 500;">Security Consulting (Deloitte)</td>
+              <td style="padding: 7px;"><span style="background: #f3e8ff; padding: 1px 5px; border-radius: 3px;">Prof. Services</span></td>
+              <td style="padding: 7px;"><code style="background: #f1f5f9; padding: 1px 4px; border-radius: 3px;">PRJ-0018</code></td>
+              <td style="padding: 7px; text-align: center;">✓ Monthly</td>
+              <td style="padding: 7px; text-align: center;">CapEx</td>
+              <td style="padding: 7px; text-align: right; font-weight: 600;">$180,000</td>
+              <td style="padding: 7px; text-align: right;">$15,000</td>
+              <td style="padding: 7px; text-align: center;">Sep 2025</td>
+              <td style="padding: 7px; text-align: center;">Feb 2026</td>
+              <td style="padding: 7px; text-align: center;">✏️ ⋯</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Expense Modal -->
+<div class="mockup">
+  <div class="mockup-header">Add Expense Modal — Shared across Software & Operating</div>
+  <div class="mockup-body" style="padding: 0;">
+    <!-- Simulated modal overlay -->
+    <div style="background: rgba(0,0,0,0.3); padding: 30px; display: flex; justify-content: center;">
+      <div style="background: white; border-radius: 12px; width: 100%; max-width: 560px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);">
+        <!-- Modal header -->
+        <div style="padding: 20px 24px 0; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 14px; font-weight: 700;">Add Operating Expense</div>
+            <div style="font-size: 10px; color: #64748b; margin-top: 2px;">This will create a new forecast line item in your current draft</div>
+          </div>
+          <div style="width: 24px; height: 24px; background: #f1f5f9; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px;">✕</div>
+        </div>
+        <!-- Modal body -->
+        <div style="padding: 20px 24px; font-size: 11px;">
+          <!-- Row 1 -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Expense Description *</label>
+              <input class="mock-input" style="width: 100%; padding: 8px 10px; font-size: 11px;" placeholder="e.g., AWS Hosting">
+            </div>
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Category *</label>
+              <select style="width: 100%; padding: 8px 10px; font-size: 11px; border: 1px solid #e2e8f0; border-radius: 6px; background: white;">
+                <option>Select category...</option>
+                <option>Infrastructure</option>
+                <option>Travel</option>
+                <option>Training</option>
+                <option>Professional Services</option>
+                <option>Facilities</option>
+              </select>
+            </div>
+          </div>
+          <!-- Row 2 -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Project ID *</label>
+              <select style="width: 100%; padding: 8px 10px; font-size: 11px; border: 1px solid #e2e8f0; border-radius: 6px; background: white;">
+                <option>Select project...</option>
+                <option>PRJ-0042 (Cloud Migration)</option>
+                <option>PRJ-0018 (Security Platform)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Funding Type *</label>
+              <div style="display: flex; gap: 8px; margin-top: 4px;">
+                <label style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border: 2px solid #3b82f6; border-radius: 6px; background: #eff6ff; cursor: pointer;">
+                  <input type="radio" name="funding" checked> <span style="font-size: 10px; font-weight: 500;">OpEx</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+                  <input type="radio" name="funding"> <span style="font-size: 10px; font-weight: 500;">CapEx</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- Row 3 -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Monthly Amount *</label>
+              <input class="mock-input" style="width: 100%; padding: 8px 10px; font-size: 11px;" placeholder="$0.00">
+            </div>
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Start Date *</label>
+              <input class="mock-input" type="text" style="width: 100%; padding: 8px 10px; font-size: 11px;" placeholder="Aug 2025">
+            </div>
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">End Date</label>
+              <input class="mock-input" type="text" style="width: 100%; padding: 8px 10px; font-size: 11px;" placeholder="Ongoing">
+            </div>
+          </div>
+          <!-- Row 4 -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Recurrence</label>
+              <select style="width: 100%; padding: 8px 10px; font-size: 11px; border: 1px solid #e2e8f0; border-radius: 6px; background: white;">
+                <option>Monthly (recurring)</option>
+                <option>One-time</option>
+                <option>Quarterly</option>
+                <option>Annual</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 10px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Vendor (optional)</label>
+              <input class="mock-input" style="width: 100%; padding: 8px 10px; font-size: 11px;" placeholder="e.g., AWS, Deloitte">
+            </div>
+          </div>
+          <!-- Preview -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+            <div style="font-size: 10px; font-weight: 600; margin-bottom: 6px;">Forecast Impact Preview</div>
+            <div style="display: flex; gap: 16px; font-size: 10px; color: #64748b;">
+              <span>Monthly: <strong style="color: #111;">$20,000</strong></span>
+              <span>FY26 Total: <strong style="color: #111;">$240,000</strong></span>
+              <span>Months: <strong style="color: #111;">12</strong></span>
+            </div>
+            <div style="font-size: 9px; color: #64748b; margin-top: 6px;">This will add a new line item to your monthly grid. You can adjust individual months after creation.</div>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div style="padding: 16px 24px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 9px; color: #dc2626;">* Required fields</div>
+          <div style="display: flex; gap: 8px;">
+            <button class="mock-button" style="font-size: 11px; padding: 8px 16px;">Cancel</button>
+            <button class="mock-button" style="font-size: 11px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600;">Add to Forecast</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Finance view difference callout -->
+<div style="margin-top: 20px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px 18px;">
+  <div style="font-weight: 600; font-size: 12px; margin-bottom: 6px;">🔍 Finance Operator Differences (Software & Operating)</div>
+  <div style="font-size: 10px; color: #1e40af; line-height: 1.6;">
+    • Sees <strong>all cost centers</strong> in one view (Budget Owner sees only their own)<br>
+    • Can <strong>expand/collapse metadata columns</strong> to reveal the monthly cost breakdown inline (per PRD appendix)<br>
+    • Has <strong>Cost Center</strong> and <strong>Section Type</strong> as grouping/filter columns<br>
+    • Cannot add or edit expenses — can only <strong>Approve</strong>, <strong>Challenge</strong>, or <strong>Request Info</strong><br>
+    • Sees <strong>SOW/Contracts Matching</strong> as an additional sub-view under Capital tab
+  </div>
+</div>
+
+<h3 style="margin-top: 24px;">What would you like to explore next?</h3>
+<div class="options">
+  <div class="option" data-choice="design-approved" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>I've seen enough — let's write the spec</h3>
+      <p>Move to the design document and implementation plan</p>
+    </div>
+  </div>
+  <div class="option" data-choice="audit-tab" onclick="toggleSelect(this)">
+    <div class="letter">📋</div>
+    <div class="content">
+      <h3>Show me the Audit tab</h3>
+      <p>Version history, change log, comparison view</p>
+    </div>
+  </div>
+  <div class="option" data-choice="capital-sow" onclick="toggleSelect(this)">
+    <div class="letter">📄</div>
+    <div class="content">
+      <h3>Show me Capital / SOW Matching</h3>
+      <p>Finance-only view for matching capital expenditures to contracts</p>
+    </div>
+  </div>
+  <div class="option" data-choice="full-nav" onclick="toggleSelect(this)">
+    <div class="letter">🗺️</div>
+    <div class="content">
+      <h3>Show me full app navigation</h3>
+      <p>How all modules connect — forecast, AFE, cross-cost center, approvals</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,116 @@
+<h2>Forecast Planning Dashboard — Role Comparison</h2>
+<p class="subtitle">Which role's view should we design first? Here's how they differ.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Budget Owner View</div>
+    <div class="mockup-body" style="font-size: 12px; padding: 16px;">
+      <div class="mock-nav" style="margin-bottom: 12px;">People | Software | Operating | Capital | Audit</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+        <div style="background: #e0f2fe; border-radius: 8px; padding: 10px; text-align: center;">
+          <div style="font-size: 10px; color: #64748b;">Total Forecast</div>
+          <div style="font-weight: bold; font-size: 14px;">$4.2M</div>
+        </div>
+        <div style="background: #dcfce7; border-radius: 8px; padding: 10px; text-align: center;">
+          <div style="font-size: 10px; color: #64748b;">Approved</div>
+          <div style="font-weight: bold; font-size: 14px;">$2.8M</div>
+        </div>
+        <div style="background: #fef3c7; border-radius: 8px; padding: 10px; text-align: center;">
+          <div style="font-size: 10px; color: #64748b;">Variance</div>
+          <div style="font-weight: bold; font-size: 14px;">-$140K</div>
+        </div>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong>People — Hiring Requests</strong>
+          <button class="mock-button" style="font-size: 10px; padding: 4px 8px;">+ Add Request</button>
+        </div>
+        <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
+          <tr style="background: #f1f5f9;"><th style="padding: 4px; text-align: left;">Role</th><th>Country</th><th>HC</th><th>Rate</th><th>Monthly $</th><th>Status</th></tr>
+          <tr><td style="padding: 4px;">Sr. Engineer</td><td>US</td><td>2</td><td>$185/hr</td><td style="background: #fff7ed;">$64K</td><td><span style="background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-size: 9px;">Draft</span></td></tr>
+          <tr><td style="padding: 4px;">Data Analyst</td><td>India</td><td>3</td><td>$45/hr</td><td style="background: #fff7ed;">$23K</td><td><span style="background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-size: 9px;">Approved</span></td></tr>
+        </table>
+      </div>
+      <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-size: 10px; color: #64748b;">Quick Actions</div>
+        <div style="display: flex; gap: 6px; justify-content: center; margin-top: 6px;">
+          <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Submit for Review</button>
+          <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Compare Versions</button>
+          <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Export</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Finance Operator View</div>
+    <div class="mockup-body" style="font-size: 12px; padding: 16px;">
+      <div class="mock-nav" style="margin-bottom: 12px;">People | Software | Operating | Capital | SOW Match | Audit</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin-bottom: 16px;">
+        <div style="background: #e0f2fe; border-radius: 8px; padding: 8px; text-align: center;">
+          <div style="font-size: 9px; color: #64748b;">Total Budget</div>
+          <div style="font-weight: bold; font-size: 13px;">$18.6M</div>
+        </div>
+        <div style="background: #dcfce7; border-radius: 8px; padding: 8px; text-align: center;">
+          <div style="font-size: 9px; color: #64748b;">Committed</div>
+          <div style="font-weight: bold; font-size: 13px;">$12.1M</div>
+        </div>
+        <div style="background: #fef3c7; border-radius: 8px; padding: 8px; text-align: center;">
+          <div style="font-size: 9px; color: #64748b;">Variance</div>
+          <div style="font-weight: bold; font-size: 13px;">-$820K</div>
+        </div>
+        <div style="background: #fce7f3; border-radius: 8px; padding: 8px; text-align: center;">
+          <div style="font-size: 9px; color: #64748b;">Overrides</div>
+          <div style="font-weight: bold; font-size: 13px;">7 ⚠️</div>
+        </div>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong>People — All Cost Centers</strong>
+          <div style="display: flex; gap: 4px;">
+            <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Filter ▾</button>
+            <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Expand Metadata</button>
+          </div>
+        </div>
+        <table style="width: 100%; font-size: 9px; border-collapse: collapse;">
+          <tr style="background: #f1f5f9;"><th style="padding: 4px; text-align: left;">Cost Ctr</th><th>Role</th><th>Type</th><th>Rate</th><th>Override?</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Status</th></tr>
+          <tr><td style="padding: 3px;">CC-4201</td><td>Sr. Eng</td><td>FTE</td><td>$185</td><td>—</td><td>$64K</td><td>$64K</td><td>$64K</td><td><span style="background: #dbeafe; padding: 1px 4px; border-radius: 3px;">Review</span></td></tr>
+          <tr><td style="padding: 3px;">CC-4305</td><td>Analyst</td><td>Contr</td><td style="color: #dc2626; font-weight: bold;">$72*</td><td>⚠️ Manual</td><td>$12K</td><td>$12K</td><td>$12K</td><td><span style="background: #fef3c7; padding: 1px 4px; border-radius: 3px;">Flagged</span></td></tr>
+        </table>
+        <div style="font-size: 9px; color: #94a3b8; margin-top: 4px;">* Rate override: default was $45/hr (Vendor: Infosys). Manual set to $72/hr.</div>
+      </div>
+      <div style="display: flex; gap: 6px; margin-top: 8px;">
+        <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Approve Selected</button>
+        <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Request Info</button>
+        <button class="mock-button" style="font-size: 9px; padding: 3px 6px;">Challenge Rate</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top: 24px;">Which should we build first?</h3>
+<p class="subtitle">Click to select your preference</p>
+
+<div class="options">
+  <div class="option" data-choice="budget-owner" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Budget Owner First</h3>
+      <p>Editable forecasts, hiring requests, expense entry, submit for review. The "creator" experience — where data originates.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="finance" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Finance Operator First</h3>
+      <p>Cross-cost-center view, expanded metadata, rate override visibility, approval controls. The "reviewer" experience.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="both" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Build Both Together</h3>
+      <p>Design the shared data structure and tabs first, then layer role-specific controls on top. Slightly more work upfront but ensures consistency.</p>
+    </div>
+  </div>
+</div>

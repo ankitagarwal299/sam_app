@@ -1,0 +1,189 @@
+/* Global Tech Forecast & AFE Platform — Prototype Styles */
+
+* { box-sizing: border-box; }
+body { font-family: 'Inter', system-ui, sans-serif; }
+
+/* Sidebar nav links */
+.nav-link {
+  color: #94a3b8;
+  transition: all 0.15s;
+  font-size: 13px;
+}
+.nav-link:hover {
+  background: #334155;
+  color: #e2e8f0;
+}
+.nav-link.active {
+  background: #334155;
+  color: #ffffff;
+  border-left: 3px solid #3b82f6;
+  font-weight: 600;
+}
+
+/* Role toggle buttons */
+.role-btn {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.role-btn:hover { background: #e2e8f0; }
+.role-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* Sub-tab navigation */
+.sub-tab {
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sub-tab:hover { background: #e2e8f0; }
+.sub-tab.active {
+  background: white;
+  color: #1e40af;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Workflow pipeline */
+.workflow-step {
+  flex: 1;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.workflow-step.completed {
+  border-color: #16a34a;
+  background: #dcfce7;
+}
+.workflow-step.current {
+  border-color: #3b82f6;
+  background: #dbeafe;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+.workflow-step.current .step-label { color: #1e40af; font-weight: 700; }
+.workflow-step.completed .step-label { color: #166534; }
+.workflow-connector {
+  width: 24px;
+  height: 2px;
+  background: #e2e8f0;
+  flex-shrink: 0;
+}
+.workflow-connector.done { background: #16a34a; }
+
+/* Data tables */
+.data-table {
+  width: 100%;
+  font-size: 11px;
+  border-collapse: collapse;
+}
+.data-table th {
+  background: #f8fafc;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e2e8f0;
+}
+.data-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.data-table tr:hover td { background: #f8fafc; }
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+}
+.badge-draft { background: #dbeafe; color: #1e40af; }
+.badge-submitted { background: #f3e8ff; color: #6b21a8; }
+.badge-approved { background: #dcfce7; color: #166534; }
+.badge-rejected { background: #fef2f2; color: #991b1b; }
+.badge-warning { background: #fef3c7; color: #92400e; }
+.badge-locked { background: #f1f5f9; color: #374151; }
+
+/* KPI Cards */
+.kpi-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: box-shadow 0.2s;
+}
+.kpi-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+/* Monthly grid inputs */
+.grid-input {
+  width: 58px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 10px;
+  transition: border-color 0.15s;
+}
+.grid-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
+}
+.grid-input.error {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+/* Action buttons */
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #2563eb; }
+.btn-secondary {
+  background: white;
+  color: #374151;
+  border: 1px solid #e2e8f0;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+/* Finance-only columns */
+.finance-col { display: none; }
+.role-finance .finance-col { display: table-cell; }
+.role-finance .budget-owner-only { display: none; }
+.role-approver .budget-owner-only { display: none; }
+
+/* Animate page transitions */
+.page-enter {
+  animation: fadeIn 0.2s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
