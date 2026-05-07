@@ -82,7 +82,7 @@ export default function ViewAssetPage() {
     const [isRenewalModalOpen, setIsRenewalModalOpen] = useState(false);
     const [selectedVendorForRenewal, setSelectedVendorForRenewal] = useState<string | undefined>(undefined);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-    const [confirmConfig, setConfirmConfig] = useState({ title: '', description: '', confirmText: '', variant: 'default' as 'default' | 'destructive', action: '' });
+    const [confirmConfig, setConfirmConfig] = useState({ title: '', description: '', confirmText: '', variant: 'default' as 'default' | 'destructive', action: '', poNumbers: [] as string[] });
 
     const uniqueFiscalYears = Array.from(new Set(data?.map(po => po.FISCAL_YEAR).filter(Boolean))).sort();
 
@@ -132,33 +132,40 @@ export default function ViewAssetPage() {
         return selectedIndices.map(idx => filteredData[idx]).filter(Boolean);
     };
 
-    const openConfirm = (title: string, description: string, confirmText: string, action: string, variant: 'default' | 'destructive' = 'default') => {
-        setConfirmConfig({ title, description, confirmText, variant, action });
+    const openConfirm = (title: string, description: string, confirmText: string, action: string, variant: 'default' | 'destructive' = 'default', poNumbers?: string[]) => {
+        setConfirmConfig({ title, description, confirmText, variant, action, poNumbers: poNumbers || [] });
         setIsConfirmDialogOpen(true);
     };
 
     const handleConfirm = async () => {
-        const selected = getSelectedPOs();
-        if (selected.length === 0) return;
-        const poNumbers = selected.map(po => po.PO_NUMBER);
+        const poNumbers = confirmConfig.poNumbers && confirmConfig.poNumbers.length > 0
+            ? confirmConfig.poNumbers
+            : getSelectedPOs().map(po => po.PO_NUMBER);
+        if (poNumbers.length === 0) return;
 
-        switch (confirmConfig.action) {
-            case 'approve':
-                await updatePOStatus(poNumbers, 'Approved');
-                break;
-            case 'sign':
-                await updatePOStatus(poNumbers, 'Signed');
-                break;
-            case 'ignore':
-                await updatePOStatus(poNumbers, 'Ignored');
-                break;
-            case 'revert':
-                await updatePOStatus(poNumbers, 'Draft');
-                break;
-            case 'send-new':
-                await updatePOStatus(poNumbers, 'Active');
-                break;
-        }
+        const statusMap: Record<string, string> = {
+            approve: 'Approved',
+            sign: 'Signed',
+            ignore: 'Ignored',
+            revert: 'Draft',
+            'send-new': 'Active',
+        };
+        const newStatus = statusMap[confirmConfig.action];
+        if (newStatus) await updatePOStatus(poNumbers, newStatus);
+    };
+
+    const confirmSinglePO = (po: PurchaseOrder, action: string, newStatus: string) => {
+        const amount = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(parseFloat(po.TOTAL_AMOUNT_USD));
+        const details = `PO: ${po.PO_NUMBER} · ${po.VENDOR_NAME}\nDescription: ${po.PO_DESCRIPTION}\nAmount: ${amount}\nCurrent Status: ${po.PO_STATUS} → ${newStatus}`;
+
+        const titles: Record<string, string> = {
+            approve: 'Approve Purchase Order',
+            sign: 'Sign Purchase Order',
+            ignore: 'Ignore Purchase Order',
+            revert: 'Revert to Draft',
+        };
+        const variant = action === 'ignore' ? 'destructive' as const : 'default' as const;
+        openConfirm(titles[action] || 'Confirm', details, newStatus === 'Ignored' ? 'Ignore' : newStatus === 'Draft' ? 'Revert' : newStatus, action, variant, [po.PO_NUMBER]);
     };
 
     const handleSendAsRenewal = () => {
@@ -273,21 +280,21 @@ export default function ViewAssetPage() {
                 if (status === 'Draft') {
                     return (
                         <div className="flex gap-1">
-                            <Button size="sm" variant="ghost" className="h-7 text-xs text-green-700 hover:bg-green-50" onClick={() => updatePOStatus([poNumber], 'Approved')}>✓ Approve</Button>
-                            <Button size="sm" variant="ghost" className="h-7 text-xs text-red-700 hover:bg-red-50" onClick={() => updatePOStatus([poNumber], 'Ignored')}>✗</Button>
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-green-700 hover:bg-green-50" onClick={() => confirmSinglePO(row.original, 'approve', 'Approved')}>✓ Approve</Button>
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-red-700 hover:bg-red-50" onClick={() => confirmSinglePO(row.original, 'ignore', 'Ignored')}>✗</Button>
                         </div>
                     );
                 }
                 if (status === 'Approved') {
                     return (
                         <div className="flex gap-1">
-                            <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-700 hover:bg-indigo-50" onClick={() => updatePOStatus([poNumber], 'Signed')}>✍ Sign</Button>
-                            <Button size="sm" variant="ghost" className="h-7 text-xs text-red-700 hover:bg-red-50" onClick={() => updatePOStatus([poNumber], 'Ignored')}>✗</Button>
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-700 hover:bg-indigo-50" onClick={() => confirmSinglePO(row.original, 'sign', 'Signed')}>✍ Sign</Button>
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-red-700 hover:bg-red-50" onClick={() => confirmSinglePO(row.original, 'ignore', 'Ignored')}>✗</Button>
                         </div>
                     );
                 }
                 if (status === 'Ignored') {
-                    return <Button size="sm" variant="ghost" className="h-7 text-xs text-orange-700 hover:bg-orange-50" onClick={() => updatePOStatus([poNumber], 'Draft')}><RotateCcw className="mr-1 h-3 w-3" />Revert</Button>;
+                    return <Button size="sm" variant="ghost" className="h-7 text-xs text-orange-700 hover:bg-orange-50" onClick={() => confirmSinglePO(row.original, 'revert', 'Draft')}><RotateCcw className="mr-1 h-3 w-3" />Revert</Button>;
                 }
                 return null;
             },
@@ -377,11 +384,19 @@ export default function ViewAssetPage() {
                         <span className="text-xs text-gray-600">{selectedCount} selected</span>
                         <div className="flex gap-2">
                             <Button size="sm" variant="outline" className="h-7 text-xs text-green-700 border-green-200 hover:bg-green-50"
-                                onClick={() => openConfirm('Approve Purchase Orders', `Approve ${selectedCount} selected PO(s)?`, 'Approve', 'approve')}>
+                                onClick={() => {
+                                    const selected = getSelectedPOs();
+                                    const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME} (${po.PO_STATUS} → Approved)`).join('\n');
+                                    openConfirm('Approve Purchase Orders', `Approve ${selectedCount} selected PO(s)?\n\n${details}`, 'Approve', 'approve');
+                                }}>
                                 ✓ Approve Selected
                             </Button>
                             <Button size="sm" variant="outline" className="h-7 text-xs text-red-700 border-red-200 hover:bg-red-50"
-                                onClick={() => openConfirm('Ignore Purchase Orders', `Ignore ${selectedCount} selected PO(s)?`, 'Ignore', 'ignore', 'destructive')}>
+                                onClick={() => {
+                                    const selected = getSelectedPOs();
+                                    const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME} (${po.PO_STATUS} → Ignored)`).join('\n');
+                                    openConfirm('Ignore Purchase Orders', `Ignore ${selectedCount} selected PO(s)?\n\n${details}`, 'Ignore', 'ignore', 'destructive');
+                                }}>
                                 ✗ Ignore Selected
                             </Button>
                         </div>
@@ -397,7 +412,8 @@ export default function ViewAssetPage() {
                         const selected = getSelectedPOs();
                         if (selected.length === 0) { toast.error("Select at least one signed PO"); return; }
                         if (selected.some(po => po.PO_STATUS !== 'Signed')) { toast.error("Only signed POs can be sent"); return; }
-                        openConfirm('Send as New', `Send ${selected.length} PO(s) to GPS Portfolio & Financial Analyst Portfolio?`, 'Send', 'send-new');
+                        const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME}`).join('\n');
+                        openConfirm('Send as New', `Send ${selected.length} PO(s) to GPS Portfolio & Financial Analyst Portfolio?\n\n${details}`, 'Send', 'send-new');
                     }}
                 >
                     Send as New →
