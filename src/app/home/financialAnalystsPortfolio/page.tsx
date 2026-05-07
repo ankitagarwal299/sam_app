@@ -117,12 +117,8 @@ const fetchPOs = async (): Promise<PO[]> => {
         };
     });
 
-    // Filter UI with PO_Status : Active (or null as per requirement "Active or PO_Status : null")
-    // Requirement says: "Add PO_Status : Active or PO_Status : null - UI will be filtered with PO_Status : Active"
-    // This implies we show only Active ones? Or if null is allowed?
-    // "UI will be filtered with PO_Status : Active" -> I will interpret this as showing only 'Active'.
-    // If requirement means "Active or null are valid, but filter for Active", then I filter for 'Active'.
-    return allPos.filter((po: any) => po.status === 'Active');
+    // Show Signed and Active POs — Signed POs appear here once signed on the Inbound screen
+    return allPos.filter((po: any) => po.status === 'Signed' || po.status === 'Active');
 };
 
 // --- Column Definitions ---

@@ -81,7 +81,7 @@ const fetchGPSPortfolio = async (): Promise<GPSPortfolioItem[]> => {
             };
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((po: any) => po.status === 'Active');
+        .filter((po: any) => po.status === 'Signed' || po.status === 'Active');
 };
 
 export default function GPSPortfolioPage() {
