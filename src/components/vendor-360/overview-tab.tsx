@@ -4,10 +4,10 @@ import { DollarSign, Calendar, Clock, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KpiCard } from './kpi-card';
 import { DonutChartKPI } from './donut-chart-kpi';
-import { Publisher360Data, formatCurrency, formatDate, getYearlyTotal, getYearlyInvoices } from '@/lib/publisher-360-data';
+import { Vendor360Data, formatCurrency, formatDate, getYearlyTotal, getYearlyInvoices } from '@/lib/vendor-360-data';
 
 interface OverviewTabProps {
-    data: Publisher360Data;
+    data: Vendor360Data;
     selectedYear?: number;
     onNavigateToInvoices?: () => void;
 }

@@ -1,4 +1,4 @@
-// Publisher 360° View - Mock Data & Types
+// Vendor 360° View - Mock Data & Types
 
 // ==================== Types ====================
 
@@ -108,7 +108,7 @@ export interface Invoice {
     bu: string;
 }
 
-export interface Publisher360Data {
+export interface Vendor360Data {
     publisher: Publisher;
     kpis: ContractKPIs;
     keyDates: KeyDates;
@@ -133,7 +133,7 @@ export const publishers: Publisher[] = [
     { id: 'ibm', name: 'IBM' },
 ];
 
-const oracleData: Publisher360Data = {
+const oracleData: Vendor360Data = {
     publisher: { id: 'oracle', name: 'Oracle' },
     kpis: {
         tcv: 2500000,
@@ -298,7 +298,7 @@ const oracleData: Publisher360Data = {
     ],
 };
 
-const microsoftData: Publisher360Data = {
+const microsoftData: Vendor360Data = {
     publisher: { id: 'microsoft', name: 'Microsoft' },
     kpis: {
         tcv: 4200000,
@@ -375,13 +375,13 @@ const microsoftData: Publisher360Data = {
 };
 
 // Map of all publisher data
-export const publisherDataMap: Record<string, Publisher360Data> = {
+export const publisherDataMap: Record<string, Vendor360Data> = {
     oracle: oracleData,
     microsoft: microsoftData,
 };
 
 // Helper function to get publisher data
-export function getPublisher360Data(publisherId: string): Publisher360Data | null {
+export function getVendor360Data(publisherId: string): Vendor360Data | null {
     return publisherDataMap[publisherId] || null;
 }
 

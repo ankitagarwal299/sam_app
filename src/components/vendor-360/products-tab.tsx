@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Eye, Pencil, Plus, Cloud, Server, HardDrive, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Product } from '@/lib/publisher-360-data';
+import { Product } from '@/lib/vendor-360-data';
 import { EditSidePanel, FormField, FormInput, FormTextArea, FormSelect } from './edit-side-panel';
 import { toast } from 'sonner';
 

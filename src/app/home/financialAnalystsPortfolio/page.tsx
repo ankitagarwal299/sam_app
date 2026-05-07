@@ -103,7 +103,7 @@ const fetchPOs = async (): Promise<PO[]> => {
             poDescription: String(getVal('PO_DESCRIPTION') || getVal('VENDOR_NAME') || 'Unknown'),
             amount: Number(getVal('TOTAL_AMOUNT_USD') || 0),
             fiscalYear: String(getVal('FISCAL_YEAR') || ''),
-            status: String(getVal('PO_STATUS') || 'Active'), // Default to Active/Null logic handling
+            status: String(getVal('PO_STATUS') || 'Draft'),
             startDate: String(getVal('PO_START_DATE') || ''),
             endDate: String(getVal('PO_END_DATE') || ''),
             owner: String(getVal('FINANCIAL_ANALYST_NAME') || ''),

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { publishers, getPublisher360Data } from '@/lib/publisher-360-data';
+import { publishers, getVendor360Data } from '@/lib/vendor-360-data';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     }
 
     // Get specific publisher data
-    const data = getPublisher360Data(publisherId);
+    const data = getVendor360Data(publisherId);
 
     if (!data) {
         return NextResponse.json({ error: 'Publisher not found' }, { status: 404 });

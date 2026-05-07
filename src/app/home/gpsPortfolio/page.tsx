@@ -4,188 +4,115 @@ import { useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { Check, RefreshCw, X } from 'lucide-react';
+
+interface RawDataItem {
+    key: string;
+    value: string | number;
+    name: string;
+}
 
 interface GPSPortfolioItem {
-    "BU Name Software": string;
-    "Title": string;
-    "Publisher": string;
-    "PO Description": string;
-    "Biz Owner": string;
-    "Opportunity Status": string;
-    "Opportunity Category": string;
-    "Strategic Intent": string;
-    "License Rights": string;
-    "Contract URL": string | null;
-    "Board Approval Level": string;
-    "Deal Status": string;
-    "Total Realized Savings": number;
+    vendor: string;
+    poDescription: string;
+    poNumber: string;
+    purchaseType: string;
+    amount: number;
+    startDate: string;
+    endDate: string;
+    expenseType: string;
+    productOwner: string;
+    financialAnalyst: string;
+    glAccount: string;
+    deptCode: string;
 }
 
 const columns: ColumnDef<GPSPortfolioItem>[] = [
+    { accessorKey: "vendor", header: "Vendor" },
+    { accessorKey: "poDescription", header: "PO Description" },
+    { accessorKey: "poNumber", header: "PO Number" },
+    { accessorKey: "purchaseType", header: "Purchase Type" },
     {
-        accessorKey: "BU Name Software",
-        header: "BU Name Software",
-    },
-    {
-        accessorKey: "Title",
-        header: "Title",
-    },
-    {
-        accessorKey: "Publisher",
-        header: "Publisher",
-    },
-    {
-        accessorKey: "PO Description",
-        header: "PO Description",
-    },
-    {
-        accessorKey: "Biz Owner",
-        header: "Biz Owner",
-    },
-    {
-        accessorKey: "Opportunity Status",
-        header: "Opportunity Status",
-    },
-    {
-        accessorKey: "Opportunity Category",
-        header: "Opportunity Category",
-    },
-    {
-        accessorKey: "Strategic Intent",
-        header: "Strategic Intent",
-    },
-    {
-        accessorKey: "License Rights",
-        header: "License Rights",
-    },
-    {
-        accessorKey: "Contract URL",
-        header: "Contract URL",
+        accessorKey: "amount",
+        header: "PO Amount",
         cell: ({ row }) => {
-            const url = row.getValue("Contract URL") as string;
-            return url ? (
-                <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                    Link
-                </a>
-            ) : "N/A";
+            const amount = row.getValue("amount") as number;
+            return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
         },
     },
     {
-        accessorKey: "Board Approval Level",
-        header: "Board Approval Level",
+        accessorKey: "startDate",
+        header: "Start Date",
+        cell: ({ row }) => { const d = row.getValue("startDate") as string; return d ? d.split(' ')[0] : 'N/A'; },
     },
     {
-        accessorKey: "Deal Status",
-        header: "Deal Status",
+        accessorKey: "endDate",
+        header: "End Date",
+        cell: ({ row }) => { const d = row.getValue("endDate") as string; return d ? d.split(' ')[0] : 'N/A'; },
     },
-    {
-        accessorKey: "Total Realized Savings",
-        header: "Total Realized Savings",
-        cell: ({ row }) => {
-            const amount = row.getValue("Total Realized Savings") as number;
-            return new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount);
-        },
-    },
-];
-
-const mockData: GPSPortfolioItem[] = [
-    {
-        "BU Name Software": "Finance",
-        "Title": "Snowflake Enterprise",
-        "Publisher": "Snowflake Inc.",
-        "PO Description": "Annual subscription specifically for finance analytics.",
-        "Biz Owner": "John Doe",
-        "Opportunity Status": "Active",
-        "Opportunity Category": "Renewal",
-        "Strategic Intent": "Cost Optimization",
-        "License Rights": "Enterprise",
-        "Contract URL": "https://example.com/contract/123",
-        "Board Approval Level": "Level 1",
-        "Deal Status": "Negotiating",
-        "Total Realized Savings": 50000,
-    },
-    {
-        "BU Name Software": "Engineering",
-        "Title": "Jira Cloud",
-        "Publisher": "Atlassian",
-        "PO Description": "Project management tool for 500 users.",
-        "Biz Owner": "Jane Smith",
-        "Opportunity Status": "Pending",
-        "Opportunity Category": "New Purchase",
-        "Strategic Intent": "Process Improvement",
-        "License Rights": "Standard",
-        "Contract URL": null,
-        "Board Approval Level": "Level 2",
-        "Deal Status": "Draft",
-        "Total Realized Savings": 12000,
-    },
-    {
-        "BU Name Software": "HR",
-        "Title": "Workday HCM",
-        "Publisher": "Workday",
-        "PO Description": "Human Capital Management suite renewal.",
-        "Biz Owner": "Robert Johnson",
-        "Opportunity Status": "Review",
-        "Opportunity Category": "Renewal",
-        "Strategic Intent": "Compliance",
-        "License Rights": "SaaS",
-        "Contract URL": "https://example.com/contract/456",
-        "Board Approval Level": "Level 1",
-        "Deal Status": "Approved",
-        "Total Realized Savings": 75000,
-    },
+    { accessorKey: "expenseType", header: "Expense Type" },
+    { accessorKey: "productOwner", header: "Product Owner" },
+    { accessorKey: "financialAnalyst", header: "Financial Analyst" },
+    { accessorKey: "glAccount", header: "GL Account" },
+    { accessorKey: "deptCode", header: "Dept Number" },
 ];
 
 const fetchGPSPortfolio = async (): Promise<GPSPortfolioItem[]> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return mockData;
+    const res = await fetch('/api/datalake/v1/attributes/purchaseorders', { method: 'POST' });
+    if (!res.ok) throw new Error('Failed to fetch');
+    const json = await res.json();
+
+    return json.purchaseOrderRows
+        .map((row: RawDataItem[]) => {
+            const get = (key: string) => row.find(f => f.key === key)?.value ?? '';
+            return {
+                vendor: get('VENDOR_NAME'),
+                poDescription: get('PO_DESCRIPTION'),
+                poNumber: get('PO_NUMBER'),
+                purchaseType: get('PURCHASE_TYPE') || 'Software',
+                amount: parseFloat(String(get('TOTAL_AMOUNT_USD'))) || 0,
+                startDate: get('PO_START_DATE'),
+                endDate: get('PO_END_DATE'),
+                expenseType: get('COGS_OR_OPEX'),
+                productOwner: get('PRODUCT_OWNER'),
+                financialAnalyst: get('FINANCIAL_ANALYST_NAME'),
+                glAccount: get('GL_ACCOUNT'),
+                deptCode: get('FINANCIAL_DEPARTMENT_CODE'),
+                status: get('PO_STATUS'),
+            };
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .filter((po: any) => po.status === 'Active');
 };
 
-export default function RenewalPage() {
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['gpsPortfolio'],
-        queryFn: fetchGPSPortfolio,
-    });
+export default function GPSPortfolioPage() {
+    const { data, isLoading, error } = useQuery({ queryKey: ['gpsPortfolio'], queryFn: fetchGPSPortfolio });
 
     if (isLoading) {
         return (
             <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h2 className="text-xl font-semibold text-gray-700">GPS Portfolio:</h2>
-                        <p className="text-sm text-gray-500 mt-1">
-                            Monthly reconciled view of General Ledger Actuals with PO Forecasts, compared per Organization Leaders.
-                        </p>
-                    </div>
-                </div>
-                <div className="space-y-2">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-20 w-full" />
-                    <Skeleton className="h-20 w-full" />
-                </div>
+                <h2 className="text-xl font-semibold text-gray-700">GPS Portfolio</h2>
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-64 w-full" />
             </div>
         );
     }
 
-    if (error) {
-        return <div className="text-red-500">Error loading data</div>;
-    }
+    if (error) return <div className="text-red-500">Error loading data</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex flex-col gap-1">
-                <h2 className="text-xl font-medium text-gray-600">GPS Portfolio:</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                    SW Purchase and Renewal Forecasts View for Global Purchase Services
-                </p>
+                <h2 className="text-xl font-medium text-gray-600">GPS Portfolio</h2>
+                <p className="text-sm text-gray-500 mt-1">Purchase and Renewal Forecasts View for Global Purchase Services</p>
             </div>
-            <DataTable columns={columns} data={data || []} />
+            {data && data.length > 0 ? (
+                <DataTable columns={columns} data={data} />
+            ) : (
+                <div className="text-center py-12 text-gray-500 border border-dashed border-gray-300 rounded-xl">
+                    <p className="text-sm">No active purchase orders yet.</p>
+                    <p className="text-xs text-gray-400 mt-1">Sign and send POs from the Inbound Purchase Order screen to see them here.</p>
+                </div>
+            )}
         </div>
     );
 }

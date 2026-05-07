@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Invoice, formatCurrency, formatDate } from '@/lib/publisher-360-data';
+import { Invoice, formatCurrency, formatDate } from '@/lib/vendor-360-data';
 
 interface InvoicesTabProps {
     invoices: Invoice[];

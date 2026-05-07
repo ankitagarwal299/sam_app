@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Plus, Pencil, MoreHorizontal, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Stakeholder } from '@/lib/publisher-360-data';
+import { Stakeholder } from '@/lib/vendor-360-data';
 import { EditSidePanel, FormField, FormInput, FormTextArea, FormSelect } from './edit-side-panel';
 import { toast } from 'sonner';
 

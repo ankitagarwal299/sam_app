@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronRight, Eye, Pencil, Download, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Contract, formatCurrency, formatDate } from '@/lib/publisher-360-data';
+import { Contract, formatCurrency, formatDate } from '@/lib/vendor-360-data';
 import { EditSidePanel, FormField, FormInput, FormTextArea, FormSelect } from './edit-side-panel';
 import { toast } from 'sonner';
 

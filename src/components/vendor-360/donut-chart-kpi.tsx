@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { formatCurrency } from '@/lib/publisher-360-data';
+import { formatCurrency } from '@/lib/vendor-360-data';
 import { AlertCircle } from 'lucide-react';
 
 interface DonutChartKPIProps {
