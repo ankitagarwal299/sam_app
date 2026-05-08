@@ -43,6 +43,8 @@ interface PurchaseOrder {
     FISCAL_YEAR: string;
     FINANCIAL_ANALYST_NAME: string;
     PURCHASE_TYPE: string;
+    ASSOCIATION_TYPE: string;
+    ASSOCIATED_PO: string;
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -65,6 +67,8 @@ const fetchPurchaseOrders = async (): Promise<PurchaseOrder[]> => {
         po['FISCAL_YEAR'] = po['FISCAL_YEAR'] || 'Unknown';
         po['PURCHASE_TYPE'] = po['PURCHASE_TYPE'] || 'Software';
         po['PO_STATUS'] = po['PO_STATUS'] || 'Draft';
+        po['ASSOCIATION_TYPE'] = po['ASSOCIATION_TYPE'] || '';
+        po['ASSOCIATED_PO'] = po['ASSOCIATED_PO'] || '';
         return po as PurchaseOrder;
     }).filter((po: PurchaseOrder) => po.PO_STATUS !== 'Active');
 };
@@ -143,6 +147,16 @@ export default function ViewAssetPage() {
             : getSelectedPOs().map(po => po.PO_NUMBER);
         if (poNumbers.length === 0) return;
 
+        if (confirmConfig.action === 'send-new') {
+            // Mark each PO as New Purchase with no prior association
+            for (const poNum of poNumbers) {
+                await updatePOFields(poNum, { ASSOCIATION_TYPE: 'New', ASSOCIATED_PO: '' });
+            }
+            toast.success(`${poNumbers.length} PO(s) marked as New Purchase`);
+            setRowSelection({});
+            return;
+        }
+
         const statusMap: Record<string, string> = {
             approve: 'Approved',
             sign: 'Signed',
@@ -167,12 +181,24 @@ export default function ViewAssetPage() {
         openConfirm(titles[action] || 'Confirm', details, newStatus === 'Ignored' ? 'Ignore' : newStatus === 'Draft' ? 'Revert' : newStatus, action, variant, [po.PO_NUMBER]);
     };
 
+    const updatePOFields = async (poNumber: string, fields: Record<string, string | null>) => {
+        const res = await fetch('/api/datalake/v1/attributes/purchaseorders', {
+            method: 'PATCH',
+            body: JSON.stringify({ poNumber, updates: fields }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (!res.ok) throw new Error('Failed to update PO');
+        queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+        queryClient.invalidateQueries({ queryKey: ['gpsPortfolio'] });
+        queryClient.invalidateQueries({ queryKey: ['financial-portfolio'] });
+    };
+
     const handleSendAsNew = () => {
         const selected = getSelectedPOs();
         if (selected.length === 0) { toast.error("Select at least one signed PO"); return; }
         if (selected.some(po => po.PO_STATUS !== 'Signed')) { toast.error("Only signed POs can be sent as new"); return; }
         const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME}`).join('\n');
-        openConfirm('Send as New', `Send ${selected.length} PO(s) as new to GPS Portfolio & Financial Analyst Portfolio?\n\n${details}`, 'Send as New', 'send-new');
+        openConfirm('Send as New', `Mark ${selected.length} PO(s) as New Purchase (no prior association)?\n\n${details}`, 'Send as New', 'send-new');
     };
 
     const handleSendAsRenewal = () => {
@@ -185,8 +211,20 @@ export default function ViewAssetPage() {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleRenewalConfirm = (existingPo: any) => {
-        toast.success(`Associated with existing PO: ${existingPo.id}`);
+    const handleRenewalConfirm = async (existingPo: any) => {
+        const selected = getSelectedPOs();
+        if (selected.length === 0) return;
+        const po = selected[0];
+        try {
+            await updatePOFields(po.PO_NUMBER, {
+                ASSOCIATION_TYPE: 'Renewal',
+                ASSOCIATED_PO: existingPo.id,
+            });
+            toast.success(`${po.PO_NUMBER} associated as Renewal of ${existingPo.id}`);
+            setRowSelection({});
+        } catch {
+            toast.error('Failed to set renewal association');
+        }
     };
 
     const columns: ColumnDef<PurchaseOrder>[] = [
@@ -274,6 +312,25 @@ export default function ViewAssetPage() {
         {
             accessorKey: "FINANCIAL_ANALYST_NAME",
             header: "Financial Analyst",
+        },
+        {
+            accessorKey: "ASSOCIATION_TYPE",
+            header: "Association",
+            cell: ({ row }) => {
+                const type = row.getValue("ASSOCIATION_TYPE") as string;
+                if (!type) return <span className="text-gray-300 text-xs">—</span>;
+                const color = type === 'Renewal' ? 'text-violet-800 bg-violet-100' : 'text-blue-800 bg-blue-100';
+                return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${color}`}>{type}</span>;
+            },
+        },
+        {
+            accessorKey: "ASSOCIATED_PO",
+            header: "Previous PO",
+            cell: ({ row }) => {
+                const po = row.getValue("ASSOCIATED_PO") as string;
+                if (!po) return <span className="text-gray-300 text-xs">—</span>;
+                return <span className="text-xs font-mono text-violet-600">{po}</span>;
+            },
         },
         {
             id: "actions",

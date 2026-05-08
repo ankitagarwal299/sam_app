@@ -24,6 +24,8 @@ interface GPSPortfolioItem {
     financialAnalyst: string;
     glAccount: string;
     deptCode: string;
+    associationType: string;
+    associatedPO: string;
 }
 
 const columns: ColumnDef<GPSPortfolioItem>[] = [
@@ -54,6 +56,25 @@ const columns: ColumnDef<GPSPortfolioItem>[] = [
     { accessorKey: "financialAnalyst", header: "Financial Analyst" },
     { accessorKey: "glAccount", header: "GL Account" },
     { accessorKey: "deptCode", header: "Dept Number" },
+    {
+        accessorKey: "associationType",
+        header: "Association",
+        cell: ({ row }) => {
+            const type = row.getValue("associationType") as string;
+            if (!type) return <span className="text-gray-300 text-xs">—</span>;
+            const color = type === 'Renewal' ? 'text-violet-800 bg-violet-100' : 'text-blue-800 bg-blue-100';
+            return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${color}`}>{type}</span>;
+        },
+    },
+    {
+        accessorKey: "associatedPO",
+        header: "Previous PO",
+        cell: ({ row }) => {
+            const po = row.getValue("associatedPO") as string;
+            if (!po) return <span className="text-gray-300 text-xs">—</span>;
+            return <span className="text-xs font-mono text-violet-600">{po}</span>;
+        },
+    },
 ];
 
 const fetchGPSPortfolio = async (): Promise<GPSPortfolioItem[]> => {
@@ -77,6 +98,8 @@ const fetchGPSPortfolio = async (): Promise<GPSPortfolioItem[]> => {
                 financialAnalyst: get('FINANCIAL_ANALYST_NAME'),
                 glAccount: get('GL_ACCOUNT'),
                 deptCode: get('FINANCIAL_DEPARTMENT_CODE'),
+                associationType: get('ASSOCIATION_TYPE') || '',
+                associatedPO: get('ASSOCIATED_PO') || '',
                 status: get('PO_STATUS'),
             };
         })

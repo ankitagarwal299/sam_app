@@ -407,12 +407,10 @@ export async function PATCH(request: Request) {
         Object.keys(updates).forEach(key => {
             const field = purchaseOrderRows[rowIndex].find(f => f.key === key);
             if (field) {
-                // Determine if we need to parse the value (e.g. for numbers)
-                // For simplicity in this mock, we'll trust the input or cast slightly
                 field.value = updates[key];
             } else {
-                // Optionally create the field if it doesn't exist (mock data flexibility)
-                // For now, we only update existing fields to avoid polluting schema
+                // Create the field if it doesn't exist
+                purchaseOrderRows[rowIndex].push({ key, value: updates[key], name: key, type: 'STRING', readOnly: false });
             }
         });
     }
