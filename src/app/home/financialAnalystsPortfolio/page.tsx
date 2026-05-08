@@ -118,8 +118,8 @@ const fetchPOs = async (): Promise<PO[]> => {
         };
     });
 
-    // Only show POs that have been sent via "Send as New" or "Send as Renewal"
-    return allPos.filter((po: any) => po.associationType === 'New' || po.associationType === 'Renewal');
+    // Only show POs with InPortfolio status (sent via Send as New or Send as Renewal)
+    return allPos.filter((po: any) => po.status === 'InPortfolio');
 };
 
 // --- Column Definitions ---
@@ -162,6 +162,10 @@ const poColumns: ColumnDef<PO>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const dateStr = row.getValue('startDate') as string;
+            return dateStr ? dateStr.split(' ')[0] : 'N/A';
+        },
     },
     {
         accessorKey: 'endDate',
@@ -172,6 +176,10 @@ const poColumns: ColumnDef<PO>[] = [
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
+        },
+        cell: ({ row }) => {
+            const dateStr = row.getValue('endDate') as string;
+            return dateStr ? dateStr.split(' ')[0] : 'N/A';
         },
     },
     {

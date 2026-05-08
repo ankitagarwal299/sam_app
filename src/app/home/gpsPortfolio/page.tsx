@@ -104,7 +104,7 @@ const fetchGPSPortfolio = async (): Promise<GPSPortfolioItem[]> => {
             };
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((po: any) => po.associationType === 'New' || po.associationType === 'Renewal');
+        .filter((po: any) => po.status === 'InPortfolio');
 };
 
 export default function GPSPortfolioPage() {

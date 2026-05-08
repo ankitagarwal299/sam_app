@@ -51,6 +51,7 @@ const STATUS_COLORS: Record<string, string> = {
     Draft: 'text-blue-800 bg-blue-100',
     Approved: 'text-green-800 bg-green-100',
     Signed: 'text-indigo-800 bg-indigo-100',
+    InPortfolio: 'text-teal-800 bg-teal-100',
     Ignored: 'text-gray-600 bg-gray-100',
 };
 
@@ -102,6 +103,7 @@ export default function ViewAssetPage() {
         Draft: data?.filter(po => po.PO_STATUS === 'Draft').length || 0,
         Approved: data?.filter(po => po.PO_STATUS === 'Approved').length || 0,
         Signed: data?.filter(po => po.PO_STATUS === 'Signed').length || 0,
+        InPortfolio: data?.filter(po => po.PO_STATUS === 'InPortfolio').length || 0,
         Ignored: data?.filter(po => po.PO_STATUS === 'Ignored').length || 0,
     };
 
@@ -149,11 +151,11 @@ export default function ViewAssetPage() {
         if (poNumbers.length === 0) return;
 
         if (confirmConfig.action === 'send-new') {
-            // Mark each PO as New Purchase with no prior association
+            // Mark each PO as New Purchase, change status to InPortfolio
             for (const poNum of poNumbers) {
-                await updatePOFields(poNum, { ASSOCIATION_TYPE: 'New', ASSOCIATED_PO: '' });
+                await updatePOFields(poNum, { ASSOCIATION_TYPE: 'New', ASSOCIATED_PO: '', PO_STATUS: 'InPortfolio' });
             }
-            toast.success(`${poNumbers.length} PO(s) marked as New Purchase`);
+            toast.success(`${poNumbers.length} PO(s) sent as New Purchase → InPortfolio`);
             setRowSelection({});
             return;
         }
@@ -221,8 +223,9 @@ export default function ViewAssetPage() {
             await updatePOFields(po.PO_NUMBER, {
                 ASSOCIATION_TYPE: 'Renewal',
                 ASSOCIATED_PO: existingPo.id,
+                PO_STATUS: 'InPortfolio',
             });
-            toast.success(`${po.PO_NUMBER} associated as Renewal of ${existingPo.id}`);
+            toast.success(`${po.PO_NUMBER} sent as Renewal of ${existingPo.id} → InPortfolio`);
             setRowSelection({});
         } catch {
             toast.error('Failed to set renewal association');
@@ -408,7 +411,7 @@ export default function ViewAssetPage() {
                 {/* Filter pills + search */}
                 <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
                     <div className="flex gap-1.5">
-                        {(['All', 'Draft', 'Approved', 'Signed', 'Ignored'] as const).map(status => (
+                        {(['All', 'Draft', 'Approved', 'Signed', 'InPortfolio', 'Ignored'] as const).map(status => (
                             <button
                                 key={status}
                                 onClick={() => { setStatusFilter(status); setRowSelection({}); }}
