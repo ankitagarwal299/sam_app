@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Mail, Phone, MessageSquare, Plus, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PublisherContact, InternalContact } from '@/lib/publisher-360-data';
+import { PublisherContact, InternalContact } from '@/lib/vendor-360-data';
 import { EditSidePanel, FormField, FormInput, FormSelect } from './edit-side-panel';
 import { toast } from 'sonner';
 

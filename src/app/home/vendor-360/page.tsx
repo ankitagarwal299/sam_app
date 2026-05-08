@@ -7,34 +7,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Toaster } from '@/components/ui/sonner';
 import { LayoutDashboard, FileText, Package, Users, UserCheck, PiggyBank, Receipt } from 'lucide-react';
 
-import { PublisherSelector } from '@/components/publisher-360/publisher-selector';
-import { OverviewTab } from '@/components/publisher-360/overview-tab';
-import { ContractsTab } from '@/components/publisher-360/contracts-tab';
-import { ProductsTab } from '@/components/publisher-360/products-tab';
-import { PeopleTab } from '@/components/publisher-360/people-tab';
-import { StakeholdersTab } from '@/components/publisher-360/stakeholders-tab';
-import { SavingsTab } from '@/components/publisher-360/savings-tab';
-import { InvoicesTab } from '@/components/publisher-360/invoices-tab';
+import { PublisherSelector } from '@/components/vendor-360/vendor-selector';
+import { OverviewTab } from '@/components/vendor-360/overview-tab';
+import { ContractsTab } from '@/components/vendor-360/contracts-tab';
+import { ProductsTab } from '@/components/vendor-360/products-tab';
+import { PeopleTab } from '@/components/vendor-360/people-tab';
+import { StakeholdersTab } from '@/components/vendor-360/stakeholders-tab';
+import { SavingsTab } from '@/components/vendor-360/savings-tab';
+import { InvoicesTab } from '@/components/vendor-360/invoices-tab';
 
-import { Publisher, Publisher360Data, Contract, Product, PublisherContact, InternalContact, Stakeholder } from '@/lib/publisher-360-data';
+import { Publisher, Vendor360Data, Contract, Product, PublisherContact, InternalContact, Stakeholder } from '@/lib/vendor-360-data';
 
 // Fetch publishers list
 const fetchPublishers = async (): Promise<{ publishers: Publisher[] }> => {
-    const res = await fetch('/api/publisher-360');
+    const res = await fetch('/api/vendor-360');
     if (!res.ok) throw new Error('Failed to fetch publishers');
     return res.json();
 };
 
 // Fetch specific publisher data
-const fetchPublisherData = async (publisherId: string): Promise<Publisher360Data> => {
-    const res = await fetch(`/api/publisher-360?publisherId=${publisherId}`);
+const fetchPublisherData = async (publisherId: string): Promise<Vendor360Data> => {
+    const res = await fetch(`/api/vendor-360?publisherId=${publisherId}`);
     if (!res.ok) throw new Error('Failed to fetch publisher data');
     return res.json();
 };
 
-export default function Publisher360Page() {
+export default function Vendor360Page() {
     const [selectedPublisher, setSelectedPublisher] = useState<Publisher | null>(null);
-    const [localData, setLocalData] = useState<Publisher360Data | null>(null);
+    const [localData, setLocalData] = useState<Vendor360Data | null>(null);
     const [selectedYear, setSelectedYear] = useState<number>(2024);
     const [activeTab, setActiveTab] = useState<string>('overview');
 
@@ -46,7 +46,7 @@ export default function Publisher360Page() {
 
     // Fetch publisher data when selected
     const { data: publisherData, isLoading: isLoadingData } = useQuery({
-        queryKey: ['publisher360', selectedPublisher?.id],
+        queryKey: ['vendor360', selectedPublisher?.id],
         queryFn: () => fetchPublisherData(selectedPublisher!.id),
         enabled: !!selectedPublisher,
     });
@@ -147,7 +147,7 @@ export default function Publisher360Page() {
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-                                Publisher 360° View
+                                Vendor 360° View
                             </h1>
                             <p className="text-sm text-gray-500 mt-0.5">
                                 Comprehensive view of purchases, renewals, financials, and relationships

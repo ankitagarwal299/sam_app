@@ -103,7 +103,7 @@ const fetchPOs = async (): Promise<PO[]> => {
             poDescription: String(getVal('PO_DESCRIPTION') || getVal('VENDOR_NAME') || 'Unknown'),
             amount: Number(getVal('TOTAL_AMOUNT_USD') || 0),
             fiscalYear: String(getVal('FISCAL_YEAR') || ''),
-            status: String(getVal('PO_STATUS') || 'Active'), // Default to Active/Null logic handling
+            status: String(getVal('PO_STATUS') || 'Draft'),
             startDate: String(getVal('PO_START_DATE') || ''),
             endDate: String(getVal('PO_END_DATE') || ''),
             owner: String(getVal('FINANCIAL_ANALYST_NAME') || ''),
@@ -113,16 +113,13 @@ const fetchPOs = async (): Promise<PO[]> => {
             productOwner: String(getVal('PRODUCT_OWNER') || ''),
             leader2: String(getVal('NODE_LEVEL02_NAME_HIER') || ''),
             leader3: String(getVal('NODE_LEVEL03_NAME') || ''),
+            associationType: String(getVal('ASSOCIATION_TYPE') || ''),
             raw: row
         };
     });
 
-    // Filter UI with PO_Status : Active (or null as per requirement "Active or PO_Status : null")
-    // Requirement says: "Add PO_Status : Active or PO_Status : null - UI will be filtered with PO_Status : Active"
-    // This implies we show only Active ones? Or if null is allowed?
-    // "UI will be filtered with PO_Status : Active" -> I will interpret this as showing only 'Active'.
-    // If requirement means "Active or null are valid, but filter for Active", then I filter for 'Active'.
-    return allPos.filter((po: any) => po.status === 'Active');
+    // Only show POs with InPortfolio status (sent via Send as New or Send as Renewal)
+    return allPos.filter((po: any) => po.status === 'InPortfolio');
 };
 
 // --- Column Definitions ---
@@ -165,6 +162,10 @@ const poColumns: ColumnDef<PO>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const dateStr = row.getValue('startDate') as string;
+            return dateStr ? dateStr.split(' ')[0] : 'N/A';
+        },
     },
     {
         accessorKey: 'endDate',
@@ -175,6 +176,10 @@ const poColumns: ColumnDef<PO>[] = [
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
+        },
+        cell: ({ row }) => {
+            const dateStr = row.getValue('endDate') as string;
+            return dateStr ? dateStr.split(' ')[0] : 'N/A';
         },
     },
     {

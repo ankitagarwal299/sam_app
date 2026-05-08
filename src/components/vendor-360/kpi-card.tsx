@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { formatCurrency } from '@/lib/publisher-360-data';
+import { formatCurrency } from '@/lib/vendor-360-data';
 
 interface KpiCardProps {
     title: string;

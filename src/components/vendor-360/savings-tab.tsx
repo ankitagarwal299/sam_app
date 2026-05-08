@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Saving, formatCurrency } from '@/lib/publisher-360-data';
+import { Saving, formatCurrency } from '@/lib/vendor-360-data';
 
 interface SavingsTabProps {
     savings: Saving[];

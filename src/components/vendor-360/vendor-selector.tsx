@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { Check, ChevronsUpDown, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Publisher } from '@/lib/publisher-360-data';
+import { Publisher } from '@/lib/vendor-360-data';
 
 interface PublisherSelectorProps {
     publishers: Publisher[];

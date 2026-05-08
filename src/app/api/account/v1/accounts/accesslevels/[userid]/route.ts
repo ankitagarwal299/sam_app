@@ -47,7 +47,7 @@ export async function GET() {
             {
                 "id": "xxxxxxxxxxxxxxxxxxx",
                 "moduleName": "GPS Portfolio",
-                "moduleDescription": "GPS Portfolio : SW Purchase and Renewal Forecasts View for Global Purchase Services",
+                "moduleDescription": "GPS Portfolio : Purchase and Renewal Forecasts View for Global Purchase Services",
                 "moduleImagePath": "/assets/images/poProcessing.jpg",
                 "moduleUri": "/home/gpsPortfolio",
                 "moduleIsDisabled": false,

@@ -4,35 +4,28 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowUpDown, RotateCcw, Calendar } from 'lucide-react';
+import { ArrowUpDown, RotateCcw, Plus } from 'lucide-react';
 import { useState } from 'react';
-import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
-import { RenewalModal } from "@/components/renewal-modal"
-import { ConfirmDialog } from "@/components/confirm-dialog"
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { RenewalModal } from "@/components/renewal-modal";
+import { ConfirmDialog } from "@/components/confirm-dialog";
+import { AddDraftPOModal } from "@/components/add-draft-po-modal";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs"
+} from "@/components/ui/select";
 
-// Define the shape of the raw data item from API
 interface RawDataItem {
     key: string;
     value: string | number;
     name: string;
 }
 
-// Define the shape of the transformed data for the table
 interface PurchaseOrder {
     VENDOR_NAME: string;
     PO_DESCRIPTION: string;
@@ -49,246 +42,70 @@ interface PurchaseOrder {
     PO_STATUS: string;
     FISCAL_YEAR: string;
     FINANCIAL_ANALYST_NAME: string;
+    PURCHASE_TYPE: string;
+    ASSOCIATION_TYPE: string;
+    ASSOCIATED_PO: string;
 }
 
-const columns: ColumnDef<PurchaseOrder>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: "VENDOR_NAME",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Vendor Name
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "PO_DESCRIPTION",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    PO Description
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "PO_NUMBER",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    PO Number
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "PO_START_DATE",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Start Date
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            const dateStr = row.getValue("PO_START_DATE") as string;
-            // Expected format "2025/08/01 00:00:00" -> "2025/08/01"
-            return dateStr ? dateStr.split(' ')[0] : 'N/A';
-        }
-    },
-    {
-        accessorKey: "PO_END_DATE",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    End Date
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            const dateStr = row.getValue("PO_END_DATE") as string;
-            return dateStr ? dateStr.split(' ')[0] : 'N/A';
-        }
-    },
-    {
-        accessorKey: "TOTAL_AMOUNT_USD",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    PO Amount
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("TOTAL_AMOUNT_USD"));
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount);
-            return formatted;
-        },
-    },
-    {
-        accessorKey: "NODE_LEVEL02_NAME_HIER",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Leader 2
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "NODE_LEVEL03_NAME",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Leader 3
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "FINANCIAL_DEPARTMENT_CODE",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Dept Number
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "GL_ACCOUNT",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    GL Account
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "COGS_OR_OPEX",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Expense Type
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "PRODUCT_OWNER",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Product Owner
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "FINANCIAL_ANALYST_NAME",
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Financial Analyst
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-];
+const STATUS_COLORS: Record<string, string> = {
+    Draft: 'text-blue-800 bg-blue-100',
+    Approved: 'text-green-800 bg-green-100',
+    Signed: 'text-indigo-800 bg-indigo-100',
+    InPortfolio: 'text-teal-800 bg-teal-100',
+    Ignored: 'text-gray-600 bg-gray-100',
+};
 
 const fetchPurchaseOrders = async (): Promise<PurchaseOrder[]> => {
-    const res = await fetch('/api/datalake/v1/attributes/purchaseorders', {
-        method: 'POST',
-    });
-    if (!res.ok) {
-        throw new Error('Network response was not ok');
-    }
+    const res = await fetch('/api/datalake/v1/attributes/purchaseorders', { method: 'POST' });
+    if (!res.ok) throw new Error('Network response was not ok');
     const json = await res.json();
 
-    const allPos = json.purchaseOrderRows.map((row: RawDataItem[]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return json.purchaseOrderRows.map((row: RawDataItem[]) => {
         const po: Record<string, any> = {};
-        row.forEach((item) => {
-            po[item.key] = item.value;
-        });
-
+        row.forEach((item) => { po[item.key] = item.value; });
         po['PO_DESCRIPTION'] = po['PO_DESCRIPTION'] || po['VENDOR_NAME'] || 'Unknown';
         po['FISCAL_YEAR'] = po['FISCAL_YEAR'] || 'Unknown';
-
+        po['PURCHASE_TYPE'] = po['PURCHASE_TYPE'] || 'Software';
+        po['PO_STATUS'] = po['PO_STATUS'] || 'Draft';
+        po['ASSOCIATION_TYPE'] = po['ASSOCIATION_TYPE'] || '';
+        po['ASSOCIATED_PO'] = po['ASSOCIATED_PO'] || '';
         return po as PurchaseOrder;
-    });
-
-    // Show everything except 'Active' (so we get both pending/null and Ignored)
-    return allPos.filter((po: any) => po.PO_STATUS !== 'Active');
+    }).filter((po: PurchaseOrder) => po.PO_STATUS !== 'Active');
 };
 
 export default function ViewAssetPage() {
     const queryClient = useQueryClient();
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['purchaseOrders'],
-        queryFn: fetchPurchaseOrders,
-    });
+    const { data, isLoading, error } = useQuery({ queryKey: ['purchaseOrders'], queryFn: fetchPurchaseOrders });
 
-    const [isRenewalModalOpen, setIsRenewalModalOpen] = useState(false)
-    const [selectedVendorForRenewal, setSelectedVendorForRenewal] = useState<string | undefined>(undefined)
-    const [rowSelection, setRowSelection] = useState({})
-    const [selectedFiscalYear, setSelectedFiscalYear] = useState<string>("All")
-    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
-    const [isIgnoreConfirmOpen, setIsIgnoreConfirmOpen] = useState(false)
-    const [isRevertConfirmOpen, setIsRevertConfirmOpen] = useState(false)
-    const [activeTab, setActiveTab] = useState<string>("pending")
+    const [rowSelection, setRowSelection] = useState({});
+    const [statusFilter, setStatusFilter] = useState<string>('All');
+    const [selectedFiscalYear, setSelectedFiscalYear] = useState<string>('All');
+    const [purchaseTypeFilter, setPurchaseTypeFilter] = useState<string>('All');
 
-    const uniqueFiscalYears = Array.from(new Set(data?.map(po => po.FISCAL_YEAR).filter(Boolean))).sort()
+    const [isAddDraftOpen, setIsAddDraftOpen] = useState(false);
+    const [isRenewalModalOpen, setIsRenewalModalOpen] = useState(false);
+    const [selectedVendorForRenewal, setSelectedVendorForRenewal] = useState<string | undefined>(undefined);
+    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [confirmConfig, setConfirmConfig] = useState({ title: '', description: '', confirmText: '', variant: 'default' as 'default' | 'destructive', action: '', poNumbers: [] as string[] });
+
+    const uniqueFiscalYears = Array.from(new Set(data?.map(po => po.FISCAL_YEAR).filter(Boolean))).sort();
 
     const filteredData = data?.filter(po => {
-        // Tab filter
-        if (activeTab === "pending" && po.PO_STATUS === 'Ignored') return false;
-        if (activeTab === "ignored" && po.PO_STATUS !== 'Ignored') return false;
-
-        // FY filter
-        if (selectedFiscalYear === "All") return true;
-        return String(po.FISCAL_YEAR) === selectedFiscalYear;
+        if (statusFilter !== 'All' && po.PO_STATUS !== statusFilter) return false;
+        if (selectedFiscalYear !== 'All' && String(po.FISCAL_YEAR) !== selectedFiscalYear) return false;
+        if (purchaseTypeFilter !== 'All' && po.PURCHASE_TYPE !== purchaseTypeFilter) return false;
+        return true;
     }) || [];
+
+    const statusCounts = {
+        All: data?.length || 0,
+        Draft: data?.filter(po => po.PO_STATUS === 'Draft').length || 0,
+        Approved: data?.filter(po => po.PO_STATUS === 'Approved').length || 0,
+        Signed: data?.filter(po => po.PO_STATUS === 'Signed').length || 0,
+        InPortfolio: data?.filter(po => po.PO_STATUS === 'InPortfolio').length || 0,
+        Ignored: data?.filter(po => po.PO_STATUS === 'Ignored').length || 0,
+    };
 
     const updatePOStatus = async (poNumbers: string[], status: string) => {
         const promises = poNumbers.map(poNumber =>
@@ -298,7 +115,6 @@ export default function ViewAssetPage() {
                 headers: { 'Content-Type': 'application/json' }
             })
         );
-
         try {
             const results = await Promise.all(promises);
             const failures = results.filter(r => !r.ok);
@@ -308,100 +124,256 @@ export default function ViewAssetPage() {
                 toast.success(`Successfully updated ${poNumbers.length} PO(s) to ${status}`);
             }
             queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+            queryClient.invalidateQueries({ queryKey: ['gpsPortfolio'] });
+            queryClient.invalidateQueries({ queryKey: ['financial-portfolio'] });
+            queryClient.invalidateQueries({ queryKey: ['portfolioPos'] });
             setRowSelection({});
         } catch (err) {
             toast.error("An error occurred while updating PO status");
             console.error(err);
         }
-    }
+    };
 
-    const handleAddAsNew = async () => {
+    const getSelectedPOs = () => {
         const selectedIndices = Object.keys(rowSelection).map(Number);
-        if (selectedIndices.length === 0) {
-            toast.error("Please select at least one PO")
-            return
-        }
+        return selectedIndices.map(idx => filteredData[idx]).filter(Boolean);
+    };
+
+    const openConfirm = (title: string, description: string, confirmText: string, action: string, variant: 'default' | 'destructive' = 'default', poNumbers?: string[]) => {
+        setConfirmConfig({ title, description, confirmText, variant, action, poNumbers: poNumbers || [] });
         setIsConfirmDialogOpen(true);
-    }
+    };
 
-    const confirmAddAsNew = async () => {
-        const selectedIndices = Object.keys(rowSelection).map(Number);
-        if (selectedIndices.length === 0) return;
+    const handleConfirm = async () => {
+        const poNumbers = confirmConfig.poNumbers && confirmConfig.poNumbers.length > 0
+            ? confirmConfig.poNumbers
+            : getSelectedPOs().map(po => po.PO_NUMBER);
+        if (poNumbers.length === 0) return;
 
-        const poNumbers = selectedIndices.map(idx => filteredData[idx].PO_NUMBER);
-        await updatePOStatus(poNumbers, 'Active');
-    }
-
-    const handleIgnore = async () => {
-        const selectedIndices = Object.keys(rowSelection).map(Number);
-        if (selectedIndices.length === 0) {
-            toast.error("Please select at least one PO")
-            return
-        }
-        setIsIgnoreConfirmOpen(true);
-    }
-
-    const confirmIgnore = async () => {
-        const selectedIndices = Object.keys(rowSelection).map(Number);
-        if (selectedIndices.length === 0) return;
-
-        const poNumbers = selectedIndices.map(idx => filteredData[idx].PO_NUMBER);
-        await updatePOStatus(poNumbers, 'Ignored');
-    }
-
-    const handleRevert = async () => {
-        const selectedIndices = Object.keys(rowSelection).map(Number);
-        if (selectedIndices.length === 0) {
-            toast.error("Please select at least one PO")
-            return
-        }
-        setIsRevertConfirmOpen(true);
-    }
-
-    const confirmRevert = async () => {
-        const selectedIndices = Object.keys(rowSelection).map(Number);
-        if (selectedIndices.length === 0) return;
-
-        const poNumbers = selectedIndices.map(idx => filteredData[idx].PO_NUMBER);
-        // Setting status back to null marks it as pending/fresh
-        await updatePOStatus(poNumbers, null as any);
-    }
-
-    const handleAddAsRenewal = async () => {
-        const selectedIndices = Object.keys(rowSelection).map(Number)
-        if (selectedIndices.length === 0) {
-            toast.error("Please select a PO to renew")
-            return
-        }
-        if (selectedIndices.length > 1) {
-            toast.error("Please select only one PO for renewal association")
-            return
+        if (confirmConfig.action === 'send-new') {
+            // Mark each PO as New Purchase, change status to InPortfolio
+            for (const poNum of poNumbers) {
+                await updatePOFields(poNum, { ASSOCIATION_TYPE: 'New', ASSOCIATED_PO: '', PO_STATUS: 'InPortfolio' });
+            }
+            toast.success(`${poNumbers.length} PO(s) sent as New Purchase → InPortfolio`);
+            setRowSelection({});
+            return;
         }
 
-        const selectedPO = filteredData[selectedIndices[0]]
-        if (selectedPO) {
-            // Update status to Active first (as per requirement to remove from list)
-            await updatePOStatus([selectedPO.PO_NUMBER], 'Active');
-            setSelectedVendorForRenewal(selectedPO.VENDOR_NAME)
-            setIsRenewalModalOpen(true)
-        }
-    }
+        const statusMap: Record<string, string> = {
+            approve: 'Approved',
+            sign: 'Signed',
+            ignore: 'Ignored',
+            revert: 'Draft',
+        };
+        const newStatus = statusMap[confirmConfig.action];
+        if (newStatus) await updatePOStatus(poNumbers, newStatus);
+    };
 
-    const handleRenewalConfirm = (existingPo: any) => {
-        toast.success(`Associated with existing PO: ${existingPo.id}`)
-    }
+    const confirmSinglePO = (po: PurchaseOrder, action: string, newStatus: string) => {
+        const amount = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(parseFloat(po.TOTAL_AMOUNT_USD));
+        const details = `PO: ${po.PO_NUMBER} · ${po.VENDOR_NAME}\nDescription: ${po.PO_DESCRIPTION}\nAmount: ${amount}\nCurrent Status: ${po.PO_STATUS} → ${newStatus}`;
+
+        const titles: Record<string, string> = {
+            approve: 'Approve Purchase Order',
+            sign: 'Sign Purchase Order',
+            ignore: 'Ignore Purchase Order',
+            revert: 'Revert to Draft',
+        };
+        const variant = action === 'ignore' ? 'destructive' as const : 'default' as const;
+        openConfirm(titles[action] || 'Confirm', details, newStatus === 'Ignored' ? 'Ignore' : newStatus === 'Draft' ? 'Revert' : newStatus, action, variant, [po.PO_NUMBER]);
+    };
+
+    const updatePOFields = async (poNumber: string, fields: Record<string, string | null>) => {
+        const res = await fetch('/api/datalake/v1/attributes/purchaseorders', {
+            method: 'PATCH',
+            body: JSON.stringify({ poNumber, updates: fields }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (!res.ok) throw new Error('Failed to update PO');
+        queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+        queryClient.invalidateQueries({ queryKey: ['gpsPortfolio'] });
+        queryClient.invalidateQueries({ queryKey: ['financial-portfolio'] });
+            queryClient.invalidateQueries({ queryKey: ['portfolioPos'] });
+    };
+
+    const handleSendAsNew = () => {
+        const selected = getSelectedPOs();
+        if (selected.length === 0) { toast.error("Select at least one signed PO"); return; }
+        if (selected.some(po => po.PO_STATUS !== 'Signed')) { toast.error("Only signed POs can be sent as new"); return; }
+        const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME}`).join('\n');
+        openConfirm('Send as New', `Mark ${selected.length} PO(s) as New Purchase (no prior association)?\n\n${details}`, 'Send as New', 'send-new');
+    };
+
+    const handleSendAsRenewal = () => {
+        const selected = getSelectedPOs();
+        if (selected.length === 0) { toast.error("Select at least one signed PO"); return; }
+        if (selected.some(po => po.PO_STATUS !== 'Signed')) { toast.error("Only signed POs can be sent as renewal"); return; }
+        if (selected.length > 1) { toast.error("Select only one PO for renewal"); return; }
+        setSelectedVendorForRenewal(selected[0].VENDOR_NAME);
+        setIsRenewalModalOpen(true);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleRenewalConfirm = async (existingPo: any) => {
+        const selected = getSelectedPOs();
+        if (selected.length === 0) return;
+        const po = selected[0];
+        try {
+            await updatePOFields(po.PO_NUMBER, {
+                ASSOCIATION_TYPE: 'Renewal',
+                ASSOCIATED_PO: existingPo.id,
+                PO_STATUS: 'InPortfolio',
+            });
+            toast.success(`${po.PO_NUMBER} sent as Renewal of ${existingPo.id} → InPortfolio`);
+            setRowSelection({});
+        } catch {
+            toast.error('Failed to set renewal association');
+        }
+    };
+
+    const columns: ColumnDef<PurchaseOrder>[] = [
+        {
+            id: "select",
+            header: ({ table }) => (
+                <Checkbox
+                    checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({ row }) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "VENDOR_NAME",
+            header: ({ column }) => <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Vendor Name<ArrowUpDown className="ml-2 h-4 w-4" /></Button>,
+        },
+        {
+            accessorKey: "PO_DESCRIPTION",
+            header: ({ column }) => <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>PO Description<ArrowUpDown className="ml-2 h-4 w-4" /></Button>,
+        },
+        {
+            accessorKey: "PO_NUMBER",
+            header: ({ column }) => <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>PO Number<ArrowUpDown className="ml-2 h-4 w-4" /></Button>,
+        },
+        {
+            accessorKey: "PURCHASE_TYPE",
+            header: "Purchase Type",
+            cell: ({ row }) => {
+                const type = row.getValue("PURCHASE_TYPE") as string;
+                const color = type === 'Hardware' ? 'text-amber-800 bg-amber-100' : 'text-sky-800 bg-sky-100';
+                return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${color}`}>{type}</span>;
+            },
+        },
+        {
+            accessorKey: "PO_STATUS",
+            header: "Status",
+            cell: ({ row }) => {
+                const status = row.getValue("PO_STATUS") as string;
+                const color = STATUS_COLORS[status] || 'text-gray-600 bg-gray-100';
+                return <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>{status}</span>;
+            },
+        },
+        {
+            accessorKey: "TOTAL_AMOUNT_USD",
+            header: ({ column }) => <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>PO Amount<ArrowUpDown className="ml-2 h-4 w-4" /></Button>,
+            cell: ({ row }) => {
+                const amount = parseFloat(row.getValue("TOTAL_AMOUNT_USD"));
+                return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
+            },
+        },
+        {
+            accessorKey: "PO_START_DATE",
+            header: "Start Date",
+            cell: ({ row }) => {
+                const dateStr = row.getValue("PO_START_DATE") as string;
+                return dateStr ? dateStr.split(' ')[0] : 'N/A';
+            },
+        },
+        {
+            accessorKey: "PO_END_DATE",
+            header: "End Date",
+            cell: ({ row }) => {
+                const dateStr = row.getValue("PO_END_DATE") as string;
+                return dateStr ? dateStr.split(' ')[0] : 'N/A';
+            },
+        },
+        {
+            accessorKey: "COGS_OR_OPEX",
+            header: "Expense Type",
+        },
+        {
+            accessorKey: "PRODUCT_OWNER",
+            header: "Product Owner",
+        },
+        {
+            accessorKey: "FINANCIAL_ANALYST_NAME",
+            header: "Financial Analyst",
+        },
+        {
+            accessorKey: "ASSOCIATION_TYPE",
+            header: "Association",
+            cell: ({ row }) => {
+                const type = row.getValue("ASSOCIATION_TYPE") as string;
+                if (!type) return <span className="text-gray-300 text-xs">—</span>;
+                const color = type === 'Renewal' ? 'text-violet-800 bg-violet-100' : 'text-blue-800 bg-blue-100';
+                return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${color}`}>{type}</span>;
+            },
+        },
+        {
+            accessorKey: "ASSOCIATED_PO",
+            header: "Previous PO",
+            cell: ({ row }) => {
+                const po = row.getValue("ASSOCIATED_PO") as string;
+                if (!po) return <span className="text-gray-300 text-xs">—</span>;
+                return <span className="text-xs font-mono text-violet-600">{po}</span>;
+            },
+        },
+        {
+            id: "actions",
+            header: "Actions",
+            cell: ({ row }) => {
+                const status = row.original.PO_STATUS;
+                const poNumber = row.original.PO_NUMBER;
+
+                if (status === 'Draft') {
+                    return (
+                        <div className="flex gap-1">
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-green-700 hover:bg-green-50" onClick={() => confirmSinglePO(row.original, 'approve', 'Approved')}>✓ Approve</Button>
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-red-700 hover:bg-red-50" onClick={() => confirmSinglePO(row.original, 'ignore', 'Ignored')}>✗</Button>
+                        </div>
+                    );
+                }
+                if (status === 'Approved') {
+                    return (
+                        <div className="flex gap-1">
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-indigo-700 hover:bg-indigo-50" onClick={() => confirmSinglePO(row.original, 'sign', 'Signed')}>✍ Sign</Button>
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-red-700 hover:bg-red-50" onClick={() => confirmSinglePO(row.original, 'ignore', 'Ignored')}>✗</Button>
+                        </div>
+                    );
+                }
+                if (status === 'Ignored') {
+                    return <Button size="sm" variant="ghost" className="h-7 text-xs text-orange-700 hover:bg-orange-50" onClick={() => confirmSinglePO(row.original, 'revert', 'Draft')}><RotateCcw className="mr-1 h-3 w-3" />Revert</Button>;
+                }
+                return null;
+            },
+        },
+    ];
 
     if (isLoading) {
         return (
             <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900">New PO available for Portfolio View</h1>
-                </div>
-                <div className="space-y-2">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-20 w-full" />
-                    <Skeleton className="h-20 w-full" />
-                </div>
+                <h1 className="text-2xl font-bold tracking-tight text-gray-900">Inbound Purchase Order</h1>
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-64 w-full" />
             </div>
         );
     }
@@ -410,117 +382,112 @@ export default function ViewAssetPage() {
         return <div className="text-red-500 p-4">Error loading data. Please try again later.</div>;
     }
 
+    const selectedCount = Object.keys(rowSelection).length;
+
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col space-y-4">
-                {/* Context / Top Filter Area - Segmented Control */}
-                <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2 text-blue-600">
-                        <Calendar className="h-4 w-4 animate-pulse" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Select Fiscal Year</span>
+        <div className="space-y-4">
+            {/* Header */}
+            <div className="flex items-end justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900">Inbound Purchase Order</h1>
+                    <p className="text-sm text-gray-500 mt-1">Review, approve, and sign incoming purchase orders.</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                    <Select value={selectedFiscalYear} onValueChange={setSelectedFiscalYear}>
+                        <SelectTrigger className="w-[160px]"><SelectValue placeholder="Fiscal Year" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="All">All Fiscal Years</SelectItem>
+                            {uniqueFiscalYears.map(fy => <SelectItem key={fy} value={String(fy)}>FY {fy}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                    <Button onClick={() => setIsAddDraftOpen(true)} className="gap-1">
+                        <Plus className="h-4 w-4" /> Add Draft PO
+                    </Button>
+                </div>
+            </div>
+
+            {/* Bordered container */}
+            <div className="border border-gray-200 rounded-xl overflow-hidden">
+                {/* Filter pills + search */}
+                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
+                    <div className="flex gap-1.5">
+                        {(['All', 'Draft', 'Approved', 'Signed', 'InPortfolio', 'Ignored'] as const).map(status => (
+                            <button
+                                key={status}
+                                onClick={() => { setStatusFilter(status); setRowSelection({}); }}
+                                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                                    statusFilter === status
+                                        ? 'bg-gray-900 text-white'
+                                        : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100'
+                                }`}
+                            >
+                                {status} ({statusCounts[status]})
+                            </button>
+                        ))}
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                        <Select value={selectedFiscalYear} onValueChange={setSelectedFiscalYear}>
-                            <SelectTrigger className="w-[180px] rounded-full bg-white border-blue-200 text-blue-600 font-bold focus:ring-blue-100">
-                                <SelectValue placeholder="Select Year" />
-                            </SelectTrigger>
+                    <div className="flex gap-2">
+                        <Select value={purchaseTypeFilter} onValueChange={setPurchaseTypeFilter}>
+                            <SelectTrigger className="w-[130px] h-8 text-xs"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="All">All Fiscal Years</SelectItem>
-                                {uniqueFiscalYears.map(fy => (
-                                    <SelectItem key={fy} value={String(fy)}>FY {fy}</SelectItem>
-                                ))}
+                                <SelectItem value="All">All Types</SelectItem>
+                                <SelectItem value="Software">Software</SelectItem>
+                                <SelectItem value="Hardware">Hardware</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div className="space-y-1">
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Purchase Order Inbox</h1>
-                        <p className="text-gray-500 text-sm">Review and process incoming purchase orders for {selectedFiscalYear === 'All' ? 'all years' : `FY ${selectedFiscalYear}`}.</p>
-                    </div>
-                    <div className="flex gap-2 items-center">
-                        {activeTab === "pending" ? (
-                            <>
-                                <Button onClick={handleAddAsNew} className="bg-green-600 hover:bg-green-700">Add as New</Button>
-                                <Button onClick={handleAddAsRenewal} className="bg-blue-600 hover:bg-blue-700">Add as Renewal</Button>
-                                <Button onClick={handleIgnore} variant="destructive">Ignore PO</Button>
-                            </>
-                        ) : (
-                            <Button onClick={handleRevert} className="bg-orange-600 hover:bg-orange-700">
-                                <RotateCcw className="mr-2 h-4 w-4" />
-                                Revert to Pending Inbox
+                {/* Table */}
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    rowSelection={rowSelection}
+                    setRowSelection={setRowSelection}
+                />
+
+                {/* Bulk actions bar */}
+                {selectedCount > 0 && (
+                    <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-t border-gray-200">
+                        <span className="text-xs text-gray-600">{selectedCount} selected</span>
+                        <div className="flex gap-2">
+                            <Button size="sm" variant="outline" className="h-7 text-xs text-green-700 border-green-200 hover:bg-green-50"
+                                onClick={() => {
+                                    const selected = getSelectedPOs();
+                                    const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME} (${po.PO_STATUS} → Approved)`).join('\n');
+                                    openConfirm('Approve Purchase Orders', `Approve ${selectedCount} selected PO(s)?\n\n${details}`, 'Approve', 'approve');
+                                }}>
+                                ✓ Approve Selected
                             </Button>
-                        )}
+                            <Button size="sm" variant="outline" className="h-7 text-xs text-red-700 border-red-200 hover:bg-red-50"
+                                onClick={() => {
+                                    const selected = getSelectedPOs();
+                                    const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME} (${po.PO_STATUS} → Ignored)`).join('\n');
+                                    openConfirm('Ignore Purchase Orders', `Ignore ${selectedCount} selected PO(s)?\n\n${details}`, 'Ignore', 'ignore', 'destructive');
+                                }}>
+                                ✗ Ignore Selected
+                            </Button>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
-            <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); setRowSelection({}); }} className="w-full">
-                <div className="flex items-center justify-between mb-4">
-                    <TabsList>
-                        <TabsTrigger value="pending" className="px-6">
-                            Pending ({data?.filter(po => po.PO_STATUS !== 'Ignored').length || 0})
-                        </TabsTrigger>
-                        <TabsTrigger value="ignored" className="px-6">
-                            Ignored ({data?.filter(po => po.PO_STATUS === 'Ignored').length || 0})
-                        </TabsTrigger>
-                    </TabsList>
-                </div>
+            {/* Send buttons outside bordered container */}
+            <div className="flex justify-end gap-2">
+                <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleSendAsNew}>
+                    Send as New →
+                </Button>
+                <Button className="bg-violet-600 hover:bg-violet-700" onClick={handleSendAsRenewal}>
+                    Send as Renewal →
+                </Button>
+            </div>
+            <p className="text-xs text-gray-400 text-right -mt-2">Select Signed POs to associate with GPS Portfolio & Financial Analyst Portfolio</p>
 
-                <TabsContent value="pending" className="border-none p-0 outline-none">
-                    <DataTable
-                        columns={columns}
-                        data={filteredData}
-                        rowSelection={rowSelection}
-                        setRowSelection={setRowSelection}
-                    />
-                </TabsContent>
+            {/* Modals */}
+            <AddDraftPOModal isOpen={isAddDraftOpen} onClose={() => setIsAddDraftOpen(false)} onSuccess={() => queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] })} />
 
-                <TabsContent value="ignored" className="border-none p-0">
-                    <DataTable
-                        columns={columns}
-                        data={filteredData}
-                        rowSelection={rowSelection}
-                        setRowSelection={setRowSelection}
-                    />
-                </TabsContent>
-            </Tabs>
+            <RenewalModal isOpen={isRenewalModalOpen} onClose={() => setIsRenewalModalOpen(false)} onConfirm={handleRenewalConfirm} initialVendorName={selectedVendorForRenewal} />
 
-            <RenewalModal
-                isOpen={isRenewalModalOpen}
-                onClose={() => setIsRenewalModalOpen(false)}
-                onConfirm={handleRenewalConfirm}
-                initialVendorName={selectedVendorForRenewal}
-            />
-
-            <ConfirmDialog
-                isOpen={isConfirmDialogOpen}
-                onClose={() => setIsConfirmDialogOpen(false)}
-                onConfirm={confirmAddAsNew}
-                title="Add as New Purchase"
-                description={`Are you sure you want to add ${Object.keys(rowSelection).length} selected PO(s) as New Purchase? This will move them to the Portfolio View.`}
-                confirmText="Add POs"
-            />
-
-            <ConfirmDialog
-                isOpen={isIgnoreConfirmOpen}
-                onClose={() => setIsIgnoreConfirmOpen(false)}
-                onConfirm={confirmIgnore}
-                title="Ignore Purchase Orders"
-                description={`Are you sure you want to ignore ${Object.keys(rowSelection).length} selected PO(s)? They will be hidden from this view.`}
-                confirmText="Ignore POs"
-                variant="destructive"
-            />
-
-            <ConfirmDialog
-                isOpen={isRevertConfirmOpen}
-                onClose={() => setIsRevertConfirmOpen(false)}
-                onConfirm={confirmRevert}
-                title="Revert to Pending"
-                description={`Are you sure you want to revert ${Object.keys(rowSelection).length} selected PO(s) back to the Pending Inbox?`}
-                confirmText="Revert POs"
-            />
+            <ConfirmDialog isOpen={isConfirmDialogOpen} onClose={() => setIsConfirmDialogOpen(false)} onConfirm={handleConfirm} title={confirmConfig.title} description={confirmConfig.description} confirmText={confirmConfig.confirmText} variant={confirmConfig.variant} />
         </div>
     );
 }
