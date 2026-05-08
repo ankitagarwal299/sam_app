@@ -80,7 +80,7 @@ export default function ViewAssetPage() {
 
     const [isAddDraftOpen, setIsAddDraftOpen] = useState(false);
     const [isRenewalModalOpen, setIsRenewalModalOpen] = useState(false);
-    const [selectedVendorForRenewal] = useState<string | undefined>(undefined);
+    const [selectedVendorForRenewal, setSelectedVendorForRenewal] = useState<string | undefined>(undefined);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const [confirmConfig, setConfirmConfig] = useState({ title: '', description: '', confirmText: '', variant: 'default' as 'default' | 'destructive', action: '', poNumbers: [] as string[] });
 
@@ -165,6 +165,23 @@ export default function ViewAssetPage() {
         };
         const variant = action === 'ignore' ? 'destructive' as const : 'default' as const;
         openConfirm(titles[action] || 'Confirm', details, newStatus === 'Ignored' ? 'Ignore' : newStatus === 'Draft' ? 'Revert' : newStatus, action, variant, [po.PO_NUMBER]);
+    };
+
+    const handleSendAsNew = () => {
+        const selected = getSelectedPOs();
+        if (selected.length === 0) { toast.error("Select at least one signed PO"); return; }
+        if (selected.some(po => po.PO_STATUS !== 'Signed')) { toast.error("Only signed POs can be sent as new"); return; }
+        const details = selected.map(po => `• ${po.PO_NUMBER} — ${po.VENDOR_NAME}`).join('\n');
+        openConfirm('Send as New', `Send ${selected.length} PO(s) as new to GPS Portfolio & Financial Analyst Portfolio?\n\n${details}`, 'Send as New', 'send-new');
+    };
+
+    const handleSendAsRenewal = () => {
+        const selected = getSelectedPOs();
+        if (selected.length === 0) { toast.error("Select at least one signed PO"); return; }
+        if (selected.some(po => po.PO_STATUS !== 'Signed')) { toast.error("Only signed POs can be sent as renewal"); return; }
+        if (selected.length > 1) { toast.error("Select only one PO for renewal"); return; }
+        setSelectedVendorForRenewal(selected[0].VENDOR_NAME);
+        setIsRenewalModalOpen(true);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -392,8 +409,16 @@ export default function ViewAssetPage() {
                 )}
             </div>
 
-            {/* Info: Signed POs automatically appear on GPS & Financial Analyst screens */}
-            <p className="text-xs text-gray-400 text-right">Signed POs automatically appear in GPS Portfolio & Financial Analyst Portfolio.</p>
+            {/* Send buttons outside bordered container */}
+            <div className="flex justify-end gap-2">
+                <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleSendAsNew}>
+                    Send as New →
+                </Button>
+                <Button className="bg-violet-600 hover:bg-violet-700" onClick={handleSendAsRenewal}>
+                    Send as Renewal →
+                </Button>
+            </div>
+            <p className="text-xs text-gray-400 text-right -mt-2">Select Signed POs to associate with GPS Portfolio & Financial Analyst Portfolio</p>
 
             {/* Modals */}
             <AddDraftPOModal isOpen={isAddDraftOpen} onClose={() => setIsAddDraftOpen(false)} onSuccess={() => queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] })} />
