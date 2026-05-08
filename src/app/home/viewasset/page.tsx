@@ -124,6 +124,7 @@ export default function ViewAssetPage() {
             queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
             queryClient.invalidateQueries({ queryKey: ['gpsPortfolio'] });
             queryClient.invalidateQueries({ queryKey: ['financial-portfolio'] });
+            queryClient.invalidateQueries({ queryKey: ['portfolioPos'] });
             setRowSelection({});
         } catch (err) {
             toast.error("An error occurred while updating PO status");
@@ -191,6 +192,7 @@ export default function ViewAssetPage() {
         queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
         queryClient.invalidateQueries({ queryKey: ['gpsPortfolio'] });
         queryClient.invalidateQueries({ queryKey: ['financial-portfolio'] });
+            queryClient.invalidateQueries({ queryKey: ['portfolioPos'] });
     };
 
     const handleSendAsNew = () => {
