@@ -113,12 +113,13 @@ const fetchPOs = async (): Promise<PO[]> => {
             productOwner: String(getVal('PRODUCT_OWNER') || ''),
             leader2: String(getVal('NODE_LEVEL02_NAME_HIER') || ''),
             leader3: String(getVal('NODE_LEVEL03_NAME') || ''),
+            associationType: String(getVal('ASSOCIATION_TYPE') || ''),
             raw: row
         };
     });
 
-    // Show Signed and Active POs — Signed POs appear here once signed on the Inbound screen
-    return allPos.filter((po: any) => po.status === 'Signed' || po.status === 'Active');
+    // Only show POs that have been sent via "Send as New" or "Send as Renewal"
+    return allPos.filter((po: any) => po.associationType === 'New' || po.associationType === 'Renewal');
 };
 
 // --- Column Definitions ---
