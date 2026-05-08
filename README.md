@@ -1,124 +1,109 @@
-# SAM Financial Portfolio Application
+# SAM — Purchase Order Lifecycle Management Platform
 
-[![Deployment Status](https://img.shields.io/badge/vercel-deployed-success)](https://vercel.com)
+A web-based platform for enterprise IT organizations to manage the full lifecycle of vendor purchase orders — from initial intake through approval, signing, and portfolio management.
 
-## Overview
-The **SAM (Software Asset Management) Financial Portfolio** application is a modern, web-based platform designed to help organizations manage their software spend, track purchase orders (POs), and forecast financial commitments with precision. Built with **Next.js** and **Tailwind CSS**, it offers a responsive and interactive experience for Financial Analysts and Leadership.
+## What This Product Does
 
-## 🚀 Key Features
+Enterprise IT teams manage hundreds of purchase orders across software and hardware vendors. Without a centralized system, POs get tracked in spreadsheets, approval chains happen over email, and financial analysts lack real-time visibility into spend, forecasts, and renewals.
 
-*   **📊 Financial Analyst Dashboard**: A comprehensive view of portfolio health with KPIs, PO lists, and actuals tracking.
-*   **📝 Single PO Management**: Detailed view of PO attributes, renewal data, and financial breakdowns.
-*   **📅 72-Month Forecast Manager**: 
-    *   Interactive grid for managing long-term forecasts.
-    *   Support for Monthly, Quarterly, and Yearly views.
-    *   Inline editing with optimistic UI updates.
-    *   Fiscal Year alignment (August start).
-*   **📈 Leaders View**: 
-    *   Executive dashboard visualizing spend by Organizational Level (L4/L5).
-    *   Funding source analysis (Central vs Functional).
-    *   Tier-based spend breakdown (Mega, Platinum, Gold, etc.).
+SAM solves this by providing:
 
-## 🛠️ Tech Stack
+- **A single intake point** for all incoming purchase orders, with a structured approval workflow
+- **Portfolio views** for GPS (Global Purchase Services) and Financial Analysts to manage active POs
+- **Forecasting tools** with 72-month planning grids, variance tracking, and fiscal year alignment
+- **Leadership dashboards** for executive visibility into spend by organization level and funding source
+- **Vendor 360 views** for consolidated vendor relationship management
 
-*   **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-*   **Language**: [TypeScript](https://www.typescriptlang.org/)
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-*   **UI Components**: [Shadcn UI](https://ui.shadcn.com/) (based on Radix UI)
-*   **Data Fetching**: [TanStack Query](https://tanstack.com/query/latest) (React Query)
-*   **Icons**: [Lucide React](https://lucide.dev/)
+## Who Uses It
 
-## 📂 Project Structure
+| Role | What They Do |
+|------|-------------|
+| **PO Intake Manager** | Reviews incoming POs, approves/signs them, sends to portfolio |
+| **GPS Team** | Manages active POs, tracks new purchases vs renewals |
+| **Financial Analyst** | Owns PO lifecycle — forecasts, commits, actuals, renewals |
+| **Leadership** | Reviews spend summaries by org level, tier, and funding source |
+
+## The PO Workflow
+
+Every purchase order follows this lifecycle:
 
 ```
-sam_app/
-├── src/
-│   ├── app/
-│   │   ├── api/                                    # Mock API Route Handlers
-│   │   │   ├── account/v1/accounts/accesslevels/
-│   │   │   │   └── [userid]/route.ts              # User modules/access levels
-│   │   │   ├── datalake/v1/attributes/
-│   │   │   │   └── purchaseorders/route.ts        # PO data endpoint
-│   │   │   ├── dataloader/v1/attributes/purchaseorders/
-│   │   │   │   └── aggregatePOWithoutMandatoryFY/route.ts  # Renewal candidates
-│   │   │   └── financial-portfolio/
-│   │   │       ├── route.ts                       # Portfolio aggregated data
-│   │   │       ├── [poId]/forecast/route.ts       # 72-month forecast data
-│   │   │       └── leaders-view/route.ts          # Leadership spend data
-│   │   ├── home/
-│   │   │   ├── financialAnalystsPortfolio/
-│   │   │   │   ├── [poId]/
-│   │   │   │   │   ├── page.tsx                   # Single PO Detail View
-│   │   │   │   │   ├── forecast/page.tsx          # 72-Month Forecast Manager
-│   │   │   │   │   └── renewal/page.tsx           # Renewal Analysis
-│   │   │   │   ├── leaders/page.tsx               # Portfolio View for Leaders
-│   │   │   │   └── page.tsx                       # Financial Analyst Dashboard
-│   │   │   ├── snowFlakePoView/page.tsx           # PO Processing View
-│   │   │   ├── viewasset/page.tsx                 # Enterprise Portfolio View
-│   │   │   └── layout.tsx                         # Home layout wrapper
-│   │   ├── layout.tsx                             # Root layout with providers
-│   │   └── page.tsx                               # Landing Page (Module Hub)
-│   ├── components/
-│   │   ├── ui/                                    # Shadcn UI components
-│   │   │   ├── button.tsx
-│   │   │   ├── card.tsx
-│   │   │   ├── checkbox.tsx
-│   │   │   ├── data-table.tsx                     # Reusable data table
-│   │   │   ├── dialog.tsx
-│   │   │   ├── dropdown-menu.tsx
-│   │   │   ├── input.tsx
-│   │   │   ├── select.tsx
-│   │   │   ├── skeleton.tsx
-│   │   │   ├── table.tsx
-│   │   │   ├── tabs.tsx
-│   │   │   └── sonner.tsx
-│   │   ├── providers.tsx                          # React Query provider
-│   │   └── renewal-modal.tsx                      # Add as Renewal modal
-│   └── lib/
-│       └── utils.ts                               # Utility functions
-├── docs/
-│   ├── PRD.md                                     # Product Requirements Doc
-│   └── README.md                                  # Original project docs
-├── package.json
-├── tsconfig.json
-└── tailwind.config.ts
+Draft → Approved → Signed → InPortfolio
+                      ↘ Ignored
 ```
 
-## 🏃‍♂️ Getting Started
+| Status | Meaning | Where Visible |
+|--------|---------|---------------|
+| **Draft** | New PO awaiting review (inbound or manually created) | Inbound PO |
+| **Approved** | Reviewed and approved, awaiting signature | Inbound PO |
+| **Signed** | Signed, ready to be sent to portfolio | Inbound PO |
+| **InPortfolio** | Sent via "Send as New" or "Send as Renewal" | Inbound PO + GPS Portfolio + Financial Analyst Portfolio |
+| **Ignored** | Excluded from processing (can be reverted) | Inbound PO |
 
-### Prerequisites
-*   Node.js 18+ 
-*   npm or yarn
+When a PO is sent as **New**, it has no prior association. When sent as **Renewal**, the user selects an existing InPortfolio PO to associate it with, creating a renewal chain.
 
-### Installation
+## Application Modules
 
-1.  **Clone the repository**:
-    ```bash
-    git clone <repository-url>
-    cd sam_app
-    ```
+### Inbound Purchase Order (`/home/viewasset`)
+The starting point for all POs. Single table with status filter pills (Draft / Approved / Signed / InPortfolio / Ignored), per-row action buttons, bulk actions, and a form to manually create Draft POs. "Send as New" and "Send as Renewal" buttons move Signed POs into the portfolio.
 
-2.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
+### GPS Portfolio (`/home/gpsPortfolio`)
+Shows all InPortfolio POs with vendor, amount, dates, purchase type, and association details (New vs Renewal + linked previous PO). This is the GPS team's primary working view.
 
-3.  **Run the development server**:
-    ```bash
-    npm run dev
-    ```
+### Financial Analyst PO Portfolio (`/home/financialAnalystsPortfolio`)
+Same InPortfolio POs as GPS but with additional financial attributes — KPIs (annualized spend, forecast, commit, actuals, variance), forecast/commit/actuals matrices, and renewal tracking. Each PO links to a detail page with a 72-month forecast grid.
 
-4.  **Open the application**:
-    Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+### 72-Month Forecast Manager (`/home/financialAnalystsPortfolio/[poId]/forecast`)
+Interactive monthly/quarterly/yearly planning grid for each PO. Supports inline editing, fiscal year alignment (August start), and version tracking (draft/locked/submitted states).
 
-## 🧪 Mock Data
-The application currently runs on **Mock APIs** defined in `src/app/api`. No external database connection is required for the initial demo. Data is generated on-the-fly or served from static mock objects to simulate a realistic environment.
+### Portfolio View for Leaders (`/home/portfolioViewleaders`)
+Executive dashboard with spend breakdown by L4/L5 organization levels, funding source analysis (Central vs Functional), and tier-based segmentation (Mega, Platinum, Gold, Silver, Bronze).
 
-## 🎨 Design System
-The UI follows a clean, professional aesthetic suitable for enterprise financial tools:
-*   **Colors**: Slate/Gray scale for structure, with semantic colors (Blue, Green, Red, Violet) for data visualization and status.
-*   **Typography**: Inter (default Sans).
-*   **Interactivity**: Hover effects, smooth transitions, and immediate feedback on user actions.
+### Vendor 360 View (`/home/vendor-360`)
+Consolidated view per vendor — overview KPIs, contracts, products, people, stakeholders, savings, and invoices. Supports vendor switching and yearly data filtering.
 
----
-*Generated for SAM Project - November 2025*
+### GL Reconciliation (`/home/gl-reconciliation`)
+Reconciles General Ledger actuals with PO forecasts per fiscal period and organization leader.
+
+## Getting Started
+
+**Prerequisites:** Node.js 18+
+
+```bash
+git clone <repository-url>
+cd sam_app
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). The app runs entirely on mock APIs — no database or external services required.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **UI Components:** shadcn/ui (Radix UI primitives)
+- **Data Fetching:** TanStack Query (React Query)
+- **Tables:** TanStack Table
+- **Icons:** Lucide React
+- **Toasts:** Sonner
+
+## Data Architecture
+
+All PO data flows through a single in-memory mock API (`/api/datalake/v1/attributes/purchaseorders`). This endpoint supports:
+
+- `POST` — Read all POs
+- `PATCH` — Update PO fields and status
+- `PUT` — Create new Draft POs
+
+The Inbound PO screen writes to this store. GPS Portfolio and Financial Analyst Portfolio read from it, filtered by `PO_STATUS === 'InPortfolio'`. This ensures a single source of truth — changes on the Inbound screen are immediately reflected downstream.
+
+Financial data (forecasts, commits, actuals) is generated deterministically from PO IDs via `src/lib/mock-financial-data.ts`, ensuring consistent data across page refreshes.
+
+## Key Conventions
+
+- **Fiscal Year:** Starts in August (FY26 = Aug 2025 – Jul 2026)
+- **Path alias:** `@/*` maps to `./src/*`
+- **Purchase Types:** Software, Hardware
+- **Association Types:** New (no prior PO), Renewal (linked to previous PO)
